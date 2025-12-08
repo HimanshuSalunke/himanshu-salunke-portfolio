@@ -3,7 +3,7 @@ import { motion } from 'framer-motion'
 import { ImageWithShimmer } from '../ui/ImageWithShimmer'
 import { Tag } from '../ui/Tag'
 import { Button } from '../ui/Button'
-import { ProjectGallery, CompactProjectGallery } from '../ui/ProjectGallery'
+import { ProjectGallery } from '../ui/ProjectGallery'
 
 // Helper function to filter out conflicting props between HTML and Framer Motion
 const filterMotionProps = (props: any) => {

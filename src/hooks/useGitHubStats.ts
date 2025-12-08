@@ -98,27 +98,3 @@ export const useGitHubStats = (username: string, repoName?: string) => {
 
   return stats
 }
-
-export const useTechUsageStats = () => {
-  const [techStats, setTechStats] = useState<{ [key: string]: number }>({})
-
-  useEffect(() => {
-    // Mock tech usage data - in a real app, this could come from time tracking tools
-    const mockTechStats = {
-      'React': 35,
-      'TypeScript': 30,
-      'Python': 20,
-      'Node.js': 15,
-      'AWS': 10,
-      'Docker': 8,
-      'TensorFlow': 12,
-      'PostgreSQL': 6,
-      'MongoDB': 4,
-      'Redis': 3
-    }
-
-    setTechStats(mockTechStats)
-  }, [])
-
-  return techStats
-}

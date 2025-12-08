@@ -321,31 +321,6 @@ export const useSocialStats = () => {
   return stats
 }
 
-// Individual hooks for specific platforms
-export const useGitHubStats = (username: string) => {
-  const [stats, setStats] = useState<GitHubStats>({
-    stars: 0,
-    forks: 0,
-    watchers: 0,
-    repositories: 0,
-    followers: 0,
-    following: 0,
-    isLoading: true,
-    error: null
-  })
-
-  useEffect(() => {
-    const fetchStats = async () => {
-      const result = await fetchGitHubStats(username)
-      setStats(result)
-    }
-
-    fetchStats()
-  }, [username])
-
-  return stats
-}
-
 // export const useLeetCodeStats = (username: string) => {
 //   const [stats, setStats] = useState<LeetCodeStats>({
 //     totalSolved: 0,
