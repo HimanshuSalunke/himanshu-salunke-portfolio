@@ -46,10 +46,6 @@ const ArticleEngagementMetrics: React.FC = () => {
     }
   ]
 
-  const topArticles = articles
-    .filter(article => article.featured)
-    .slice(0, 3)
-
   const getTrendIcon = (trend: string) => {
     switch (trend) {
       case 'up':
@@ -139,61 +135,12 @@ const ArticleEngagementMetrics: React.FC = () => {
         ))}
       </div>
 
-      {/* Top Performing Articles */}
-      <motion.div
-        className="bg-gradient-to-r from-primary-50 to-secondary-50 dark:from-primary-900/20 dark:to-secondary-900/20 rounded-xl p-4 sm:p-6"
-        initial={{ opacity: 0 }}
-        animate={{ opacity: 1 }}
-        transition={{ duration: 0.6, delay: 0.8 }}
-      >
-        <div className="text-center mb-4 sm:mb-6">
-          <h3 className="text-lg sm:text-xl font-bold text-neutral-900 dark:text-white mb-2">
-            🏆 Top Performing Articles
-          </h3>
-          <p className="text-sm sm:text-base text-neutral-600 dark:text-neutral-400">
-            Most viewed and engaged content
-          </p>
-        </div>
-
-        <div className="space-y-3 sm:space-y-4">
-          {topArticles.map((article, index) => (
-            <motion.div
-              key={article.id}
-              className="flex flex-col sm:flex-row sm:items-center sm:justify-between p-3 sm:p-4 bg-white dark:bg-neutral-800 rounded-lg border border-neutral-200 dark:border-neutral-700 hover:shadow-md transition-all duration-300 gap-3 sm:gap-0"
-              initial={{ opacity: 0, x: -20 }}
-              animate={{ opacity: 1, x: 0 }}
-              transition={{ duration: 0.3, delay: 1.0 + index * 0.1 }}
-            >
-              <div className="flex items-center gap-3 sm:gap-4">
-                <div className="flex items-center justify-center w-8 h-8 sm:w-10 sm:h-10 rounded-full bg-gradient-to-r from-primary-500 to-primary-600 text-white text-sm sm:text-lg font-bold shadow-sm border border-primary-400/20">
-                  {index + 1}
-                </div>
-                <div className="flex-1 min-w-0">
-                  <h4 className="text-sm sm:text-base font-semibold text-neutral-900 dark:text-white truncate">
-                    {article.title}
-                  </h4> 
-                  <div className="flex flex-col sm:flex-row sm:items-center gap-1 sm:gap-4 text-xs sm:text-sm text-neutral-500 dark:text-neutral-400">
-                    <span>⏱️ {article.readTime} min read</span>
-                    <span>📅 {new Date(article.date).toLocaleDateString()}</span>
-                  </div>
-                </div>
-              </div>
-              <div className="text-left sm:text-right">
-                <div className="inline-flex items-center px-2 sm:px-3 py-1 sm:py-1.5 rounded-full text-xs font-bold bg-gradient-to-r from-primary-500 to-primary-600 text-white shadow-sm border border-primary-400/20">
-                  {article.category}
-                </div>
-              </div>
-            </motion.div>
-          ))}
-        </div>
-      </motion.div>
-
       {/* Personal Quote */}
       <motion.div
         className="mt-6 sm:mt-8 text-center"
         initial={{ opacity: 0 }}
         animate={{ opacity: 1 }}
-        transition={{ duration: 0.6, delay: 1.4 }}
+        transition={{ duration: 0.6, delay: 0.8 }}
       >
         <div className="bg-gradient-to-r from-neutral-50 to-neutral-100 dark:from-neutral-700 dark:to-neutral-800 rounded-xl sm:rounded-2xl p-4 sm:p-6 md:p-8 border border-neutral-200 dark:border-neutral-600">
           <blockquote className="text-sm sm:text-base md:text-lg italic text-neutral-700 dark:text-neutral-300 mb-3 sm:mb-4">
