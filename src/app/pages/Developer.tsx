@@ -5,13 +5,11 @@ import {
   FaGithub, FaLinkedin
 } from 'react-icons/fa'
 import { 
-  SiCodechef, SiLeetcode, SiGithub, SiLinkedin, SiX
+  SiCodechef, SiGithub, SiLinkedin, SiX
 } from 'react-icons/si'
 import { useSocialStats } from '../../hooks/useSocialStats'
 import { useUnifiedStats } from '../../hooks/useUnifiedStats'
 import { TechStack } from '../../components/developer/TechStack'
-import LiveDashboard from '../../components/developer/LiveDashboard'
-import CodeQualityMetrics from '../../components/developer/CodeQualityMetrics'
 import WebsiteInfo from '../../components/developer/WebsiteInfo'
 
 interface SocialPlatform {
@@ -50,7 +48,7 @@ const getSocialPlatforms = (socialStats: any): SocialPlatform[] => [
     color: 'from-blue-600 to-blue-700',
     description: 'Professional networking & ML articles 📝',
     stats: [
-      { label: 'Followers', value: '23k+' },
+      { label: 'Followers', value: '24k+' },
       { label: 'Articles', value: socialStats.linkedin.isLoading ? 'Loading...' : `${socialStats.linkedin.articles || 0}+` },
       // { label: 'Newsletter', value: 'Active' } // Commented out for now
     ]
@@ -163,32 +161,12 @@ const Developer: React.FC = () => {
             </div>
           </motion.div>
 
-          {/* Live Development Dashboard */}
-          <motion.div
-            className="mt-8 sm:mt-12 lg:mt-16"
-            initial={{ opacity: 0, y: 20 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.6, delay: 0.1 }}
-          >
-            <LiveDashboard />
-          </motion.div>
-
-          {/* Code Quality Metrics */}
-          <motion.div
-            className="mt-8 sm:mt-12 lg:mt-16"
-            initial={{ opacity: 0, y: 20 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.6, delay: 0.2 }}
-          >
-            <CodeQualityMetrics />
-          </motion.div>
-
           {/* Tech Stack Section */}
           <motion.div
             className="mt-8 sm:mt-12 lg:mt-16"
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.6, delay: 0.25 }}
+            transition={{ duration: 0.6, delay: 0.1 }}
           >
             <TechStack />
           </motion.div>
@@ -198,7 +176,7 @@ const Developer: React.FC = () => {
             className="mt-8 sm:mt-12 lg:mt-16"
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.6, delay: 0.3 }}
+            transition={{ duration: 0.6, delay: 0.2 }}
           >
             <WebsiteInfo />
           </motion.div>
@@ -208,7 +186,7 @@ const Developer: React.FC = () => {
             className="mt-12 sm:mt-16"
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.6, delay: 0.4 }}
+            transition={{ duration: 0.6, delay: 0.3 }}
           >
             <div className="text-center mb-4 sm:mb-6 lg:mb-8">
               <h2 className="text-lg sm:text-xl md:text-2xl font-bold text-neutral-900 dark:text-white mb-2">
@@ -219,11 +197,11 @@ const Developer: React.FC = () => {
               </p>
             </div>
             
-            <div className="grid gap-3 sm:gap-4 lg:gap-6 grid-cols-1 sm:grid-cols-2 lg:grid-cols-3">
+            <div className="flex flex-wrap justify-center gap-3 sm:gap-4 lg:gap-6">
               {socialPlatforms.map((platform, index) => (
                 <motion.div
                   key={platform.name}
-                  className="group relative"
+                  className="group relative w-full sm:w-[calc(50%-0.75rem)] lg:w-[calc(33.333%-1rem)] max-w-md"
                   initial={{ opacity: 0, y: 30 }}
                   animate={{ opacity: 1, y: 0 }}
                   transition={{ duration: 0.6, delay: index * 0.1 }}

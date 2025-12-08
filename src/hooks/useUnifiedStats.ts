@@ -15,7 +15,6 @@ interface UnifiedStats {
   githubRepositories: number
   githubFollowers: number
   linkedinFollowers: number
-  leetcodeSolved: number
   
   // Article Stats
   totalArticles: number
@@ -34,7 +33,6 @@ export const useUnifiedStats = (): UnifiedStats => {
     githubRepositories: 0,
     githubFollowers: 0,
     linkedinFollowers: 0,
-    leetcodeSolved: 0,
     totalArticles: 0,
     isLoading: true,
     error: null
@@ -55,7 +53,6 @@ export const useUnifiedStats = (): UnifiedStats => {
       githubRepositories: socialStats.github.repositories || 0,
       githubFollowers: socialStats.github.followers || 0,
       linkedinFollowers: socialStats.linkedin.followers || 0,
-      leetcodeSolved: socialStats.leetcode.totalSolved || 0,
       
       // Article Stats
       totalArticles: articles.length,

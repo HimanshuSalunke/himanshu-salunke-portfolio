@@ -29,9 +29,9 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
       case 'github':
         result = await fetchGitHubStats(username)
         break
-      case 'leetcode':
-        result = await fetchLeetCodeStats(username)
-        break
+      // case 'leetcode':
+      //   result = await fetchLeetCodeStats(username)
+      //   break
       case 'codechef':
         result = await fetchCodeChefStats(username)
         break
@@ -94,98 +94,98 @@ async function fetchGitHubStats(username: string) {
   }
 }
 
-async function fetchLeetCodeStats(username: string) {
-  const query = `
-    query getUserProfile($username: String!) {
-      matchedUser(username: $username) {
-        submitStats {
-          acSubmissionNum {
-            difficulty
-            count
-            submissions
-          }
-        }
-        profile {
-          ranking
-        }
-      }
-      userContestRanking(username: $username) {
-        rating
-      }
-    }
-  `
+// async function fetchLeetCodeStats(username: string) {
+//   const query = `
+//     query getUserProfile($username: String!) {
+//       matchedUser(username: $username) {
+//         submitStats {
+//           acSubmissionNum {
+//             difficulty
+//             count
+//             submissions
+//           }
+//         }
+//         profile {
+//           ranking
+//         }
+//       }
+//       userContestRanking(username: $username) {
+//         rating
+//       }
+//     }
+//   `
 
-  const response = await fetch('https://leetcode.com/graphql/', {
-    method: 'POST',
-    headers: {
-      'Content-Type': 'application/json',
-      'Accept': 'application/json',
-      'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36',
-      'Referer': 'https://leetcode.com/',
-      'Origin': 'https://leetcode.com'
-    },
-    body: JSON.stringify({
-      query,
-      variables: { username }
-    })
-  })
+//   const response = await fetch('https://leetcode.com/graphql/', {
+//     method: 'POST',
+//     headers: {
+//       'Content-Type': 'application/json',
+//       'Accept': 'application/json',
+//       'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36',
+//       'Referer': 'https://leetcode.com/',
+//       'Origin': 'https://leetcode.com'
+//     },
+//     body: JSON.stringify({
+//       query,
+//       variables: { username }
+//     })
+//   })
 
-  if (!response.ok) {
-    // Try alternative API as fallback
-    try {
-      const altResponse = await fetch(`https://leetcode-stats-api.herokuapp.com/${username}`)
-      
-      if (altResponse.ok) {
-        const altData = await altResponse.json()
-        
-        return {
-          totalSolved: altData.totalSolved || 0,
-          easySolved: altData.easySolved || 0,
-          mediumSolved: altData.mediumSolved || 0,
-          hardSolved: altData.hardSolved || 0,
-          ranking: altData.ranking || 0,
-          contestRating: altData.contestRating || 0,
-          isLoading: false,
-          error: null
-        }
-      }
-    } catch (altError) {
-      console.error('Alternative LeetCode API also failed:', altError)
-    }
-    
-    throw new Error(`LeetCode API error: ${response.status}`)
-  }
+//   if (!response.ok) {
+//     // Try alternative API as fallback
+//     try {
+//       const altResponse = await fetch(`https://leetcode-stats-api.herokuapp.com/${username}`)
+//       
+//       if (altResponse.ok) {
+//         const altData = await altResponse.json()
+//         
+//         return {
+//           totalSolved: altData.totalSolved || 0,
+//           easySolved: altData.easySolved || 0,
+//           mediumSolved: altData.mediumSolved || 0,
+//           hardSolved: altData.hardSolved || 0,
+//           ranking: altData.ranking || 0,
+//           contestRating: altData.contestRating || 0,
+//           isLoading: false,
+//           error: null
+//         }
+//       }
+//     } catch (altError) {
+//       console.error('Alternative LeetCode API also failed:', altError)
+//     }
+//     
+//     throw new Error(`LeetCode API error: ${response.status}`)
+//   }
 
-  const data = await response.json()
-  
-  if (data.errors) {
-    throw new Error(`GraphQL errors: ${data.errors.map((e: any) => e.message).join(', ')}`)
-  }
-  
-  const user = data.data?.matchedUser
-  const contestRanking = data.data?.userContestRanking
+//   const data = await response.json()
+//   
+//   if (data.errors) {
+//     throw new Error(`GraphQL errors: ${data.errors.map((e: any) => e.message).join(', ')}`)
+//   }
+//   
+//   const user = data.data?.matchedUser
+//   const contestRanking = data.data?.userContestRanking
 
-  if (!user) {
-    throw new Error('User not found in LeetCode API')
-  }
+//   if (!user) {
+//     throw new Error('User not found in LeetCode API')
+//   }
 
-  const submissions = user.submitStats?.acSubmissionNum || []
-  const totalSolved = submissions.find((s: any) => s.difficulty === 'All')?.count || 0
-  const easySolved = submissions.find((s: any) => s.difficulty === 'Easy')?.count || 0
-  const mediumSolved = submissions.find((s: any) => s.difficulty === 'Medium')?.count || 0
-  const hardSolved = submissions.find((s: any) => s.difficulty === 'Hard')?.count || 0
+//   const submissions = user.submitStats?.acSubmissionNum || []
+//   const totalSolved = submissions.find((s: any) => s.difficulty === 'All')?.count || 0
+//   const easySolved = submissions.find((s: any) => s.difficulty === 'Easy')?.count || 0
+//   const mediumSolved = submissions.find((s: any) => s.difficulty === 'Medium')?.count || 0
+//   const hardSolved = submissions.find((s: any) => s.difficulty === 'Hard')?.count || 0
 
-  return {
-    totalSolved,
-    easySolved,
-    mediumSolved,
-    hardSolved,
-    ranking: user.profile?.ranking || 0,
-    contestRating: contestRanking?.rating || 0,
-    isLoading: false,
-    error: null
-  }
-}
+//   return {
+//     totalSolved,
+//     easySolved,
+//     mediumSolved,
+//     hardSolved,
+//     ranking: user.profile?.ranking || 0,
+//     contestRating: contestRanking?.rating || 0,
+//     isLoading: false,
+//     error: null
+//   }
+// }
 
 async function fetchCodeChefStats(username: string) {
   try {

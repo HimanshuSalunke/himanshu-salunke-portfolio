@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react'
+import React, { useState, useEffect, useCallback } from 'react'
 import { motion } from 'framer-motion'
 import { useSocialStats } from '../../hooks/useSocialStats'
 
@@ -27,113 +27,6 @@ const LiveDashboard: React.FC = () => {
     return () => clearInterval(timer)
   }, [])
 
-  // Fetch recent GitHub activity
-  useEffect(() => {
-    const fetchRecentActivity = async () => {
-      try {
-        setIsLoadingCommits(true)
-        
-        // Use our GitHub proxy to avoid CORS and rate limiting issues
-        console.log('Fetching GitHub user info...')
-        const API_BASE_URL = import.meta.env.DEV ? 'http://localhost:5000' : ''
-        const userResponse = await fetch(`${API_BASE_URL}/api/social-stats/github?username=HimanshuSalunke`)
-        if (!userResponse.ok) {
-          throw new Error(`User not found: ${userResponse.status}`)
-        }
-        const userData = await userResponse.json()
-        console.log('GitHub user data:', userData)
-        
-        // Get user's repositories to find recent activity
-        console.log('Fetching user repositories...')
-        const reposResponse = await fetch('https://api.github.com/users/HimanshuSalunke/repos?sort=updated&per_page=20', {
-          headers: {
-            'Accept': 'application/vnd.github.v3+json',
-            'User-Agent': 'himanshu-portfolio-website',
-            'Authorization': process.env.GITHUB_TOKEN ? `token ${process.env.GITHUB_TOKEN}` : undefined
-          }
-        })
-        if (!reposResponse.ok) {
-          throw new Error(`Repos not found: ${reposResponse.status}`)
-        }
-        const repos = await reposResponse.json()
-        console.log('User repositories:', repos)
-        
-        // Get recent commits from the most recently updated repos
-        const recentCommits: any[] = []
-        
-        // Try different time ranges if no recent commits found
-        const timeRanges = [
-          { days: 7, label: 'last 7 days' },
-          { days: 30, label: 'last 30 days' },
-          { days: 90, label: 'last 90 days' },
-          { days: 365, label: 'last year' }
-        ]
-        
-        for (const timeRange of timeRanges) {
-          const daysAgo = new Date(Date.now() - timeRange.days * 24 * 60 * 60 * 1000)
-          console.log(`Trying to fetch commits from ${timeRange.label}...`)
-          
-          for (const repo of repos.slice(0, 5)) {
-            try {
-              console.log(`Fetching commits from ${repo.name} (${timeRange.label})...`)
-              const commitsResponse = await fetch(`https://api.github.com/repos/HimanshuSalunke/${repo.name}/commits?per_page=10&since=${daysAgo.toISOString()}`)
-              if (commitsResponse.ok) {
-                const commits = await commitsResponse.json()
-                console.log(`Commits from ${repo.name} (${timeRange.label}):`, commits)
-                
-                commits.forEach((commit: any) => {
-                  const commitDate = new Date(commit.commit.author.date)
-                  // Only include commits from the current time range
-                  if (commitDate >= daysAgo) {
-                    recentCommits.push({
-                      id: commit.sha,
-                      type: 'commit',
-                      title: commit.commit.message.split('\n')[0], // First line of commit message
-                      description: `Pushed to ${repo.name}`,
-                      time: getTimeAgo(commitDate),
-                      repo: repo.name,
-                      language: repo.language || 'Unknown',
-                      commit: commit
-                    })
-                  }
-                })
-              }
-            } catch (err) {
-              console.log(`Failed to get commits from ${repo.name}:`, err)
-            }
-          }
-          
-          // If we found commits, break out of the time range loop
-          if (recentCommits.length > 0) {
-            console.log(`Found ${recentCommits.length} commits from ${timeRange.label}`)
-            break
-          }
-        }
-        
-        // Sort by date and take the most recent 5
-        recentCommits.sort((a, b) => new Date(b.commit.commit.author.date).getTime() - new Date(a.commit.commit.author.date).getTime())
-        const topCommits = recentCommits.slice(0, 5)
-        
-        console.log(`Final result: Found ${recentCommits.length} total commits, showing top 5`)
-        
-        console.log('Final recent commits:', topCommits)
-        setRecentCommits(topCommits)
-        
-      } catch (error) {
-        console.error('Failed to fetch GitHub activity:', error)
-        setRecentCommits([])
-      } finally {
-        setIsLoadingCommits(false)
-      }
-    }
-
-    fetchRecentActivity()
-    
-    // Refresh every 5 minutes to get latest commits
-    const interval = setInterval(fetchRecentActivity, 5 * 60 * 1000)
-    return () => clearInterval(interval)
-  }, [])
-
   // Helper function to get time ago
   const getTimeAgo = (date: Date) => {
     const now = new Date()
@@ -145,6 +38,107 @@ const LiveDashboard: React.FC = () => {
     if (diffInSeconds < 604800) return `${Math.floor(diffInSeconds / 86400)} days ago`
     return date.toLocaleDateString()
   }
+
+  // Fetch recent GitHub activity
+  const fetchRecentActivity = useCallback(async () => {
+    try {
+      setIsLoadingCommits(true)
+      
+      console.log('Fetching GitHub user info...')
+      const userResponse = await fetch('https://api.github.com/users/HimanshuSalunke')
+      if (!userResponse.ok) {
+        throw new Error(`User not found: ${userResponse.status}`)
+      }
+      const userData = await userResponse.json()
+      console.log('GitHub user data:', userData)
+      
+      // Get user's repositories to find recent activity
+      console.log('Fetching user repositories...')
+      const reposResponse = await fetch('https://api.github.com/users/HimanshuSalunke/repos?sort=updated&per_page=20')
+      if (!reposResponse.ok) {
+        throw new Error(`Repos not found: ${reposResponse.status}`)
+      }
+      const repos = await reposResponse.json()
+      console.log('User repositories:', repos)
+      
+      // Get recent commits from the most recently updated repos
+      const recentCommits: any[] = []
+      
+      // Try different time ranges if no recent commits found
+      const timeRanges = [
+        { days: 7, label: 'last 7 days' },
+        { days: 30, label: 'last 30 days' },
+        { days: 90, label: 'last 90 days' },
+        { days: 365, label: 'last year' }
+      ]
+      
+      for (const timeRange of timeRanges) {
+        const daysAgo = new Date(Date.now() - timeRange.days * 24 * 60 * 60 * 1000)
+        console.log(`Trying to fetch commits from ${timeRange.label}...`)
+        
+        for (const repo of repos.slice(0, 5)) {
+          try {
+            console.log(`Fetching commits from ${repo.name} (${timeRange.label})...`)
+            const commitsResponse = await fetch(`https://api.github.com/repos/HimanshuSalunke/${repo.name}/commits?per_page=10&since=${daysAgo.toISOString()}`)
+            if (commitsResponse.ok) {
+              const commits = await commitsResponse.json()
+              console.log(`Commits from ${repo.name} (${timeRange.label}):`, commits)
+              
+              commits.forEach((commit: any) => {
+                const commitDate = new Date(commit.commit.author.date)
+                // Only include commits from the current time range
+                if (commitDate >= daysAgo) {
+                  recentCommits.push({
+                    id: commit.sha,
+                    type: 'commit',
+                    title: commit.commit.message.split('\n')[0], // First line of commit message
+                    description: `Pushed to ${repo.name}`,
+                    time: getTimeAgo(commitDate),
+                    repo: repo.name,
+                    language: repo.language || 'Unknown',
+                    commit: commit
+                  })
+                }
+              })
+            }
+          } catch (err) {
+            console.log(`Failed to get commits from ${repo.name}:`, err)
+          }
+        }
+        
+        // If we found commits, break out of the time range loop
+        if (recentCommits.length > 0) {
+          console.log(`Found ${recentCommits.length} commits from ${timeRange.label}`)
+          break
+        }
+      }
+      
+      // Sort by date and take the most recent 5
+      recentCommits.sort((a, b) => new Date(b.commit.commit.author.date).getTime() - new Date(a.commit.commit.author.date).getTime())
+      const topCommits = recentCommits.slice(0, 5)
+      
+      console.log(`Final result: Found ${recentCommits.length} total commits, showing top 5`)
+      
+      console.log('Final recent commits:', topCommits)
+      setRecentCommits(topCommits)
+      
+    } catch (error) {
+      console.error('Failed to fetch GitHub activity:', error)
+      setRecentCommits([])
+    } finally {
+      setIsLoadingCommits(false)
+    }
+  }, [])
+
+  // Fetch on mount and set up auto-refresh
+  useEffect(() => {
+    // Fetch immediately on mount/reload
+    fetchRecentActivity()
+    
+    // Refresh every 5 minutes to get latest commits
+    const interval = setInterval(fetchRecentActivity, 5 * 60 * 1000)
+    return () => clearInterval(interval)
+  }, [fetchRecentActivity])
 
   // Helper function to determine language from repo name
   const getLanguageFromRepo = (repoName: string) => {
@@ -241,9 +235,9 @@ const LiveDashboard: React.FC = () => {
       </div>
 
       {/* Stats Grid */}
-      <div className="grid grid-cols-2 lg:grid-cols-4 gap-3 sm:gap-4 lg:gap-6 mb-6 sm:mb-8">
+      <div className="flex flex-wrap justify-center gap-3 sm:gap-4 lg:gap-6 mb-6 sm:mb-8">
         <motion.div
-          className="text-center p-3 sm:p-4 bg-gradient-to-br from-blue-50 to-blue-100 dark:from-blue-900/20 dark:to-blue-800/20 rounded-lg sm:rounded-xl"
+          className="text-center p-3 sm:p-4 bg-gradient-to-br from-blue-50 to-blue-100 dark:from-blue-900/20 dark:to-blue-800/20 rounded-lg sm:rounded-xl w-full sm:w-[calc(50%-0.75rem)] lg:w-[calc(33.333%-1rem)] max-w-xs"
           whileHover={{ scale: 1.05 }}
         >
           <div className="text-lg sm:text-xl lg:text-2xl font-bold text-blue-600 dark:text-blue-400 mb-1">
@@ -253,7 +247,7 @@ const LiveDashboard: React.FC = () => {
         </motion.div>
 
         <motion.div
-          className="text-center p-3 sm:p-4 bg-gradient-to-br from-green-50 to-green-100 dark:from-green-900/20 dark:to-green-800/20 rounded-lg sm:rounded-xl"
+          className="text-center p-3 sm:p-4 bg-gradient-to-br from-green-50 to-green-100 dark:from-green-900/20 dark:to-green-800/20 rounded-lg sm:rounded-xl w-full sm:w-[calc(50%-0.75rem)] lg:w-[calc(33.333%-1rem)] max-w-xs"
           whileHover={{ scale: 1.05 }}
         >
           <div className="text-lg sm:text-xl lg:text-2xl font-bold text-green-600 dark:text-green-400 mb-1">
@@ -263,7 +257,7 @@ const LiveDashboard: React.FC = () => {
         </motion.div>
 
         <motion.div
-          className="text-center p-3 sm:p-4 bg-gradient-to-br from-purple-50 to-purple-100 dark:from-purple-900/20 dark:to-purple-800/20 rounded-lg sm:rounded-xl"
+          className="text-center p-3 sm:p-4 bg-gradient-to-br from-purple-50 to-purple-100 dark:from-purple-900/20 dark:to-purple-800/20 rounded-lg sm:rounded-xl w-full sm:w-[calc(50%-0.75rem)] lg:w-[calc(33.333%-1rem)] max-w-xs"
           whileHover={{ scale: 1.05 }}
         >
           <div className="text-lg sm:text-xl lg:text-2xl font-bold text-purple-600 dark:text-purple-400 mb-1">
@@ -272,15 +266,6 @@ const LiveDashboard: React.FC = () => {
           <div className="text-xs sm:text-sm text-purple-700 dark:text-purple-300">GitHub Followers</div>
         </motion.div>
 
-        <motion.div
-          className="text-center p-3 sm:p-4 bg-gradient-to-br from-orange-50 to-orange-100 dark:from-orange-900/20 dark:to-orange-800/20 rounded-lg sm:rounded-xl"
-          whileHover={{ scale: 1.05 }}
-        >
-          <div className="text-lg sm:text-xl lg:text-2xl font-bold text-orange-600 dark:text-orange-400 mb-1">
-            {socialStats.leetcode.isLoading ? '...' : socialStats.leetcode.totalSolved || 0}
-          </div>
-          <div className="text-xs sm:text-sm text-orange-700 dark:text-orange-300">LeetCode Solved</div>
-        </motion.div>
       </div>
 
       {/* Recent Activity */}
@@ -290,92 +275,7 @@ const LiveDashboard: React.FC = () => {
             Recent Activity
           </h3>
           <button
-            onClick={async () => {
-              setIsLoadingCommits(true)
-              
-              try {
-                console.log('Manual refresh - Fetching GitHub user info...')
-                const userResponse = await fetch('https://api.github.com/users/HimanshuSalunke')
-                if (!userResponse.ok) {
-                  throw new Error(`User not found: ${userResponse.status}`)
-                }
-                const userData = await userResponse.json()
-                console.log('Manual refresh - User data:', userData)
-                
-                console.log('Manual refresh - Fetching repositories...')
-                const reposResponse = await fetch('https://api.github.com/users/HimanshuSalunke/repos?sort=updated&per_page=20')
-                if (!reposResponse.ok) {
-                  throw new Error(`Repos not found: ${reposResponse.status}`)
-                }
-                const repos = await reposResponse.json()
-                console.log('Manual refresh - Repositories:', repos)
-                
-                const recentCommits: any[] = []
-                
-                // Try different time ranges if no recent commits found
-                const timeRanges = [
-                  { days: 7, label: 'last 7 days' },
-                  { days: 30, label: 'last 30 days' },
-                  { days: 90, label: 'last 90 days' },
-                  { days: 365, label: 'last year' }
-                ]
-                
-                for (const timeRange of timeRanges) {
-                  const daysAgo = new Date(Date.now() - timeRange.days * 24 * 60 * 60 * 1000)
-                  console.log(`Manual refresh - Trying ${timeRange.label}...`)
-                  
-                  for (const repo of repos.slice(0, 5)) {
-                    try {
-                      console.log(`Manual refresh - Fetching commits from ${repo.name} (${timeRange.label})...`)
-                      const commitsResponse = await fetch(`https://api.github.com/repos/HimanshuSalunke/${repo.name}/commits?per_page=10&since=${daysAgo.toISOString()}`)
-                      if (commitsResponse.ok) {
-                        const commits = await commitsResponse.json()
-                        console.log(`Manual refresh - Commits from ${repo.name} (${timeRange.label}):`, commits)
-                        
-                        commits.forEach((commit: any) => {
-                          const commitDate = new Date(commit.commit.author.date)
-                          // Only include commits from the current time range
-                          if (commitDate >= daysAgo) {
-                            recentCommits.push({
-                              id: commit.sha,
-                              type: 'commit',
-                              title: commit.commit.message.split('\n')[0],
-                              description: `Pushed to ${repo.name}`,
-                              time: getTimeAgo(commitDate),
-                              repo: repo.name,
-                              language: repo.language || 'Unknown',
-                              commit: commit
-                            })
-                          }
-                        })
-                      }
-                    } catch (err) {
-                      console.log(`Manual refresh - Failed to get commits from ${repo.name}:`, err)
-                    }
-                  }
-                  
-                  // If we found commits, break out of the time range loop
-                  if (recentCommits.length > 0) {
-                    console.log(`Manual refresh - Found ${recentCommits.length} commits from ${timeRange.label}`)
-                    break
-                  }
-                }
-                
-                recentCommits.sort((a, b) => new Date(b.commit.commit.author.date).getTime() - new Date(a.commit.commit.author.date).getTime())
-                const topCommits = recentCommits.slice(0, 5)
-                
-                console.log(`Manual refresh - Final result: Found ${recentCommits.length} total commits, showing top 5`)
-                
-                console.log('Manual refresh - Final commits:', topCommits)
-                setRecentCommits(topCommits)
-                
-              } catch (error) {
-                console.error('Manual refresh failed:', error)
-                setRecentCommits([])
-              } finally {
-                setIsLoadingCommits(false)
-              }
-            }}
+            onClick={fetchRecentActivity}
             className="flex items-center gap-1 sm:gap-2 px-2 sm:px-3 py-1 sm:py-1.5 text-xs sm:text-sm bg-white dark:bg-neutral-700 text-neutral-700 dark:text-white rounded-lg hover:bg-neutral-50 dark:hover:bg-neutral-600 transition-colors border border-neutral-200 dark:border-neutral-600 shadow-sm hover:shadow-md"
             disabled={isLoadingCommits}
           >
@@ -438,8 +338,7 @@ const LiveDashboard: React.FC = () => {
           Live data • Last updated: {currentTime.toLocaleTimeString()}
         </div>
         <div className="mt-1 sm:mt-2 text-xs text-neutral-500 dark:text-neutral-400">
-          GitHub: {socialStats.github.isLoading ? 'Loading...' : `${socialStats.github.repositories} repos`} • 
-          LeetCode: {socialStats.leetcode.isLoading ? 'Loading...' : `${socialStats.leetcode.totalSolved} problems solved`}
+          GitHub: {socialStats.github.isLoading ? 'Loading...' : `${socialStats.github.repositories} repos`}
         </div>
       </motion.div>
     </motion.div>

@@ -4,7 +4,7 @@ import {
   SiReact, SiTypescript, SiVite, SiTailwindcss, SiVercel, 
   SiNodedotjs, SiExpress, SiMdx, SiFramer, SiGit, SiGithub,
   SiJavascript, SiHtml5, SiCss3, SiPostcss, SiEslint, SiPrettier,
-  SiVitest, SiSharp
+  SiVitest, SiSharp, SiSlack
 } from 'react-icons/si'
 import { 
   FaServer, FaDatabase, FaCloud, FaCode, FaPalette, 
@@ -124,6 +124,13 @@ const WebsiteInfo: React.FC = () => {
           description: 'Cross-Origin Resource Sharing middleware',
           version: '2.8.5',
           purpose: 'Cross-origin request handling'
+        },
+        {
+          name: 'Slack',
+          icon: SiSlack,
+          category: 'Integration',
+          description: 'Webhook integration for contact form notifications',
+          purpose: 'Real-time notification delivery'
         }
       ]
     },
@@ -262,6 +269,7 @@ const WebsiteInfo: React.FC = () => {
       'CSS Framework': 'bg-cyan-100 text-cyan-800 dark:bg-cyan-900 dark:text-cyan-200',
       'Animation': 'bg-pink-100 text-pink-800 dark:bg-pink-900 dark:text-pink-200',
       'Runtime': 'bg-emerald-100 text-emerald-800 dark:bg-emerald-900 dark:text-emerald-200',
+      'Integration': 'bg-purple-100 text-purple-800 dark:bg-purple-900 dark:text-purple-200',
       'Security': 'bg-red-100 text-red-800 dark:bg-red-900 dark:text-red-200',
       'Content': 'bg-orange-100 text-orange-800 dark:bg-orange-900 dark:text-orange-200',
       'Platform': 'bg-gray-100 text-gray-800 dark:bg-gray-900 dark:text-gray-200',
@@ -286,7 +294,7 @@ const WebsiteInfo: React.FC = () => {
       {/* Header */}
       <div className="text-center mb-6 sm:mb-8">
         <h2 className="text-xl sm:text-2xl font-bold text-neutral-900 dark:text-white mb-2">
-          🚀 Website Architecture
+          🚀 My Website's Architecture
         </h2>
         <p className="text-sm sm:text-base text-neutral-600 dark:text-neutral-400 px-2 sm:px-0">
           Built with modern technologies and deployed on Vercel for optimal performance

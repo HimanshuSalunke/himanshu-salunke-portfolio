@@ -11,16 +11,16 @@ interface GitHubStats {
   error: string | null
 }
 
-interface LeetCodeStats {
-  totalSolved: number
-  easySolved: number
-  mediumSolved: number
-  hardSolved: number
-  ranking: number
-  contestRating: number
-  isLoading: boolean
-  error: string | null
-}
+// interface LeetCodeStats {
+//   totalSolved: number
+//   easySolved: number
+//   mediumSolved: number
+//   hardSolved: number
+//   ranking: number
+//   contestRating: number
+//   isLoading: boolean
+//   error: string | null
+// }
 
 interface CodeChefStats {
   rating: number
@@ -51,7 +51,7 @@ interface TwitterStats {
 
 interface SocialStats {
   github: GitHubStats
-  leetcode: LeetCodeStats
+  // leetcode: LeetCodeStats
   codechef: CodeChefStats
   linkedin: LinkedInStats
   twitter: TwitterStats
@@ -101,46 +101,46 @@ const fetchGitHubStats = async (username: string): Promise<GitHubStats> => {
   }
 }
 
-// LeetCode API - Using server-side proxy to avoid CORS issues
-const fetchLeetCodeStats = async (username: string): Promise<LeetCodeStats> => {
-  try {
-    console.log('🔍 Fetching LeetCode stats for:', username)
-    
-    // Use our consolidated social-stats API
-    const response = await fetch(`${API_BASE_URL}/api/social-stats?platform=leetcode&username=${encodeURIComponent(username)}`)
+// LeetCode API - Commented out
+// const fetchLeetCodeStats = async (username: string): Promise<LeetCodeStats> => {
+//   try {
+//     console.log('🔍 Fetching LeetCode stats for:', username)
+//     
+//     // Use our consolidated social-stats API
+//     const response = await fetch(`${API_BASE_URL}/api/social-stats?platform=leetcode&username=${encodeURIComponent(username)}`)
 
-    if (!response.ok) {
-      throw new Error(`Failed to fetch LeetCode data: ${response.status}`)
-    }
+//     if (!response.ok) {
+//       throw new Error(`Failed to fetch LeetCode data: ${response.status}`)
+//     }
 
-    const data = await response.json()
-    console.log('LeetCode API response data:', data)
+//     const data = await response.json()
+//     console.log('LeetCode API response data:', data)
 
-    return {
-      totalSolved: data.totalSolved || 0,
-      easySolved: data.easySolved || 0,
-      mediumSolved: data.mediumSolved || 0,
-      hardSolved: data.hardSolved || 0,
-      ranking: data.ranking || 0,
-      contestRating: data.contestRating || 0,
-      isLoading: false,
-      error: data.error || null
-    }
-  } catch (error) {
-    console.error('LeetCode fetch error:', error)
-    
-    return {
-      totalSolved: 0,
-      easySolved: 0,
-      mediumSolved: 0,
-      hardSolved: 0,
-      ranking: 0,
-      contestRating: 0,
-      isLoading: false,
-      error: error instanceof Error ? error.message : 'Unknown error'
-    }
-  }
-}
+//     return {
+//       totalSolved: data.totalSolved || 0,
+//       easySolved: data.easySolved || 0,
+//       mediumSolved: data.mediumSolved || 0,
+//       hardSolved: data.hardSolved || 0,
+//       ranking: data.ranking || 0,
+//       contestRating: data.contestRating || 0,
+//       isLoading: false,
+//       error: data.error || null
+//     }
+//   } catch (error) {
+//     console.error('LeetCode fetch error:', error)
+//     
+//     return {
+//       totalSolved: 0,
+//       easySolved: 0,
+//       mediumSolved: 0,
+//       hardSolved: 0,
+//       ranking: 0,
+//       contestRating: 0,
+//       isLoading: false,
+//       error: error instanceof Error ? error.message : 'Unknown error'
+//     }
+//   }
+// }
 
 // CodeChef API - Using server-side proxy to avoid CORS issues
 const fetchCodeChefStats = async (username: string): Promise<CodeChefStats> => {
@@ -253,16 +253,16 @@ export const useSocialStats = () => {
       isLoading: true,
       error: null
     },
-    leetcode: {
-      totalSolved: 0,
-      easySolved: 0,
-      mediumSolved: 0,
-      hardSolved: 0,
-      ranking: 0,
-      contestRating: 0,
-      isLoading: true,
-      error: null
-    },
+    // leetcode: {
+    //   totalSolved: 0,
+    //   easySolved: 0,
+    //   mediumSolved: 0,
+    //   hardSolved: 0,
+    //   ranking: 0,
+    //   contestRating: 0,
+    //   isLoading: true,
+    //   error: null
+    // },
     codechef: {
       rating: 0,
       stars: 0,
@@ -294,8 +294,8 @@ export const useSocialStats = () => {
       // Fetch GitHub stats (works with public API)
       const githubStats = await fetchGitHubStats('HimanshuSalunke')
       
-      // Fetch LeetCode stats (works with GraphQL API)
-      const leetcodeStats = await fetchLeetCodeStats('himanshusalunke')
+      // Fetch LeetCode stats (commented out)
+      // const leetcodeStats = await fetchLeetCodeStats('himanshusalunke')
       
       // Fetch CodeChef stats (now using server-side proxy)
       const codechefStats = await fetchCodeChefStats('himanshuksalunke')
@@ -308,7 +308,7 @@ export const useSocialStats = () => {
 
       setStats({
         github: githubStats,
-        leetcode: leetcodeStats,
+        // leetcode: leetcodeStats,
         codechef: codechefStats,
         linkedin: linkedinStats,
         twitter: twitterStats
@@ -346,26 +346,26 @@ export const useGitHubStats = (username: string) => {
   return stats
 }
 
-export const useLeetCodeStats = (username: string) => {
-  const [stats, setStats] = useState<LeetCodeStats>({
-    totalSolved: 0,
-    easySolved: 0,
-    mediumSolved: 0,
-    hardSolved: 0,
-    ranking: 0,
-    contestRating: 0,
-    isLoading: true,
-    error: null
-  })
+// export const useLeetCodeStats = (username: string) => {
+//   const [stats, setStats] = useState<LeetCodeStats>({
+//     totalSolved: 0,
+//     easySolved: 0,
+//     mediumSolved: 0,
+//     hardSolved: 0,
+//     ranking: 0,
+//     contestRating: 0,
+//     isLoading: true,
+//     error: null
+//   })
 
-  useEffect(() => {
-    const fetchStats = async () => {
-      const result = await fetchLeetCodeStats(username)
-      setStats(result)
-    }
+//   useEffect(() => {
+//     const fetchStats = async () => {
+//       const result = await fetchLeetCodeStats(username)
+//       setStats(result)
+//     }
 
-    fetchStats()
-  }, [username])
+//     fetchStats()
+//   }, [username])
 
-  return stats
-}
+//   return stats
+// }

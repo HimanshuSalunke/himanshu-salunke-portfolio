@@ -26,7 +26,7 @@ A modern, responsive portfolio website showcasing AI/ML projects, technical expe
 ### 🔍 **Advanced Functionality**
 - **Global Search**: Real-time search across projects, articles, and content
 - **Dynamic OG Images**: Auto-generated social media previews using Vercel OG
-- **Real-time Social Stats**: Live GitHub, LeetCode, CodeChef, and Twitter metrics
+- **Real-time Social Stats**: Live GitHub, CodeChef, and Twitter metrics
 - **Analytics Integration**: Comprehensive user behavior tracking with Vercel Analytics
 - **Contact Form**: Slack-integrated contact system with spam protection
 - **Project Categories**: Auto-updating project counts across different domains
@@ -123,7 +123,7 @@ himanshu-portfolio-website/
 
 #### **🔧 Technical Optimizations**
 - **API Consolidation**: Reduced Vercel serverless functions from 12+ to stay within Hobby plan limits
-- **Social Stats Integration**: Consolidated GitHub, LeetCode, CodeChef, and Twitter APIs into single endpoint
+- **Social Stats Integration**: Consolidated GitHub, CodeChef, and Twitter APIs into single endpoint
 - **Image Organization**: Restructured all project images into organized, project-specific folders
 - **File Naming**: Fixed web compatibility issues by replacing spaces with hyphens in filenames
 
@@ -146,7 +146,7 @@ himanshu-portfolio-website/
 ### **📊 Current Project Portfolio**
 - **8 Active Projects**: Including IntelliStock Pro AI-Powered Stock Prediction Analytics
 - **5 Categories**: Machine Learning, Computer Vision, Deep Learning, Data Analysis, Data Engineering
-- **Real-time Stats**: Live GitHub, LeetCode, and social media metrics
+- **Real-time Stats**: Live GitHub and social media metrics
 - **Responsive Galleries**: Optimized project showcases with lazy loading
 
 ## 🚀 Quick Start

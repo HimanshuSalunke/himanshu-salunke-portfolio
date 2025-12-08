@@ -9,7 +9,7 @@ const PersonalInterests: React.FC = () => {
       items: [
         { name: "Open Source Projects", description: "Contributing to and maintaining open source repositories" },
         { name: "Tech Blogs & Podcasts", description: "Staying updated with latest trends and innovations" },
-        { name: "Coding Challenges", description: "Solving problems on LeetCode platform" }
+        { name: "Coding Challenges", description: "Solving problems on various coding platforms" }
       ],
       color: "from-blue-500 to-blue-600"
     },
