@@ -46,6 +46,11 @@ function validateEmail(email: string): boolean {
   return emailRegex.test(email)
 }
 
+function countWords(text: string): number {
+  if (!text || text.trim().length === 0) return 0
+  return text.trim().split(/\s+/).filter(word => word.length > 0).length
+}
+
 function validateFormData(data: ContactFormData): { isValid: boolean; errors: string[] } {
   const errors: string[] = []
   
@@ -64,12 +69,22 @@ function validateFormData(data: ContactFormData): { isValid: boolean; errors: st
     errors.push('Please provide a valid email address')
   }
   
-  if (!data.subject || data.subject.trim().length < 5) {
-    errors.push('Subject must be at least 5 characters long')
+  if (!data.subject || data.subject.trim().length === 0) {
+    errors.push('Subject is required')
+  } else {
+    const subjectWordCount = countWords(data.subject)
+    if (subjectWordCount < 10) {
+      errors.push(`Subject must contain at least 10 words (currently: ${subjectWordCount} words)`)
+    }
   }
   
-  if (!data.message || data.message.trim().length < 10) {
-    errors.push('Message must be at least 10 characters long')
+  if (!data.message || data.message.trim().length === 0) {
+    errors.push('Message is required')
+  } else {
+    const wordCount = countWords(data.message)
+    if (wordCount < 20) {
+      errors.push(`Message must contain at least 20 words (currently: ${wordCount} words)`)
+    }
   }
   
   // Length limits

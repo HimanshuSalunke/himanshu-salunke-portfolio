@@ -55,19 +55,19 @@ const getSocialPlatforms = (socialStats: any): SocialPlatform[] => [
       // { label: 'Newsletter', value: 'Active' } // Commented out for now
     ]
   },
-  {
-    name: 'LeetCode',
-    icon: SiLeetcode,
-    url: 'https://leetcode.com/u/himanshusalunke/',
-    username: 'himanshusalunke',
-    color: 'from-yellow-500 to-orange-500',
-    description: 'Solving problems, one algorithm at a time 🧠',
-    stats: [
-      { label: 'Problems Solved', value: socialStats.leetcode.isLoading ? 'Loading...' : socialStats.leetcode.totalSolved || 0 },
-      { label: 'Contest Rating', value: socialStats.leetcode.isLoading ? 'Loading...' : socialStats.leetcode.contestRating || 'N/A' },
-      { label: 'Ranking', value: socialStats.leetcode.isLoading ? 'Loading...' : socialStats.leetcode.ranking || 'N/A' }
-    ]
-  },
+  // {
+  //   name: 'LeetCode',
+  //   icon: SiLeetcode,
+  //   url: 'https://leetcode.com/u/himanshusalunke/',
+  //   username: 'himanshusalunke',
+  //   color: 'from-yellow-500 to-orange-500',
+  //   description: 'Solving problems, one algorithm at a time 🧠',
+  //   stats: [
+  //     { label: 'Problems Solved', value: socialStats.leetcode.isLoading ? 'Loading...' : socialStats.leetcode.totalSolved || 0 },
+  //     { label: 'Contest Rating', value: socialStats.leetcode.isLoading ? 'Loading...' : socialStats.leetcode.contestRating || 'N/A' },
+  //     { label: 'Ranking', value: socialStats.leetcode.isLoading ? 'Loading...' : socialStats.leetcode.ranking || 'N/A' }
+  //   ]
+  // },
   // {
   //   name: 'CodeChef',
   //   icon: SiCodechef,
@@ -116,7 +116,7 @@ const Developer: React.FC = () => {
     <>
       <Helmet>
         <title>Developer Profile - Himanshu Salunke</title>
-        <meta name="description" content="Explore my developer journey across GitHub, LeetCode, CodeChef, LinkedIn and other platforms. See my coding activity, contributions, and achievements." />
+        <meta name="description" content="Explore my developer journey across GitHub, LinkedIn and other platforms. See my coding activity, contributions, and achievements." />
         <meta property="og:title" content="Developer Profile - Himanshu Salunke" />
         <meta property="og:description" content="Explore my developer journey across multiple platforms" />
         <meta property="og:type" content="website" />

@@ -1,16 +1,26 @@
-import React, { useState } from 'react'
+import React, { useState, useEffect } from 'react'
 import { motion } from 'framer-motion'
 import { useForm } from 'react-hook-form'
 import { zodResolver } from '@hookform/resolvers/zod'
 import { z } from 'zod'
 import toast from 'react-hot-toast'
 import { Button } from '../ui/Button'
-import { SlackWebhook } from '../../utils/slackWebhook'
-import { SiLinkedin, SiGithub, SiLeetcode } from 'react-icons/si'
+import { SiLinkedin, SiGithub } from 'react-icons/si'
 import { HiMail, HiClock, HiGlobe } from 'react-icons/hi'
 import { FaBookOpen } from 'react-icons/fa'
 
 // Zod schema for form validation
+const SUBJECT_MIN_WORDS = 10
+const SUBJECT_MAX_LENGTH = 200
+const MESSAGE_MIN_WORDS = 20
+const MESSAGE_MAX_LENGTH = 2000
+
+// Helper function to count words
+const countWords = (text: string): number => {
+  if (!text || text.trim().length === 0) return 0
+  return text.trim().split(/\s+/).filter(word => word.length > 0).length
+}
+
 const contactFormSchema = z.object({
   name: z.string()
     .min(2, 'Name must be at least 2 characters') 
@@ -20,10 +30,19 @@ const contactFormSchema = z.object({
     .email('Please enter a valid email address')
     .max(255, 'Email must be less than 255 characters'),
   subject: z.string()
-    .min(3, 'Subject must be at least 3 characters')
-    .max(200, 'Subject must be less than 200 characters'),
+    .min(1, 'Subject is required')
+    .max(SUBJECT_MAX_LENGTH, `Subject must be less than ${SUBJECT_MAX_LENGTH} characters`)
+    .refine(
+      (val) => countWords(val) >= SUBJECT_MIN_WORDS,
+      `Subject must contain at least ${SUBJECT_MIN_WORDS} words`
+    ),
   message: z.string()
-    .min(10, 'Message must be at least 10 characters'),
+    .min(1, 'Message is required')
+    .max(MESSAGE_MAX_LENGTH, `Message must be less than ${MESSAGE_MAX_LENGTH} characters`)
+    .refine(
+      (val) => countWords(val) >= MESSAGE_MIN_WORDS,
+      `Message must contain at least ${MESSAGE_MIN_WORDS} words`
+    ),
   honeypot: z.string().optional(), // Anti-spam field
 })
 
@@ -33,15 +52,40 @@ export const ContactForm: React.FC = () => {
   const [isSubmitting, setIsSubmitting] = useState(false)
   const [submitStatus, setSubmitStatus] = useState<'idle' | 'success' | 'error'>('idle')
   const [errorMessage, setErrorMessage] = useState('')
+  const [subjectLength, setSubjectLength] = useState(0)
+  const [subjectWordCount, setSubjectWordCount] = useState(0)
+  const [messageLength, setMessageLength] = useState(0)
+  const [messageWordCount, setMessageWordCount] = useState(0)
 
   const {
     register,
     handleSubmit,
     formState: { errors },
     reset,
+    watch,
   } = useForm<ContactFormData>({
     resolver: zodResolver(contactFormSchema),
   })
+
+  // Watch fields for character counters
+  const subjectValue = watch('subject', '')
+  const messageValue = watch('message', '')
+  
+  useEffect(() => {
+    setSubjectLength(subjectValue?.length || 0)
+    setSubjectWordCount(countWords(subjectValue || ''))
+  }, [subjectValue])
+  
+  useEffect(() => {
+    setMessageLength(messageValue?.length || 0)
+    setMessageWordCount(countWords(messageValue || ''))
+  }, [messageValue])
+
+  // Check if form is valid for submit button
+  const isFormValid = subjectWordCount >= SUBJECT_MIN_WORDS && 
+                      messageWordCount >= MESSAGE_MIN_WORDS &&
+                      subjectLength <= SUBJECT_MAX_LENGTH &&
+                      messageLength <= MESSAGE_MAX_LENGTH
 
   const onSubmit = async (data: ContactFormData) => {
     // Check honeypot field
@@ -58,35 +102,100 @@ export const ContactForm: React.FC = () => {
     const loadingToast = toast.loading('Sending message...')
 
     try {
-      // Send to Slack webhook
-      const slackWebhook = new SlackWebhook()
-      const slackSuccess = await slackWebhook.sendContactNotification({
-        name: data.name,
-        email: data.email,
-        subject: data.subject,
-        message: data.message,
+      // Use API endpoint directly to get proper error handling
+      // In development, use the Express server; in production, use Vercel API route
+      const apiUrl = import.meta.env.DEV 
+        ? 'http://localhost:5000/api/submit-form'
+        : '/api/submit-form'
+      
+      const response = await fetch(apiUrl, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          name: data.name,
+          email: data.email,
+          subject: data.subject,
+          message: data.message,
+          honeypot: data.honeypot || '',
+        }),
       })
 
-      if (slackSuccess) {
-        setSubmitStatus('success')
-        toast.success('Message sent successfully! I\'ll get back to you soon.', {
+      const responseData = await response.json()
+
+      if (!response.ok) {
+        // Handle validation errors from API
+        if (response.status === 400 && responseData.details) {
+          const errorDetails = Array.isArray(responseData.details) 
+            ? responseData.details.join(', ')
+            : responseData.error || 'Validation failed'
+          setSubmitStatus('error')
+          setErrorMessage(errorDetails)
+          toast.error(errorDetails, {
+            id: loadingToast,
+            duration: 5000,
+          })
+          return
+        }
+        
+        // Handle rate limiting
+        if (response.status === 429) {
+          setSubmitStatus('error')
+          setErrorMessage(responseData.error || 'Too many requests. Please try again later.')
+          toast.error(responseData.error || 'Too many requests. Please try again later.', {
+            id: loadingToast,
+            duration: 5000,
+          })
+          return
+        }
+
+        // Other errors
+        setSubmitStatus('error')
+        setErrorMessage(responseData.error || 'Failed to send message. Please try again.')
+        toast.error(responseData.error || 'Failed to send message. Please try again.', {
           id: loadingToast,
           duration: 5000,
         })
-        reset()
+        return
+      }
+
+      // Success - check if notifications were actually sent
+      if (responseData.success) {
+        const notifications = responseData.notifications || {}
+        
+        if (notifications.slack || notifications.email) {
+          setSubmitStatus('success')
+          toast.success('Message sent successfully! I\'ll get back to you soon.', {
+            id: loadingToast,
+            duration: 5000,
+          })
+          reset()
+          setSubjectLength(0)
+          setSubjectWordCount(0)
+          setMessageLength(0)
+          setMessageWordCount(0)
+        } else {
+          // Neither notification method worked
+          setSubmitStatus('error')
+          setErrorMessage('Failed to send message. Please try again or contact me directly via email.')
+          toast.error('Failed to send message. Please try again or contact me directly via email.', {
+            id: loadingToast,
+            duration: 5000,
+          })
+        }
       } else {
-        // Fallback to email notification or other method
-        setSubmitStatus('success') // Still show success to user
-        toast.success('Message received! I\'ll get back to you soon.', {
+        setSubmitStatus('error')
+        setErrorMessage('Failed to send message. Please try again.')
+        toast.error('Failed to send message. Please try again.', {
           id: loadingToast,
           duration: 5000,
         })
-        reset()
       }
     } catch (error) {
       console.error('Contact form error:', error)
       setSubmitStatus('error')
-      setErrorMessage('Network error. Please try again.')
+      setErrorMessage('Network error. Please check your connection and try again.')
       toast.error('Network error. Please check your connection and try again.', {
         id: loadingToast,
         duration: 5000,
@@ -237,19 +346,55 @@ export const ContactForm: React.FC = () => {
             id="subject"
             name="subject"
             {...register('subject')}
+            maxLength={SUBJECT_MAX_LENGTH}
             className={`w-full px-3 sm:px-4 py-2 sm:py-3 border rounded-lg focus:ring-2 focus:ring-primary-500 focus:border-primary-500 transition-colors ${
               errors.subject 
                 ? 'border-red-500 dark:border-red-400' 
+                : subjectLength > SUBJECT_MAX_LENGTH
+                ? 'border-red-500 dark:border-red-400'
+                : subjectWordCount > 0 && subjectWordCount < SUBJECT_MIN_WORDS
+                ? 'border-amber-500 dark:border-amber-400'
                 : 'border-neutral-300 dark:border-neutral-600'
             } bg-white dark:bg-neutral-800 text-neutral-900 dark:text-white dark:placeholder-neutral-400 text-sm sm:text-base`}
-            placeholder="What's this about?"
+            placeholder={`What's this about? (minimum ${SUBJECT_MIN_WORDS} words required)`}
             autoComplete="off"
           />
-          {errors.subject && (
-            <p className="mt-1 text-xs sm:text-sm text-red-600 dark:text-red-400">
-              {errors.subject.message}
-            </p>
-          )}
+          {/* Character and Word Counter */}
+          <div className="mt-1 space-y-1">
+            <div className="flex items-center justify-between">
+              <div className="flex-1">
+                {errors.subject && (
+                  <p className="text-xs sm:text-sm text-red-600 dark:text-red-400">
+                    {errors.subject.message}
+                  </p>
+                )}
+                {subjectWordCount > 0 && subjectWordCount < SUBJECT_MIN_WORDS && !errors.subject && (
+                  <p className="text-xs sm:text-sm text-amber-600 dark:text-amber-400">
+                    Please enter at least {SUBJECT_MIN_WORDS} words (currently: {subjectWordCount} words)
+                  </p>
+                )}
+              </div>
+              <div className="flex flex-col items-end gap-1">
+                <span className={`text-xs sm:text-sm ${
+                  subjectWordCount < SUBJECT_MIN_WORDS 
+                    ? 'text-amber-600 dark:text-amber-400'
+                    : 'text-green-600 dark:text-green-400'
+                }`}>
+                  {subjectWordCount} / {SUBJECT_MIN_WORDS} words
+                  {subjectWordCount < SUBJECT_MIN_WORDS && (
+                    <span className="ml-1">(min required)</span>
+                  )}
+                </span>
+                <span className={`text-xs sm:text-sm ${
+                  subjectLength > SUBJECT_MAX_LENGTH
+                    ? 'text-red-600 dark:text-red-400'
+                    : 'text-neutral-500 dark:text-neutral-400'
+                }`}>
+                  {subjectLength} / {SUBJECT_MAX_LENGTH} characters
+                </span>
+              </div>
+            </div>
+          </div>
         </div>
 
         {/* Message Field */}
@@ -262,19 +407,55 @@ export const ContactForm: React.FC = () => {
             name="message"
             rows={5}
             {...register('message')}
+            maxLength={MESSAGE_MAX_LENGTH}
             className={`w-full px-3 sm:px-4 py-2 sm:py-3 border rounded-lg focus:ring-2 focus:ring-primary-500 focus:border-primary-500 transition-colors resize-vertical ${
               errors.message 
                 ? 'border-red-500 dark:border-red-400' 
+                : messageLength > MESSAGE_MAX_LENGTH
+                ? 'border-red-500 dark:border-red-400'
+                : messageWordCount > 0 && messageWordCount < MESSAGE_MIN_WORDS
+                ? 'border-amber-500 dark:border-amber-400'
                 : 'border-neutral-300 dark:border-neutral-600'
             } bg-white dark:bg-neutral-800 text-neutral-900 dark:text-white dark:placeholder-neutral-400 text-sm sm:text-base`}
-            placeholder="Tell me about your project or how I can help..."
+            placeholder={`Tell me about your project or how I can help... (minimum ${MESSAGE_MIN_WORDS} words required)`}
             autoComplete="off"
           />
-          {errors.message && (
-            <p className="mt-1 text-xs sm:text-sm text-red-600 dark:text-red-400">
-              {errors.message.message}
-            </p>
-          )}
+          {/* Character and Word Counter */}
+          <div className="mt-1 space-y-1">
+            <div className="flex items-center justify-between">
+              <div className="flex-1">
+                {errors.message && (
+                  <p className="text-xs sm:text-sm text-red-600 dark:text-red-400">
+                    {errors.message.message}
+                  </p>
+                )}
+                {messageWordCount > 0 && messageWordCount < MESSAGE_MIN_WORDS && !errors.message && (
+                  <p className="text-xs sm:text-sm text-amber-600 dark:text-amber-400">
+                    Please enter at least {MESSAGE_MIN_WORDS} words (currently: {messageWordCount} words)
+                  </p>
+                )}
+              </div>
+              <div className="flex flex-col items-end gap-1">
+                <span className={`text-xs sm:text-sm ${
+                  messageWordCount < MESSAGE_MIN_WORDS 
+                    ? 'text-amber-600 dark:text-amber-400'
+                    : 'text-green-600 dark:text-green-400'
+                }`}>
+                  {messageWordCount} / {MESSAGE_MIN_WORDS} words
+                  {messageWordCount < MESSAGE_MIN_WORDS && (
+                    <span className="ml-1">(min required)</span>
+                  )}
+                </span>
+                <span className={`text-xs sm:text-sm ${
+                  messageLength > MESSAGE_MAX_LENGTH
+                    ? 'text-red-600 dark:text-red-400'
+                    : 'text-neutral-500 dark:text-neutral-400'
+                }`}>
+                  {messageLength} / {MESSAGE_MAX_LENGTH} characters
+                </span>
+              </div>
+            </div>
+          </div>
         </div>
 
         {/* Error Message */}
@@ -300,8 +481,9 @@ export const ContactForm: React.FC = () => {
               type="submit"
               variant="primary"
               size="lg"
-              disabled={isSubmitting}
+              disabled={isSubmitting || !isFormValid}
               className="w-full"
+              title={!isFormValid ? `Please ensure subject has at least ${SUBJECT_MIN_WORDS} words and message has at least ${MESSAGE_MIN_WORDS} words` : 'Send message'}
             >
               {isSubmitting ? (
                 <div className="flex items-center justify-center">
@@ -390,17 +572,6 @@ export const ContactForm: React.FC = () => {
                 >
                   <SiGithub className="w-4 h-4 sm:w-5 sm:h-5 flex-shrink-0" />
                   View My GitHub
-                </a>
-              </div>
-              <div>
-                <a 
-                  href="https://leetcode.com/u/himanshusalunke/" 
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="flex items-center gap-2 sm:gap-3 text-primary-600 dark:text-blue-300 hover:underline font-medium"
-                >
-                  <SiLeetcode className="w-4 h-4 sm:w-5 sm:h-5 flex-shrink-0" />
-                  Check My LeetCode
                 </a>
               </div>
             </div>
