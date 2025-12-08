@@ -5,7 +5,6 @@ import { Hero } from '../../components/home/Hero'
 import { CurrentFocus } from '../../components/home/CurrentFocus'
 import { NavigationCards } from '../../components/home/NavigationCards'
 import { StatsSection } from '../../components/home/StatsSection'
-// import { NewsletterSignup } from '../../components/home/NewsletterSignup'
 
 const Home: React.FC = () => {
   return (
@@ -97,13 +96,6 @@ const Home: React.FC = () => {
             <NavigationCards />
           </div>
         </section>
-        
-        {/* Newsletter Signup Section - Commented out for now */}
-        {/* <section className="py-16 bg-white dark:bg-neutral-900">
-          <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-            <NewsletterSignup />
-          </div>
-        </section> */}
       </div>
     </>
   )

@@ -4,16 +4,13 @@ import { BrowserRouter } from 'react-router-dom'
 import { HelmetProvider } from 'react-helmet-async'
 import { Header } from '../header/Header'
 import { ThemeProvider } from '../../context/ThemeContext'
-import { RecruiterModeProvider } from '../../context/RecruiterModeContext'
 
 const renderWithProviders = (component: React.ReactElement) => {
   return render(
     <HelmetProvider>
       <BrowserRouter>
         <ThemeProvider>
-          <RecruiterModeProvider>
-            {component}
-          </RecruiterModeProvider>
+          {component}
         </ThemeProvider>
       </BrowserRouter>
     </HelmetProvider>
@@ -43,16 +40,6 @@ describe('Header Component', () => {
     expect(screen.getByLabelText(/Switch to light mode/i)).toBeInTheDocument()
   })
 
-  test('toggles recruiter mode when toggle is clicked', () => {
-    renderWithProviders(<Header />)
-    
-    const recruiterToggle = screen.getByLabelText(/recruiter mode/i)
-    fireEvent.click(recruiterToggle)
-    
-    // Check if toggle state changes by looking at the button's class or state
-    // The toggle should change its visual state
-    expect(recruiterToggle).toBeInTheDocument()
-  })
 
   test('opens mobile menu when hamburger button is clicked', () => {
     renderWithProviders(<Header />)

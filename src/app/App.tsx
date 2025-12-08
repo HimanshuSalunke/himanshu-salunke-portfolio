@@ -47,8 +47,6 @@ const AppContent: React.FC = () => {
       {/* <ScrollOptimizer> */}
         <div className="min-h-screen bg-neutral-50 dark:bg-neutral-950 transition-colors duration-300">
         {/* Performance Optimizations */}
-        {/* <CriticalCSS /> */}
-        {/* <NonCriticalCSS /> */}
         <FontPreloader />
         <FontDisplayOptimizer />
         <CriticalResourcePreloader />
@@ -98,9 +96,6 @@ const AppContent: React.FC = () => {
         {/* Analytics */}
         <VercelAnalytics isEnabled={isAnalyticsEnabled} />
         <AnalyticsBanner onAccept={enableAnalytics} onDecline={disableAnalytics} />
-
-        {/* Scroll Performance Monitor (Development only) */}
-        {/* <ScrollPerformanceMonitor /> */}
 
         {/* Service Worker Update Notification */}
         {isSupported && isUpdated && (

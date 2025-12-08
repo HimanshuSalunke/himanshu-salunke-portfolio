@@ -547,9 +547,3 @@ export const articles = [
     link: 'https://www.linkedin.com/pulse/deep-learning-reinforcement-training-workflow-more-himanshu-salunke-s7cgf/'
   }
 ]
-
-// Get recent articles (first 3 featured articles, or first 3 if no featured)
-export const getRecentArticles = () => {
-  const featured = articles.filter(article => article.featured)
-  return featured.length >= 3 ? featured.slice(0, 3) : articles.slice(0, 3)
-}
