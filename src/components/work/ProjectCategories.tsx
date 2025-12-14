@@ -1,4 +1,4 @@
-import React from 'react'
+import React, { useMemo } from 'react'
 import { motion } from 'framer-motion'
 
 interface Category {
@@ -16,13 +16,24 @@ interface ProjectCategoriesProps {
 }
 
 const ProjectCategories: React.FC<ProjectCategoriesProps> = ({ projects }) => {
+  // Memoize category counts to avoid recalculating on every render
+  const categoryCounts = useMemo(() => {
+    const counts: Record<string, number> = {}
+    projects.forEach(project => {
+      if (project?.category) {
+        counts[project.category] = (counts[project.category] || 0) + 1
+      }
+    })
+    return counts
+  }, [projects])
+
   const categories: Category[] = [
     {
       name: 'Machine Learning',
       description: 'AI-powered prediction models, ensemble methods, and intelligent analytics',
       icon: '🤖',
       color: 'from-red-500 to-red-600',
-      projectCount: projects.filter(p => p.category === 'Machine Learning').length,
+      projectCount: categoryCounts['Machine Learning'] || 0,
       technologies: ['LSTM', 'XGBoost', 'Prophet', 'Ensemble Methods', 'Time Series'],
       featured: true
     },
@@ -31,7 +42,7 @@ const ProjectCategories: React.FC<ProjectCategoriesProps> = ({ projects }) => {
       description: 'Image processing, object detection, and visual recognition systems',
       icon: '👁️',
       color: 'from-blue-500 to-blue-600',
-      projectCount: projects.filter(p => p.category === 'Computer Vision').length,
+      projectCount: categoryCounts['Computer Vision'] || 0,
       technologies: ['OpenCV', 'MediaPipe', 'YOLOv7', 'Real-time Processing'],
       featured: true
     },
@@ -40,7 +51,7 @@ const ProjectCategories: React.FC<ProjectCategoriesProps> = ({ projects }) => {
       description: 'Neural networks, transformer models, and advanced AI solutions',
       icon: '🧠',
       color: 'from-purple-500 to-purple-600',
-      projectCount: projects.filter(p => p.category === 'Deep Learning').length,
+      projectCount: categoryCounts['Deep Learning'] || 0,
       technologies: ['BERT', 'PyTorch', 'Transformers', 'NLP', 'Fine-tuning'],
       featured: true
     },
@@ -49,7 +60,7 @@ const ProjectCategories: React.FC<ProjectCategoriesProps> = ({ projects }) => {
       description: 'Statistical analysis, data visualization, and exploratory insights',
       icon: '📊',
       color: 'from-green-500 to-green-600',
-      projectCount: projects.filter(p => p.category === 'Data Analysis').length,
+      projectCount: categoryCounts['Data Analysis'] || 0,
       technologies: ['Pandas', 'NumPy', 'Matplotlib', 'Seaborn', 'Plotly'],
       featured: true
     },
@@ -58,7 +69,7 @@ const ProjectCategories: React.FC<ProjectCategoriesProps> = ({ projects }) => {
       description: 'Data pipelines, ETL processes, and scalable data infrastructure',
       icon: '⚙️',
       color: 'from-orange-500 to-orange-600',
-      projectCount: projects.filter(p => p.category === 'Data Engineering').length,
+      projectCount: categoryCounts['Data Engineering'] || 0,
       technologies: ['Apache Airflow', 'AWS S3', 'PostgreSQL', 'Docker', 'ETL'],
       featured: true
     }

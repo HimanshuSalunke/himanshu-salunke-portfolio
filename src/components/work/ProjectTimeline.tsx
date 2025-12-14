@@ -32,10 +32,14 @@ const ProjectTimeline: React.FC<ProjectTimelineProps> = ({ projects }) => {
 
   function getCategoryIcon(category: string): string {
     const icons: { [key: string]: string } = {
+      'Machine Learning': '🤖',
+      'Deep Learning': '🧠',
+      'Computer Vision': '👁️',
+      'Data Analysis': '📊',
+      'Data Engineering': '⚙️',
+      // Legacy mappings for backwards compatibility
       'AI/ML': '🤖',
       'Data Science': '📊',
-      'Computer Vision': '👁️',
-      'Data Engineering': '⚙️',
       'Web Development': '🌐',
       'Mobile': '📱',
       'DevOps': '☁️'
@@ -45,10 +49,14 @@ const ProjectTimeline: React.FC<ProjectTimelineProps> = ({ projects }) => {
 
   function getCategoryColor(category: string): string {
     const colors: { [key: string]: string } = {
+      'Machine Learning': 'from-red-500 to-red-600',
+      'Deep Learning': 'from-purple-500 to-purple-600',
+      'Computer Vision': 'from-blue-500 to-blue-600',
+      'Data Analysis': 'from-green-500 to-green-600',
+      'Data Engineering': 'from-orange-500 to-orange-600',
+      // Legacy mappings for backwards compatibility
       'AI/ML': 'from-purple-500 to-purple-600',
       'Data Science': 'from-blue-500 to-blue-600',
-      'Computer Vision': 'from-green-500 to-green-600',
-      'Data Engineering': 'from-orange-500 to-orange-600',
       'Web Development': 'from-indigo-500 to-indigo-600',
       'Mobile': 'from-pink-500 to-pink-600',
       'DevOps': 'from-red-500 to-red-600'

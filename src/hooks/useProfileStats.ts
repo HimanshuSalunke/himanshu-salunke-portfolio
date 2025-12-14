@@ -28,7 +28,8 @@ const calculateProjectsCompleted = async (): Promise<number> => {
     console.warn('Failed to fetch projects from API:', error)
     
     // Fallback: count projects from the data directory (same as server.js logic)
-    return 7 // 7 projects in src/data/projects directory
+    // Note: This should match visible projects (excluding commented ones)
+    return 7 // 7 visible projects (8 total files, 1 commented out)
   }
 }
 

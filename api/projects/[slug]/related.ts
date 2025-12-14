@@ -30,18 +30,26 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
     const projectsDir = join(process.cwd(), 'src/data/projects')
     const files = readdirSync(projectsDir).filter(file => file.endsWith('.mdx'))
     
-    const projects = files.map(file => {
-      const filePath = join(projectsDir, file)
-      const fileContent = readFileSync(filePath, 'utf8')
-      const { data: frontmatter, content } = matter(fileContent)
-      
-      return {
-        ...frontmatter,
-        slug: frontmatter.id,
-        content,
-        readingTime: Math.ceil(content.split(' ').length / 200)
-      } as Project
-    })
+    const projects = files
+      .map(file => {
+        const filePath = join(projectsDir, file)
+        const fileContent = readFileSync(filePath, 'utf8')
+        
+        // Filter out commented/hidden projects
+        if (fileContent.trim().startsWith('<!--')) {
+          return null
+        }
+        
+        const { data: frontmatter, content } = matter(fileContent)
+        
+        return {
+          ...frontmatter,
+          slug: frontmatter.id,
+          content,
+          readingTime: Math.ceil(content.split(' ').length / 200)
+        } as Project
+      })
+      .filter((project): project is Project => project !== null)
     
     // Find current project
     const currentProject = projects.find(p => p.slug === slug)

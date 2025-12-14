@@ -1,8 +1,9 @@
-import React from 'react'
+import React, { useState, useEffect, useMemo } from 'react'
 import { Link } from 'react-router-dom'
 import { motion } from 'framer-motion'
 import { useUnifiedStats } from '../../hooks/useUnifiedStats'
 import { articles } from '../../data/articles'
+import { fetchAllProjects } from '../../utils/projectAPI'
 
 interface NavigationCardProps {
   title: string
@@ -112,8 +113,36 @@ const NavigationCard: React.FC<NavigationCardProps> = ({
 
 export const NavigationCards: React.FC = () => {
   const unifiedStats = useUnifiedStats()
+  const [projects, setProjects] = useState<any[]>([])
+  const [projectsLoading, setProjectsLoading] = useState(true)
   
-  // Calculate unique categories dynamically
+  // Fetch projects to get dynamic categories
+  useEffect(() => {
+    const loadProjects = async () => {
+      try {
+        const projectsData = await fetchAllProjects()
+        setProjects(projectsData)
+      } catch (error) {
+        console.error('Error loading projects for categories:', error)
+      } finally {
+        setProjectsLoading(false)
+      }
+    }
+    loadProjects()
+  }, [])
+  
+  // Calculate unique project categories dynamically
+  const projectCategories = useMemo(() => {
+    const categories = new Set<string>()
+    projects.forEach(project => {
+      if (project?.category) {
+        categories.add(project.category)
+      }
+    })
+    return Array.from(categories).sort()
+  }, [projects])
+  
+  // Calculate unique article categories dynamically
   const uniqueCategories = [...new Set(articles.map(article => article.category))]
   const categoryCount = uniqueCategories.length
 
@@ -132,9 +161,9 @@ export const NavigationCards: React.FC = () => {
         gradient="bg-gradient-to-br from-blue-500/5 to-purple-500/5"
         stats={{
           primary: { value: unifiedStats.isLoading ? "..." : unifiedStats.projectsCompleted.toString(), label: "Projects" },
-          secondary: { value: "4", label: "Categories" }
+          secondary: { value: projectsLoading ? "..." : projectCategories.length.toString(), label: "Categories" }
         }}
-        categories={['Computer Vision', 'Deep Learning', 'Data Analysis', 'Data Engineering']}
+        categories={projectsLoading ? ['Loading...'] : projectCategories.slice(0, 4)}
         buttonText="View Projects"
         buttonIcon={
           <svg className="w-5 h-5 group-hover:translate-x-1 transition-transform duration-300" fill="none" viewBox="0 0 24 24" stroke="currentColor">

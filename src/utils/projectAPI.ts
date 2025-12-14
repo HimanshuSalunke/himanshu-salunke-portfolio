@@ -7,7 +7,17 @@ const API_BASE_URL = import.meta.env.DEV ? 'http://localhost:5000/api' : '/api'
 // Generic fetch function with error handling
 async function apiFetch<T>(endpoint: string): Promise<T> {
   try {
-    const response = await fetch(`${API_BASE_URL}${endpoint}`)
+    // Add cache-busting query parameter to ensure fresh data
+    const cacheBuster = `?t=${Date.now()}`
+    const url = `${API_BASE_URL}${endpoint}${endpoint.includes('?') ? '&' : '?'}t=${Date.now()}`
+    
+    const response = await fetch(url, {
+      cache: 'no-store', // Disable browser cache
+      headers: {
+        'Cache-Control': 'no-cache',
+        'Pragma': 'no-cache'
+      }
+    })
     
     if (!response.ok) {
       throw new Error(`HTTP error! status: ${response.status}`)

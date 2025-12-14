@@ -116,18 +116,26 @@ function getAllProjects() {
   try {
     const files = readdirSync(projectsDir).filter(file => file.endsWith('.mdx'));
     
-    const projects = files.map(file => {
-      const filePath = path.join(projectsDir, file);
-      const fileContent = readFileSync(filePath, 'utf8');
-      const { data: frontmatter, content } = matter(fileContent);
-      
-      return {
-        ...frontmatter,
-        slug: frontmatter.id, // Add slug field for frontend compatibility
-        content,
-        readingTime: Math.ceil(content.split(' ').length / 200)
-      };
-    });
+    const projects = files
+      .map(file => {
+        const filePath = path.join(projectsDir, file);
+        const fileContent = readFileSync(filePath, 'utf8');
+        
+        // Filter out commented/hidden projects
+        if (fileContent.trim().startsWith('<!--')) {
+          return null;
+        }
+        
+        const { data: frontmatter, content } = matter(fileContent);
+        
+        return {
+          ...frontmatter,
+          slug: frontmatter.id, // Add slug field for frontend compatibility
+          content,
+          readingTime: Math.ceil(content.split(' ').length / 200)
+        };
+      })
+      .filter(project => project !== null);
     
     // Sort by order field if available, otherwise by date
     return projects.sort((a, b) => {

@@ -9,8 +9,6 @@ import { articles } from '../../data/articles'
 import ArticleEngagementMetrics from '../../components/articles/ArticleEngagementMetrics'
 import ArticleCategories from '../../components/articles/ArticleCategories'
 
-
-const categories = ['All', 'Machine Learning', 'Deep Learning', 'Reinforcement Learning']
 const statuses = ['All', 'Featured', 'Regular']
 
 const sortOptions = [
@@ -26,6 +24,12 @@ const Articles: React.FC = () => {
   const [sortBy, setSortBy] = useState<'date' | 'title' | 'readTime'>('date')
   
   const unifiedStats = useUnifiedStats()
+
+  // Dynamically calculate categories from articles
+  const categories = useMemo(() => {
+    const uniqueCategories = [...new Set(articles.map(article => article.category).filter(Boolean))]
+    return ['All', ...uniqueCategories.sort()]
+  }, [])
 
   const filteredArticles = useMemo(() => {
     const filtered = articles.filter(article => {

@@ -14,18 +14,52 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
     const projectsDir = join(process.cwd(), 'src/data/projects')
     const files = readdirSync(projectsDir).filter(file => file.endsWith('.mdx'))
     
-    const projects = files.map(file => {
-      const filePath = join(projectsDir, file)
-      const fileContent = readFileSync(filePath, 'utf8')
-      const { data: frontmatter, content } = matter(fileContent)
-      
-      return {
-        ...frontmatter,
-        slug: frontmatter.id,
-        content,
-        readingTime: Math.ceil(content.split(' ').length / 200)
-      }
-    })
+    const projects = files
+      .map(file => {
+        const filePath = join(projectsDir, file)
+        const fileContent = readFileSync(filePath, 'utf8')
+        
+        // Filter out commented/hidden projects
+        // Projects are hidden by wrapping frontmatter in HTML comments
+        const trimmedContent = fileContent.trim()
+        if (trimmedContent.startsWith('<!--')) {
+          console.log(`[API] Filtering out commented project: ${file}`)
+          return null
+        }
+        
+        // Try to parse frontmatter - if it fails or is empty, skip
+        let frontmatter, content
+        try {
+          const parsed = matter(fileContent)
+          frontmatter = parsed.data
+          content = parsed.content
+        } catch (error) {
+          console.log(`[API] Error parsing frontmatter for ${file}:`, error)
+          return null
+        }
+        
+        // Additional safety check: if frontmatter is missing required fields, skip
+        if (!frontmatter || !frontmatter.id || !frontmatter.title) {
+          console.log(`[API] Filtering out project with missing frontmatter: ${file}`)
+          return null
+        }
+        
+        // Double-check: if the file content suggests it's commented, skip
+        if (fileContent.includes('COMMENTED OUT PROJECT') || fileContent.includes('COMMENTED OUT -')) {
+          console.log(`[API] Filtering out project marked as commented: ${file}`)
+          return null
+        }
+        
+        return {
+          ...frontmatter,
+          slug: frontmatter.id,
+          content,
+          readingTime: Math.ceil(content.split(' ').length / 200)
+        }
+      })
+      .filter((project): project is NonNullable<typeof project> => project !== null)
+    
+    console.log(`[API] Total projects after filtering: ${projects.length}`)
     
     // Handle specific project by slug
     if (slug && typeof slug === 'string') {
@@ -58,7 +92,10 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
       return dateB.getTime() - dateA.getTime()
     })
     
-    res.setHeader('Cache-Control', 'public, max-age=3600')
+    // Disable cache temporarily to ensure fresh data
+    res.setHeader('Cache-Control', 'no-cache, no-store, must-revalidate')
+    res.setHeader('Pragma', 'no-cache')
+    res.setHeader('Expires', '0')
     res.status(200).json(sortedProjects)
   } catch (error) {
     console.error('Error fetching projects:', error)
