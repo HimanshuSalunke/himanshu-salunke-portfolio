@@ -1,8 +1,8 @@
 import type { VercelRequest, VercelResponse } from '@vercel/node'
 import { put } from '@vercel/blob'
 import formidable from 'formidable'
-import { db } from '../../src/lib/db'
-import { serviceInquirySchema } from '../../src/lib/validations/serviceInquirySchema'
+import { db } from '../../src/lib/db.js'
+import { serviceInquirySchema } from '../../src/lib/validations/serviceInquirySchema.js'
 
 // Disable body parsing - formidable will handle it
 export const config = {
