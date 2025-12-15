@@ -12,10 +12,10 @@ const Services: React.FC = () => {
   return (
     <>
       <Helmet>
-        <title>Services - Freelance AI/ML & Software Development</title>
-        <meta name="description" content="I build AI/ML and software projects for students. Complete code, documentation, and deployment support. Student-friendly pricing under ₹6k." />
-        <meta property="og:title" content="Services - Freelance AI/ML & Software Development" />
-        <meta property="og:description" content="I build AI/ML and software projects for students. Complete code, documentation, and deployment support." />
+        <title>Services - Professional AI/ML & Data Science</title>
+        <meta name="description" content="Professional AI/ML and Data Science services. Complete code, documentation, and deployment support. Industry-standard pricing starting from ₹15k." />
+        <meta property="og:title" content="Services - Professional AI/ML & Data Science" />
+        <meta property="og:description" content="Professional AI/ML and Data Science services. Complete code, documentation, and deployment support." />
         <meta property="og:type" content="website" />
       </Helmet>
 
@@ -31,8 +31,8 @@ const Services: React.FC = () => {
         </section>
 
         {/* Pricing Section */}
-        <section className="py-16 bg-neutral-100 dark:bg-neutral-800">
-          <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+        <section className="py-16 bg-neutral-100 dark:bg-neutral-800 overflow-visible">
+          <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 overflow-visible">
             <PricingSection />
           </div>
         </section>

@@ -1,6 +1,5 @@
 import React from 'react'
 import { motion } from 'framer-motion'
-import { Link } from 'react-router-dom'
 import { Button } from '../ui/Button'
 
 export const ServicesHero: React.FC = () => {
@@ -20,9 +19,7 @@ export const ServicesHero: React.FC = () => {
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.6, delay: 0.1 }}
           >
-            I Build AI/ML & Software Projects
-            <br />
-            <span className="text-blue-600 dark:text-blue-400">for Students</span>
+            Professional AI/ML & Data Science Services
           </motion.h1>
 
           {/* Description */}
@@ -32,7 +29,7 @@ export const ServicesHero: React.FC = () => {
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.6, delay: 0.2 }}
           >
-            Got a project idea but running short on time? I can help. I build complete projects with full code, documentation, and deployment support. All projects under ₹6k with student-friendly pricing.
+            I build complete AI/ML and Data Science projects with production-ready code, comprehensive documentation, and deployment support. Industry-standard pricing with transparent quotes.
           </motion.p>
 
           {/* Key Points */}
@@ -64,7 +61,7 @@ export const ServicesHero: React.FC = () => {
               <svg className="w-5 h-5 text-blue-600 dark:text-blue-400" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
               </svg>
-              <span className="text-sm sm:text-base">Under ₹6k</span>
+              <span className="text-sm sm:text-base">Transparent Pricing</span>
             </div>
           </motion.div>
 
@@ -74,20 +71,24 @@ export const ServicesHero: React.FC = () => {
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.6, delay: 0.4 }}
           >
-            <Link to="#inquiry-form">
-              <motion.div
-                whileHover={{ scale: 1.05 }}
-                whileTap={{ scale: 0.95 }}
+            <motion.div
+              whileHover={{ scale: 1.05 }}
+              whileTap={{ scale: 0.95 }}
+            >
+              <Button
+                variant="primary"
+                size="lg"
+                className="bg-blue-600 hover:bg-blue-700 dark:bg-blue-600 dark:hover:bg-blue-700"
+                onClick={() => {
+                  const formElement = document.getElementById('inquiry-form')
+                  if (formElement) {
+                    formElement.scrollIntoView({ behavior: 'smooth', block: 'start' })
+                  }
+                }}
               >
-                <Button
-                  variant="primary"
-                  size="lg"
-                  className="bg-blue-600 hover:bg-blue-700 dark:bg-blue-600 dark:hover:bg-blue-700"
-                >
-                  Get Started
-                </Button>
-              </motion.div>
-            </Link>
+                Get Started
+              </Button>
+            </motion.div>
           </motion.div>
         </motion.div>
       </div>

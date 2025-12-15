@@ -49,10 +49,26 @@ export const PaymentInfo: React.FC = () => {
         </div>
       </div>
 
-      <div className="bg-neutral-50 dark:bg-neutral-700/50 p-4 rounded-lg">
+      <div className="bg-neutral-50 dark:bg-neutral-700/50 p-4 rounded-lg mb-4">
         <p className="text-sm text-neutral-700 dark:text-neutral-300">
-          <strong className="text-neutral-900 dark:text-white">Note:</strong> Payment can be done via UPI, bank transfer, or any method convenient for you. I'll share the payment details after we finalize the project scope.
+          <strong className="text-neutral-900 dark:text-white">Note:</strong> Payment can be done via UPI. I'll share the payment details after we finalize the project scope.
         </p>
+      </div>
+
+      <div className="bg-amber-50 dark:bg-amber-900/20 p-4 rounded-lg border border-amber-200 dark:border-amber-800">
+        <div className="flex items-start gap-3">
+          <svg className="w-5 h-5 text-amber-600 dark:text-amber-400 mt-0.5 flex-shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+          </svg>
+          <div>
+            <p className="text-sm font-semibold text-amber-800 dark:text-amber-300 mb-1">
+              Additional Hosting & Cloud Services
+            </p>
+            <p className="text-sm text-amber-700 dark:text-amber-300">
+              If your project requires hosting or cloud services (AWS, GCP, Azure, or any other platform), those charges are separate and will be paid directly by you to the service provider. I'll help you set up and configure these services, but the ongoing costs are your responsibility.
+            </p>
+          </div>
+        </div>
       </div>
     </motion.div>
   )

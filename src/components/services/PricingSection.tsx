@@ -11,50 +11,54 @@ interface PricingTier {
 
 const pricingTiers: PricingTier[] = [
   {
-    name: 'Student Starter',
-    description: 'Perfect for students and beginners - simple ML models and basic AI applications',
-    price: '₹1.5k - ₹3k',
+    name: 'Starter',
+    description: 'Basic ML models and simple AI applications',
+    price: '₹15k - ₹30k',
     features: [
       'Basic ML models (classification, regression)',
-      'Simple data preprocessing',
-      'Basic documentation and code comments',
+      'Data preprocessing and cleaning',
+      'Model training and evaluation',
+      'Documentation and code comments',
       'Email support',
-      'Standard delivery (1 week)',
-      'Express delivery (3-4 days) available',
+      'Standard delivery (2-3 weeks)',
+      'Express delivery (1 week) available',
       'Complete GitHub repository'
     ],
-    bestFor: 'Students and beginners starting with ML'
+    bestFor: 'Basic projects and prototypes'
   },
   {
-    name: 'Student Advanced',
-    description: 'Intermediate projects with more complex AI/ML requirements',
-    price: '₹3k - ₹5k',
+    name: 'Advanced',
+    description: 'Intermediate projects with complex AI/ML requirements',
+    price: '₹30k - ₹60k',
     features: [
       'Advanced ML models (NLP, CV, recommendations)',
       'Data preprocessing and feature engineering',
+      'Model optimization and hyperparameter tuning',
       'Comprehensive documentation and setup guide',
       'Live deployment and testing',
       'Priority support',
-      'Standard delivery (1 week)',
-      'Express delivery (3-4 days) available',
+      'Standard delivery (3-4 weeks)',
+      'Express delivery (2 weeks) available',
       'Complete GitHub repository'
     ],
-    bestFor: 'Students working on intermediate projects'
+    bestFor: 'Production-ready applications'
   },
   {
-    name: 'Student Premium',
-    description: 'Complex AI systems and advanced projects for serious students',
-    price: '₹5k - ₹6k',
+    name: 'Premium',
+    description: 'Complex AI systems and enterprise-level projects',
+    price: '₹60k - ₹1L+',
     features: [
       'LLM integration and RAG systems',
       'Custom AI agents and workflows',
       'Advanced deployment and monitoring',
-      '30 days post-delivery support',
-      'Standard delivery (1 week)',
-      'Express delivery (3-4 days) available',
+      'Scalable architecture design',
+      'Performance optimization',
+      '60 days post-delivery support',
+      'Standard delivery (4-6 weeks)',
+      'Express delivery (3 weeks) available',
       'Complete GitHub repository'
     ],
-    bestFor: 'Students working on advanced projects and research'
+    bestFor: 'Enterprise and research projects'
   }
 ]
 
@@ -69,18 +73,18 @@ export const PricingSection: React.FC = () => {
         viewport={{ once: true }}
       >
         <h2 className="text-2xl sm:text-3xl font-bold text-neutral-900 dark:text-white mb-4">
-          Transparent Pricing
+          Pricing
         </h2>
         <p className="text-base sm:text-lg text-neutral-600 dark:text-neutral-400 max-w-2xl mx-auto">
-          I keep pricing simple and student-friendly. Here's what I charge:
+          Transparent pricing based on project complexity. Here's what I charge:
         </p>
       </motion.div>
 
-      <div className="grid grid-cols-1 md:grid-cols-3 gap-6 sm:gap-8">
+      <div className="grid grid-cols-1 md:grid-cols-3 gap-6 sm:gap-8 pt-8 pb-4">
         {pricingTiers.map((tier, index) => (
           <motion.div
             key={tier.name}
-            className={`relative bg-white dark:bg-neutral-800 rounded-xl sm:rounded-2xl p-6 sm:p-8 shadow-lg border transition-all duration-500 overflow-hidden ${
+            className={`relative bg-white dark:bg-neutral-800 rounded-xl sm:rounded-2xl p-6 sm:p-8 shadow-lg border transition-all duration-500 ${
               index === 1
                 ? 'border-blue-500 dark:border-blue-500 border-2 scale-105'
                 : 'border-neutral-200 dark:border-neutral-700'
@@ -92,7 +96,7 @@ export const PricingSection: React.FC = () => {
             whileHover={{ y: -4, scale: index === 1 ? 1.06 : 1.02 }}
           >
             {index === 1 && (
-              <div className="absolute -top-3 left-1/2 transform -translate-x-1/2 bg-blue-600 text-white px-4 py-1 rounded-full text-xs font-semibold">
+              <div className="absolute -top-3 left-1/2 transform -translate-x-1/2 bg-blue-600 text-white px-4 py-1 rounded-full text-xs font-semibold z-10">
                 Most Popular
               </div>
             )}
@@ -146,10 +150,10 @@ export const PricingSection: React.FC = () => {
       >
         <div className="text-center">
           <h3 className="text-lg sm:text-xl font-bold text-blue-800 dark:text-blue-300 mb-3">
-            Special Student Pricing
+            What's Included in Every Project
           </h3>
           <p className="text-sm sm:text-base text-blue-700 dark:text-blue-300 mb-4">
-            I understand that students have budget constraints. That's why I've designed my pricing to be accessible while maintaining high quality standards.
+            All projects come with complete code, documentation, and support regardless of pricing tier.
           </p>
           <div className="grid grid-cols-1 sm:grid-cols-3 gap-4 text-sm">
             <div className="bg-white dark:bg-neutral-800 p-4 rounded-lg">
@@ -161,8 +165,8 @@ export const PricingSection: React.FC = () => {
               <p className="text-neutral-600 dark:text-neutral-400">Setup guides and explanations</p>
             </div>
             <div className="bg-white dark:bg-neutral-800 p-4 rounded-lg">
-              <p className="font-semibold text-neutral-900 dark:text-white mb-1">Student Support</p>
-              <p className="text-neutral-600 dark:text-neutral-400">30 days of help included</p>
+              <p className="font-semibold text-neutral-900 dark:text-white mb-1">Post-Delivery Support</p>
+              <p className="text-neutral-600 dark:text-neutral-400">30 days of support included</p>
             </div>
           </div>
         </div>

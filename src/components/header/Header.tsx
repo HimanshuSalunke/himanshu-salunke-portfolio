@@ -4,12 +4,23 @@ import { motion, AnimatePresence } from 'framer-motion'
 import { useTheme } from '../../context/ThemeContext'
 import { GlobalSearch } from '../ui/GlobalSearch'
 
-const navigation = [
+interface NavigationItem {
+  name: string
+  href: string
+  submenu?: { name: string; href: string }[]
+}
+
+const navigation: NavigationItem[] = [
   { name: 'Home', href: '/' },
-  { name: 'About', href: '/about' },
+  { 
+    name: 'About', 
+    href: '/about',
+    submenu: [
+      { name: 'My Tech Stack', href: '/developer' },
+    ]
+  },
   { name: 'Work', href: '/work' },
   { name: 'Services', href: '/services' },
-  { name: 'Developer', href: '/developer' },
   { name: 'Articles', href: '/articles' },
   { name: 'Contact', href: '/contact' },
 ]
@@ -20,7 +31,6 @@ const getPageDescription = (pageName: string): string => {
     'About': 'Personal Story & Mission',
     'Work': 'Project Portfolio & Case Studies',
     'Services': 'Freelance AI/ML & Software Development',
-    'Developer': 'Technical Excellence Showcase',
     'Articles': 'Knowledge Hub & Thought Leadership',
     'Contact': 'Collaboration & Connection'
   }
@@ -30,9 +40,11 @@ const getPageDescription = (pageName: string): string => {
 export const Header: React.FC = () => {
   const [isMenuOpen, setIsMenuOpen] = useState(false)
   const [isScrolled, setIsScrolled] = useState(false)
+  const [openDropdown, setOpenDropdown] = useState<string | null>(null)
   const { theme, toggleTheme } = useTheme()
   const location = useLocation()
   const menuRef = useRef<HTMLDivElement>(null)
+  const dropdownRef = useRef<HTMLDivElement>(null)
   
 
   useEffect(() => {
@@ -130,28 +142,68 @@ export const Header: React.FC = () => {
 
           {/* Desktop Navigation */}
           <div className="hidden md:flex md:items-center md:space-x-8">
-            {navigation.map((item) => (
-              <Link
-                key={item.name}
-                to={item.href}
-                className={`text-sm font-medium transition-all duration-200 relative group hover:scale-105 ${
-                  location.pathname === item.href
-                    ? 'text-primary-500'
-                    : 'text-neutral-600 hover:text-primary-500 dark:text-neutral-200 dark:hover:text-primary-400'
-                }`}
-                title={`${item.name} - ${getPageDescription(item.name)}`}
-              >
-                {item.name}
-                {location.pathname === item.href && (
-                  <motion.div
-                    className="absolute -bottom-1 left-0 right-0 h-0.5 bg-primary-500 rounded-full"
-                    layoutId="activeIndicator"
-                    initial={false}
-                    transition={{ type: "spring", stiffness: 500, damping: 30 }}
-                  />
-                )}
-              </Link>
-            ))}
+            {navigation.map((item) => {
+              const hasSubmenu = item.submenu && item.submenu.length > 0
+              return (
+                <div
+                  key={item.name}
+                  className="relative"
+                  onMouseEnter={() => hasSubmenu && setOpenDropdown(item.name)}
+                  onMouseLeave={() => hasSubmenu && setOpenDropdown(null)}
+                >
+                  <Link
+                    to={item.href}
+                    className={`text-sm font-medium transition-all duration-200 relative hover:scale-105 flex items-center gap-1 ${
+                      location.pathname === item.href || (hasSubmenu && location.pathname.startsWith(item.href))
+                        ? 'text-primary-500'
+                        : 'text-neutral-600 hover:text-primary-500 dark:text-neutral-200 dark:hover:text-primary-400'
+                    }`}
+                    title={`${item.name} - ${getPageDescription(item.name)}`}
+                  >
+                    {item.name}
+                    {hasSubmenu && (
+                      <svg className={`w-3 h-3 transition-transform duration-200 ${openDropdown === item.name ? 'rotate-180' : ''}`} fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" />
+                      </svg>
+                    )}
+                    {location.pathname === item.href && !hasSubmenu && (
+                      <motion.div
+                        className="absolute -bottom-1 left-0 right-0 h-0.5 bg-primary-500 rounded-full"
+                        layoutId="activeIndicator"
+                        initial={false}
+                        transition={{ type: "spring", stiffness: 500, damping: 30 }}
+                      />
+                    )}
+                  </Link>
+                  
+                  {/* Dropdown Menu */}
+                  {hasSubmenu && openDropdown === item.name && (
+                    <motion.div
+                      className="absolute top-full left-0 w-48 z-50 -mt-1"
+                      initial={{ opacity: 0, y: -5 }}
+                      animate={{ opacity: 1, y: 0 }}
+                      exit={{ opacity: 0, y: -5 }}
+                      transition={{ duration: 0.15 }}
+                    >
+                      <div className="pt-2 pb-1">
+                        <div className="bg-white dark:bg-neutral-800 rounded-lg shadow-lg border border-neutral-200 dark:border-neutral-700 py-2">
+                          {item.submenu.map((subItem) => (
+                            <Link
+                              key={subItem.name}
+                              to={subItem.href}
+                              className="block px-4 py-2 text-sm text-neutral-700 dark:text-neutral-200 hover:bg-neutral-100 dark:hover:bg-neutral-700 transition-colors"
+                              onClick={() => setOpenDropdown(null)}
+                            >
+                              {subItem.name}
+                            </Link>
+                          ))}
+                        </div>
+                      </div>
+                    </motion.div>
+                  )}
+                </div>
+              )
+            })}
           </div>
 
           {/* Controls */}
@@ -258,21 +310,37 @@ export const Header: React.FC = () => {
                     animate={{ opacity: 1, x: 0 }}
                     transition={{ delay: index * 0.05, duration: 0.2 }}
                   >
-                    <Link
-                      to={item.href}
-                      className={`block rounded-lg px-3 py-2.5 sm:py-3 text-sm sm:text-base font-medium transition-all duration-200 hover:scale-[1.02] active:scale-[0.98] touch-manipulation ${
-                        location.pathname === item.href
-                          ? 'bg-primary-100 text-primary-500 dark:bg-primary-900 dark:text-primary-400 shadow-sm'
-                          : 'text-neutral-600 hover:bg-neutral-100 hover:text-neutral-900 dark:text-neutral-200 dark:hover:bg-neutral-800 dark:hover:text-white'
-                      }`}
-                    >
-                      <div className="flex items-center justify-between">
-                        <span>{item.name}</span>
-                        <span className="text-xs sm:text-sm text-neutral-400 dark:text-neutral-300 hidden xs:block">
-                          {getPageDescription(item.name)}
-                        </span>
-                      </div>
-                    </Link>
+                    <div>
+                      <Link
+                        to={item.href}
+                        className={`block rounded-lg px-3 py-2.5 sm:py-3 text-sm sm:text-base font-medium transition-all duration-200 hover:scale-[1.02] active:scale-[0.98] touch-manipulation ${
+                          location.pathname === item.href || (item.submenu && location.pathname.startsWith(item.href))
+                            ? 'bg-primary-100 text-primary-500 dark:bg-primary-900 dark:text-primary-400 shadow-sm'
+                            : 'text-neutral-600 hover:bg-neutral-100 hover:text-neutral-900 dark:text-neutral-200 dark:hover:bg-neutral-800 dark:hover:text-white'
+                        }`}
+                      >
+                        <div className="flex items-center justify-between">
+                          <span>{item.name}</span>
+                          <span className="text-xs sm:text-sm text-neutral-400 dark:text-neutral-300 hidden xs:block">
+                            {getPageDescription(item.name)}
+                          </span>
+                        </div>
+                      </Link>
+                      {item.submenu && (
+                        <div className="ml-4 mt-1 space-y-1">
+                          {item.submenu.map((subItem) => (
+                            <Link
+                              key={subItem.name}
+                              to={subItem.href}
+                              className="block rounded-lg px-3 py-2 text-xs sm:text-sm text-neutral-500 dark:text-neutral-400 hover:bg-neutral-50 dark:hover:bg-neutral-800 hover:text-neutral-700 dark:hover:text-neutral-200 transition-colors"
+                              onClick={() => setIsMenuOpen(false)}
+                            >
+                              {subItem.name}
+                            </Link>
+                          ))}
+                        </div>
+                      )}
+                    </div>
                   </motion.div>
                 ))}
                 

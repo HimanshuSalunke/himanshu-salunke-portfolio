@@ -12,65 +12,28 @@ interface ServiceCard {
 
 const services: ServiceCard[] = [
   {
-    title: 'Web Development',
-    description: 'I build full-stack web apps using modern frameworks. From e-commerce sites to social media apps, I deliver working code with complete documentation.',
-    icon: (
-      <svg className="w-8 h-8 text-blue-100" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M21 12a9 9 0 01-9 9m9-9a9 9 0 00-9-9m9 9H3m9 9a9 9 0 01-9-9m9 9c1.657 0 3-4.03 3-9s-1.343-9-3-9m0 18c-1.657 0-3-4.03-3-9s1.343-9 3-9m-9 9a9 9 0 019-9" />
-      </svg>
-    ),
-    features: [
-      'Frontend with React/Vue/Angular',
-      'Backend APIs with Node.js/Python',
-      'Database design and setup',
-      'E-commerce and business apps',
-      'Real-time features',
-      'Complete GitHub repository'
-    ],
-    technologies: ['React', 'Node.js', 'Python', 'MongoDB', 'PostgreSQL'],
-    priceRange: '₹2k - ₹5k'
-  },
-  {
-    title: 'Mobile Development',
-    description: 'I create cross-platform and native mobile apps for iOS and Android. Whether it\'s a task manager or a social app, I build it with clean code.',
-    icon: (
-      <svg className="w-8 h-8 text-blue-100" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 18h.01M8 21h8a2 2 0 002-2V5a2 2 0 00-2-2H8a2 2 0 00-2 2v14a2 2 0 002 2z" />
-      </svg>
-    ),
-    features: [
-      'Cross-platform with React Native/Flutter',
-      'Native iOS and Android apps',
-      'Push notifications',
-      'Offline functionality',
-      'Payment integration',
-      'Complete GitHub repository'
-    ],
-    technologies: ['React Native', 'Flutter', 'Swift', 'Kotlin', 'Firebase'],
-    priceRange: '₹2.5k - ₹5.5k'
-  },
-  {
     title: 'AI & Machine Learning',
-    description: 'I build AI/ML projects including chatbots, computer vision, and predictive models. I specialize in LLM applications and help students understand the code.',
+    description: 'I build AI/ML projects including chatbots, computer vision, and predictive models. I specialize in LLM applications with production-ready code.',
     icon: (
       <svg className="w-8 h-8 text-blue-100" fill="none" viewBox="0 0 24 24" stroke="currentColor">
         <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9.663 17h4.673M12 3v1m6.364 1.636l-.707.707M21 12h-1M4 12H3m3.343-5.657l-.707-.707m2.828 9.9a5 5 0 117.072 0l-.548.547A3.374 3.374 0 0014 18.469V19a2 2 0 11-4 0v-.531c0-.895-.356-1.754-.988-2.386l-.548-.547z" />
       </svg>
     ),
     features: [
-      'LLM & Generative AI apps',
-      'Computer vision projects',
+      'LLM & Generative AI applications',
+      'Computer vision and image processing',
       'Natural language processing',
-      'Predictive analytics',
+      'Predictive analytics and forecasting',
       'Recommendation systems',
+      'Model training and optimization',
       'Complete GitHub repository'
     ],
-    technologies: ['Python', 'TensorFlow', 'PyTorch', 'OpenAI', 'Hugging Face'],
-    priceRange: '₹3k - ₹6k'
+    technologies: ['Python', 'TensorFlow', 'PyTorch', 'OpenAI', 'Hugging Face', 'LangChain'],
+    priceRange: '₹15k - ₹1L+'
   },
   {
-    title: 'Data Analytics & BI',
-    description: 'I create data processing pipelines, analytics dashboards, and business intelligence solutions. I help you make sense of your data.',
+    title: 'Data Science & Analytics',
+    description: 'I create data processing pipelines, analytics dashboards, and business intelligence solutions. I help you extract insights from your data.',
     icon: (
       <svg className="w-8 h-8 text-blue-100" fill="none" viewBox="0 0 24 24" stroke="currentColor">
         <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z" />
@@ -78,14 +41,15 @@ const services: ServiceCard[] = [
     ),
     features: [
       'Data visualization dashboards',
-      'ETL pipelines',
+      'ETL/ELT pipelines',
       'Business intelligence reports',
+      'Statistical analysis and modeling',
       'Real-time analytics',
-      'Predictive analytics',
+      'Data warehousing solutions',
       'Complete GitHub repository'
     ],
-    technologies: ['Python', 'Tableau', 'Power BI', 'SQL', 'Pandas'],
-    priceRange: '₹2k - ₹5k'
+    technologies: ['Python', 'Tableau', 'Power BI', 'SQL', 'Pandas', 'Apache Spark'],
+    priceRange: '₹15k - ₹60k'
   }
 ]
 
@@ -103,7 +67,7 @@ export const WhatICanBuild: React.FC = () => {
           What I Can Build For You
         </h2>
         <p className="text-base sm:text-lg text-neutral-600 dark:text-neutral-400 max-w-2xl mx-auto">
-          From web apps to AI/ML models, I help students bring their ideas to life. Here's what I can build:
+          Specialized in AI/ML and Data Science solutions. I deliver production-ready models and analytics systems.
         </p>
       </motion.div>
 

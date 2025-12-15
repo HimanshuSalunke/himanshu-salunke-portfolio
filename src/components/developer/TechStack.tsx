@@ -150,15 +150,6 @@ export const TechStack: React.FC = () => {
       animate={{ opacity: 1, y: 0 }}
       transition={{ duration: 0.6 }}
     >
-      <div className="text-center mb-6 sm:mb-8 lg:mb-12">
-        <h2 className="text-xl sm:text-2xl md:text-3xl font-bold text-neutral-900 dark:text-white mb-2 sm:mb-3 md:mb-4">
-          🛠️ My Tech Stack & Skills
-        </h2>
-        <p className="text-sm sm:text-base md:text-lg text-neutral-600 dark:text-neutral-400 max-w-2xl sm:max-w-3xl mx-auto px-4 sm:px-0">
-          My collection of technologies and tools for building amazing projects. 
-          From AI/ML to web development, here's what I work with daily.
-        </p>
-      </div>
 
       {/* Live GitHub Language Usage */}
       {githubStats.languages && Object.keys(githubStats.languages).length > 0 && (

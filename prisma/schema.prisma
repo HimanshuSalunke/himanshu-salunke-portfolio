@@ -15,6 +15,7 @@ model ServiceInquiry {
   name          String
   email         String
   phone         String?
+  clientType    String?  // student, professional, business_owner, researcher, startup, other
   studyYear     String?
   projectTitle  String
   domain        String?

@@ -113,10 +113,10 @@ const Developer: React.FC = () => {
   return (
     <>
       <Helmet>
-        <title>Developer Profile - Himanshu Salunke</title>
-        <meta name="description" content="Explore my developer journey across GitHub, LinkedIn and other platforms. See my coding activity, contributions, and achievements." />
-        <meta property="og:title" content="Developer Profile - Himanshu Salunke" />
-        <meta property="og:description" content="Explore my developer journey across multiple platforms" />
+        <title>My Tech Stack - Himanshu Salunke</title>
+        <meta name="description" content="Explore my tech stack, developer journey across GitHub, LinkedIn and other platforms. See my coding activity, contributions, and achievements." />
+        <meta property="og:title" content="My Tech Stack - Himanshu Salunke" />
+        <meta property="og:description" content="Explore my tech stack and developer journey across multiple platforms" />
         <meta property="og:type" content="website" />
         <meta name="twitter:card" content="summary_large_image" />
         <meta name="twitter:title" content="Developer Profile - Himanshu Salunke" />
@@ -148,12 +148,11 @@ const Developer: React.FC = () => {
                   filter: 'progid:DXImageTransform.Microsoft.gradient(startColorstr="#0974F1", endColorstr="#003A7A", GradientType=1)'
                 }}
               >
-                Developer Dashboard
+                My Tech Stack
               </span>
             </h1>
             <p className="text-base sm:text-lg md:text-xl text-neutral-600 dark:text-neutral-300 max-w-2xl sm:max-w-3xl mx-auto px-4 sm:px-0">
-              Deep dive into my technical expertise, coding activity, and development journey. 
-              See the metrics that matter for building exceptional software.
+              My collection of technologies and tools for building projects. From AI/ML to web development, here's what I work with.
             </p>
             <div className="mt-3 sm:mt-4 flex flex-col sm:flex-row items-center justify-center gap-1 sm:gap-2 text-xs sm:text-sm text-neutral-500 dark:text-neutral-400">
               <span>Live data • Last updated:</span>

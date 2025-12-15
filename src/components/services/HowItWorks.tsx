@@ -52,33 +52,48 @@ export const HowItWorks: React.FC = () => {
         </p>
       </motion.div>
 
-      <div className="flex flex-col md:flex-row items-center justify-between max-w-6xl mx-auto relative">
-        {steps.map((step, index) => (
-          <motion.div
-            key={step.step}
-            className="text-center relative z-10 mb-8 md:mb-0 flex-1"
-            initial={{ opacity: 0, y: 20 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.6, delay: index * 0.1 }}
-            viewport={{ once: true }}
-          >
-            <div className="w-16 h-16 bg-gradient-to-br from-blue-500 to-blue-600 rounded-full flex items-center justify-center text-2xl mx-auto mb-4 border-4 border-white dark:border-neutral-800 shadow-lg relative z-20">
-              {step.icon}
-            </div>
-            
-            {/* Connecting line between circles */}
-            {index < steps.length - 1 && (
-              <div className="hidden md:block absolute top-8 left-[calc(50%+32px)] w-[calc(100%-64px)] h-0.5 bg-gradient-to-r from-blue-500 to-blue-600 z-10" />
-            )}
-            
-            <h3 className="text-lg font-semibold text-neutral-900 dark:text-white mb-2">
-              {step.step}. {step.title}
-            </h3>
-            <p className="text-sm sm:text-base text-neutral-600 dark:text-neutral-400 px-2">
-              {step.description}
-            </p>
-          </motion.div>
-        ))}
+      <div className="relative max-w-6xl mx-auto">
+        {/* Single horizontal timeline line for desktop - aligned with icon centers */}
+        <div className="hidden md:block absolute top-[2.5rem] left-0 right-0 h-0.5 bg-gradient-to-r from-blue-500 via-blue-500 to-blue-600 z-0" />
+        
+        <div className="grid grid-cols-1 md:grid-cols-5 gap-8 md:gap-4 relative z-10">
+          {steps.map((step, index) => (
+            <motion.div
+              key={step.step}
+              className="relative flex flex-col items-center"
+              initial={{ opacity: 0, y: 20 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.6, delay: index * 0.1 }}
+              viewport={{ once: true }}
+            >
+              {/* Icon circle with step number */}
+              <div className="relative mb-6">
+                <div className="w-20 h-20 bg-gradient-to-br from-blue-500 to-blue-600 rounded-full flex items-center justify-center text-3xl border-4 border-white dark:border-neutral-800 shadow-lg relative z-20">
+                  {step.icon}
+                </div>
+                {/* Step number badge */}
+                <div className="absolute -top-2 -right-2 w-7 h-7 bg-blue-600 rounded-full flex items-center justify-center text-xs font-bold text-white border-2 border-white dark:border-neutral-800 shadow-md z-30">
+                  {step.step}
+                </div>
+              </div>
+              
+              {/* Content */}
+              <div className="text-center flex-1">
+                <h3 className="text-lg font-semibold text-neutral-900 dark:text-white mb-2">
+                  {step.title}
+                </h3>
+                <p className="text-sm sm:text-base text-neutral-600 dark:text-neutral-400 leading-relaxed">
+                  {step.description}
+                </p>
+              </div>
+              
+              {/* Vertical connecting line for mobile */}
+              {index < steps.length - 1 && (
+                <div className="md:hidden absolute left-1/2 top-20 -bottom-8 w-0.5 h-16 bg-gradient-to-b from-blue-500 to-blue-600 transform -translate-x-1/2 z-0" />
+              )}
+            </motion.div>
+          ))}
+        </div>
       </div>
     </>
   )

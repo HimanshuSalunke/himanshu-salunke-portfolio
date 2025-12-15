@@ -1,4 +1,4 @@
-import React, { useState } from 'react'
+import React, { useState, useEffect } from 'react'
 import { motion } from 'framer-motion'
 import { useForm } from 'react-hook-form'
 import { zodResolver } from '@hookform/resolvers/zod'
@@ -7,11 +7,21 @@ import { Button } from '../ui/Button'
 import { serviceInquirySchema, type ServiceInquiryFormData } from '../../lib/validations/serviceInquirySchema'
 
 const domains = [
-  'Web Development',
-  'Mobile Development',
   'AI & Machine Learning',
-  'Data Analytics & BI',
+  'Data Science & Analytics',
+  'Computer Vision',
+  'Natural Language Processing',
+  'Deep Learning',
   'Other'
+]
+
+const clientTypes = [
+  { value: 'student', label: 'Student' },
+  { value: 'professional', label: 'Professional' },
+  { value: 'business_owner', label: 'Business Owner' },
+  { value: 'researcher', label: 'Researcher' },
+  { value: 'startup', label: 'Startup' },
+  { value: 'other', label: 'Other' }
 ]
 
 const studyYears = [
@@ -40,9 +50,21 @@ export const ServiceInquiryForm: React.FC = () => {
     handleSubmit,
     formState: { errors },
     reset,
+    watch,
+    setValue,
   } = useForm<ServiceInquiryFormData>({
     resolver: zodResolver(serviceInquirySchema)
   })
+
+  const selectedClientType = watch('clientType')
+  const isStudent = selectedClientType === 'student'
+
+  // Clear studyYear when clientType changes from student to something else
+  useEffect(() => {
+    if (!isStudent) {
+      setValue('studyYear', '')
+    }
+  }, [isStudent, setValue])
 
   const validateFiles = (files: File[]) => {
     setFileError('')
@@ -195,33 +217,66 @@ export const ServiceInquiryForm: React.FC = () => {
         <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
           <div>
             <label htmlFor="phone" className="block text-sm font-medium text-neutral-700 dark:text-neutral-300 mb-2">
-              Phone Number (Optional)
+              Phone Number *
             </label>
             <input
               id="phone"
               type="tel"
               {...register('phone')}
               placeholder="+91 98765 43210"
-              className="w-full px-4 py-3 border rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-colors bg-white dark:bg-neutral-700 border-neutral-300 dark:border-neutral-600 text-neutral-900 dark:text-white"
+              className={`w-full px-4 py-3 border rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-colors bg-white dark:bg-neutral-700 border-neutral-300 dark:border-neutral-600 text-neutral-900 dark:text-white ${
+                errors.phone ? 'border-red-500' : ''
+              }`}
             />
+            {errors.phone && (
+              <p className="text-red-500 text-sm mt-1">{errors.phone.message}</p>
+            )}
           </div>
 
           <div>
+            <label htmlFor="clientType" className="block text-sm font-medium text-neutral-700 dark:text-neutral-300 mb-2">
+              Profession *
+            </label>
+            <select
+              id="clientType"
+              {...register('clientType')}
+              className={`w-full px-4 py-3 border rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-colors bg-white dark:bg-neutral-700 border-neutral-300 dark:border-neutral-600 text-neutral-900 dark:text-white ${
+                errors.clientType ? 'border-red-500' : ''
+              }`}
+            >
+              <option value="">Select your profession</option>
+              {clientTypes.map((type) => (
+                <option key={type.value} value={type.value}>{type.label}</option>
+              ))}
+            </select>
+            {errors.clientType && (
+              <p className="text-red-500 text-sm mt-1">{errors.clientType.message}</p>
+            )}
+          </div>
+        </div>
+
+        {isStudent && (
+          <div>
             <label htmlFor="studyYear" className="block text-sm font-medium text-neutral-700 dark:text-neutral-300 mb-2">
-              Study Year (Optional)
+              Study Year *
             </label>
             <select
               id="studyYear"
-              {...register('studyYear')}
-              className="w-full px-4 py-3 border rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-colors bg-white dark:bg-neutral-700 border-neutral-300 dark:border-neutral-600 text-neutral-900 dark:text-white"
+              {...register('studyYear', { required: isStudent ? 'Please select your study year' : false })}
+              className={`w-full px-4 py-3 border rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-colors bg-white dark:bg-neutral-700 border-neutral-300 dark:border-neutral-600 text-neutral-900 dark:text-white ${
+                errors.studyYear ? 'border-red-500' : ''
+              }`}
             >
               <option value="">Select your year</option>
               {studyYears.map((year) => (
                 <option key={year} value={year}>{year}</option>
               ))}
             </select>
+            {errors.studyYear && (
+              <p className="text-red-500 text-sm mt-1">{errors.studyYear.message}</p>
+            )}
           </div>
-        </div>
+        )}
 
         {/* Project Information */}
         <div>
@@ -244,7 +299,7 @@ export const ServiceInquiryForm: React.FC = () => {
 
         <div>
           <label className="block text-sm font-medium text-neutral-700 dark:text-neutral-300 mb-2">
-            Project Domain (Optional)
+            Project Domain *
           </label>
           <div className="grid grid-cols-2 md:grid-cols-3 gap-2">
             {domains.map((domain) => (
@@ -259,6 +314,9 @@ export const ServiceInquiryForm: React.FC = () => {
               </label>
             ))}
           </div>
+          {errors.domain && (
+            <p className="text-red-500 text-sm mt-1">{errors.domain.message}</p>
+          )}
         </div>
 
         <div>
@@ -282,7 +340,7 @@ export const ServiceInquiryForm: React.FC = () => {
         {/* Data/Requirements Information */}
         <div>
           <label className="block text-sm font-medium text-neutral-700 dark:text-neutral-300 mb-2">
-            Data/Requirements Availability (Optional)
+            Data/Requirements Availability *
           </label>
           <div className="space-y-2">
             {datasetOptions.map((option) => (
@@ -297,13 +355,16 @@ export const ServiceInquiryForm: React.FC = () => {
               </label>
             ))}
           </div>
+          {errors.dataset && (
+            <p className="text-red-500 text-sm mt-1">{errors.dataset.message}</p>
+          )}
         </div>
 
         {/* Budget and Timeline */}
         <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
           <div>
             <label htmlFor="budgetMin" className="block text-sm font-medium text-neutral-700 dark:text-neutral-300 mb-2">
-              Budget Range (Min)
+              Budget Range (Min) *
             </label>
             <input
               id="budgetMin"
@@ -321,7 +382,7 @@ export const ServiceInquiryForm: React.FC = () => {
 
           <div>
             <label htmlFor="budgetMax" className="block text-sm font-medium text-neutral-700 dark:text-neutral-300 mb-2">
-              Budget Range (Max)
+              Budget Range (Max) *
             </label>
             <input
               id="budgetMax"
@@ -339,15 +400,20 @@ export const ServiceInquiryForm: React.FC = () => {
 
           <div>
             <label htmlFor="deadline" className="block text-sm font-medium text-neutral-700 dark:text-neutral-300 mb-2">
-              Deadline (Optional)
+              Deadline *
             </label>
             <input
               id="deadline"
               type="date"
               {...register('deadline')}
               min={new Date().toISOString().split('T')[0]}
-              className="w-full px-4 py-3 border rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-colors bg-white dark:bg-neutral-700 border-neutral-300 dark:border-neutral-600 text-neutral-900 dark:text-white"
+              className={`w-full px-4 py-3 border rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-colors bg-white dark:bg-neutral-700 border-neutral-300 dark:border-neutral-600 text-neutral-900 dark:text-white ${
+                errors.deadline ? 'border-red-500' : ''
+              }`}
             />
+            {errors.deadline && (
+              <p className="text-red-500 text-sm mt-1">{errors.deadline.message}</p>
+            )}
           </div>
         </div>
 
