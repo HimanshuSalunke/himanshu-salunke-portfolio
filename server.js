@@ -133,20 +133,20 @@ app.post('/api/service-inquiry', upload.array('files', 5), async (req, res) => {
       });
     }
 
-    // Extract form data
+    // Extract form data (keep raw string values for validation)
     const formData = {
       name: req.body.name,
       email: req.body.email,
-      phone: req.body.phone || null,
-      clientType: req.body.clientType || null,
-      studyYear: req.body.studyYear || null,
+      phone: req.body.phone ?? undefined,
+      clientType: req.body.clientType ?? undefined,
+      studyYear: req.body.studyYear ?? undefined,
       projectTitle: req.body.projectTitle,
-      domain: req.body.domain || null,
+      domain: req.body.domain ?? undefined,
       projectDetails: req.body.projectDetails,
-      dataset: req.body.dataset || null,
-      budgetMin: req.body.budgetMin ? parseInt(req.body.budgetMin) : null,
-      budgetMax: req.body.budgetMax ? parseInt(req.body.budgetMax) : null,
-      deadline: req.body.deadline ? new Date(req.body.deadline) : null,
+      dataset: req.body.dataset ?? undefined,
+      budgetMin: req.body.budgetMin ?? undefined,
+      budgetMax: req.body.budgetMax ?? undefined,
+      deadline: req.body.deadline ?? undefined,
     };
 
     // Validate form data
@@ -161,12 +161,12 @@ app.post('/api/service-inquiry', upload.array('files', 5), async (req, res) => {
         clientType: validatedData.clientType,
         studyYear: validatedData.studyYear,
         projectTitle: validatedData.projectTitle,
-        domain: validatedData.domain,
+        domain: validatedData.domain || null,
         projectDetails: validatedData.projectDetails,
-        dataset: validatedData.dataset,
-        budgetMin: validatedData.budgetMin,
-        budgetMax: validatedData.budgetMax,
-        deadline: validatedData.deadline,
+        dataset: validatedData.dataset || null,
+        budgetMin: validatedData.budgetMin ?? null,
+        budgetMax: validatedData.budgetMax ?? null,
+        deadline: validatedData.deadline ? new Date(validatedData.deadline) : null,
         fileUrl: null, // Will update after file upload
       },
     });

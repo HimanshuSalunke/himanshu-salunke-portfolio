@@ -71,20 +71,20 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
     // Parse FormData using formidable
     const { fields: formData, files } = await parseFormData(req)
 
-    // Extract form fields
+    // Extract form fields (keep raw string values for validation)
     const inquiryData = {
       name: formData.name,
       email: formData.email,
-      phone: formData.phone || null,
-      clientType: formData.clientType || null,
-      studyYear: formData.studyYear || null,
+      phone: formData.phone ?? undefined,
+      clientType: formData.clientType ?? undefined,
+      studyYear: formData.studyYear ?? undefined,
       projectTitle: formData.projectTitle,
-      domain: formData.domain || null,
+      domain: formData.domain ?? undefined,
       projectDetails: formData.projectDetails,
-      dataset: formData.dataset || null,
-      budgetMin: formData.budgetMin ? parseInt(formData.budgetMin) : null,
-      budgetMax: formData.budgetMax ? parseInt(formData.budgetMax) : null,
-      deadline: formData.deadline ? new Date(formData.deadline) : null,
+      dataset: formData.dataset ?? undefined,
+      budgetMin: formData.budgetMin ?? undefined,
+      budgetMax: formData.budgetMax ?? undefined,
+      deadline: formData.deadline ?? undefined,
     }
 
     // Validate form data
@@ -99,12 +99,12 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
         clientType: validatedData.clientType,
         studyYear: validatedData.studyYear,
         projectTitle: validatedData.projectTitle,
-        domain: validatedData.domain,
+        domain: validatedData.domain || null,
         projectDetails: validatedData.projectDetails,
-        dataset: validatedData.dataset,
-        budgetMin: validatedData.budgetMin,
-        budgetMax: validatedData.budgetMax,
-        deadline: validatedData.deadline,
+        dataset: validatedData.dataset || null,
+        budgetMin: validatedData.budgetMin ? Number(validatedData.budgetMin) : null,
+        budgetMax: validatedData.budgetMax ? Number(validatedData.budgetMax) : null,
+        deadline: validatedData.deadline ? new Date(validatedData.deadline) : null,
         fileUrl: null, // Will update after file upload
       },
     })
