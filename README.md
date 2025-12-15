@@ -8,7 +8,7 @@ A modern, responsive portfolio website showcasing AI/ML projects, technical expe
 ![Vite](https://img.shields.io/badge/Vite-7.1.2-purple)
 ![Tailwind CSS](https://img.shields.io/badge/Tailwind%20CSS-3.4.17-cyan)
 
-## 🌟 Features
+## 🌟 Features.
 
 ### 🎨 **Modern Design & UX**
 - **Responsive Design**: Mobile-first approach with seamless cross-device experience
