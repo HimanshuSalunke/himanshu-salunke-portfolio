@@ -369,7 +369,7 @@ export const ServiceInquiryForm: React.FC = () => {
             <input
               id="budgetMin"
               type="number"
-              {...register('budgetMin', { valueAsNumber: true })}
+              {...register('budgetMin')}
               placeholder="3000"
               className={`w-full px-4 py-3 border rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-colors bg-white dark:bg-neutral-700 border-neutral-300 dark:border-neutral-600 text-neutral-900 dark:text-white ${
                 errors.budgetMin ? 'border-red-500' : ''
@@ -387,7 +387,7 @@ export const ServiceInquiryForm: React.FC = () => {
             <input
               id="budgetMax"
               type="number"
-              {...register('budgetMax', { valueAsNumber: true })}
+              {...register('budgetMax')}
               placeholder="15000"
               className={`w-full px-4 py-3 border rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-colors bg-white dark:bg-neutral-700 border-neutral-300 dark:border-neutral-600 text-neutral-900 dark:text-white ${
                 errors.budgetMax ? 'border-red-500' : ''
