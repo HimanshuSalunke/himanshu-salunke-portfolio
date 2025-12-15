@@ -2,7 +2,6 @@ import React from 'react'
 import { Helmet } from 'react-helmet-async'
 import { motion } from 'framer-motion'
 import { ContactForm } from '../../components/contact/ContactForm'
-import FreelancingWebsiteCard from '../../components/contact/FreelancingWebsiteCard'
 
 const Contact: React.FC = () => {
   return (
@@ -42,11 +41,6 @@ const Contact: React.FC = () => {
               Get in touch with me for general inquiries, collaboration opportunities, or just to say hello. 
               I'm always excited to connect with fellow developers and tech enthusiasts!
             </p>
-          </motion.div>
-
-          {/* Freelancing Website Card */}
-          <motion.div className="mb-12 sm:mb-16" initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.6, delay: 0.2 }}>
-            <FreelancingWebsiteCard />
           </motion.div>
 
           {/* Contact Form */}
