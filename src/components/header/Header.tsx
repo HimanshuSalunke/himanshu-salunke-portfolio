@@ -8,6 +8,7 @@ const navigation = [
   { name: 'Home', href: '/' },
   { name: 'About', href: '/about' },
   { name: 'Work', href: '/work' },
+  { name: 'Services', href: '/services' },
   { name: 'Developer', href: '/developer' },
   { name: 'Articles', href: '/articles' },
   { name: 'Contact', href: '/contact' },
@@ -18,6 +19,7 @@ const getPageDescription = (pageName: string): string => {
     'Home': 'Impact & Navigation Hub',
     'About': 'Personal Story & Mission',
     'Work': 'Project Portfolio & Case Studies',
+    'Services': 'Freelance AI/ML & Software Development',
     'Developer': 'Technical Excellence Showcase',
     'Articles': 'Knowledge Hub & Thought Leadership',
     'Contact': 'Collaboration & Connection'

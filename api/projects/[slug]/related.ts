@@ -32,23 +32,23 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
     
     const projects = files
       .map(file => {
-        const filePath = join(projectsDir, file)
-        const fileContent = readFileSync(filePath, 'utf8')
+      const filePath = join(projectsDir, file)
+      const fileContent = readFileSync(filePath, 'utf8')
         
         // Filter out commented/hidden projects
         if (fileContent.trim().startsWith('<!--')) {
           return null
         }
         
-        const { data: frontmatter, content } = matter(fileContent)
-        
-        return {
-          ...frontmatter,
-          slug: frontmatter.id,
-          content,
-          readingTime: Math.ceil(content.split(' ').length / 200)
-        } as Project
-      })
+      const { data: frontmatter, content } = matter(fileContent)
+      
+      return {
+        ...frontmatter,
+        slug: frontmatter.id,
+        content,
+        readingTime: Math.ceil(content.split(' ').length / 200)
+      } as Project
+    })
       .filter((project): project is Project => project !== null)
     
     // Find current project

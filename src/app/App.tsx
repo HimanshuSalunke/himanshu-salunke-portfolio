@@ -27,6 +27,7 @@ const Articles = lazy(() => import('./pages/Articles.tsx'))
 // Article page removed - articles are external LinkedIn posts
 const Contact = lazy(() => import('./pages/Contact.tsx'))
 const Developer = lazy(() => import('./pages/Developer.tsx'))
+const Services = lazy(() => import('./pages/Services.tsx'))
 const NotFound = lazy(() => import('./pages/NotFound.tsx'))
 
 // Loading component
@@ -73,6 +74,7 @@ const AppContent: React.FC = () => {
                   <Route path="/articles" element={<Articles />} />
                   <Route path="/contact" element={<Contact />} />
                   <Route path="/developer" element={<Developer />} />
+                  <Route path="/services" element={<Services />} />
                   <Route path="*" element={<NotFound />} />
                 </Routes>
               </PageTransition>

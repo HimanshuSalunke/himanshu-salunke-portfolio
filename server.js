@@ -4,6 +4,10 @@ import path from 'path';
 import { fileURLToPath } from 'url';
 import { readFileSync, readdirSync } from 'fs';
 import matter from 'gray-matter';
+import multer from 'multer';
+import { put } from '@vercel/blob';
+import { db } from './src/lib/db.js';
+import { serviceInquirySchema } from './src/lib/validations/serviceInquirySchema.js';
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
@@ -17,6 +21,16 @@ app.use(cors({
   credentials: true
 }));
 app.use(express.json());
+app.use(express.urlencoded({ extended: true }));
+
+// Configure multer for file uploads (memory storage)
+const upload = multer({ 
+  storage: multer.memoryStorage(),
+  limits: {
+    fileSize: 50 * 1024 * 1024, // 50MB per file
+    files: 5 // Max 5 files
+  }
+});
 
 // Serve static files from the dist directory
 app.use(express.static(path.join(__dirname, 'dist')));
@@ -108,6 +122,120 @@ app.post('/api/submit-form', async (req, res) => {
   }
 });
 
+// API endpoint for service inquiry form submission
+app.post('/api/service-inquiry', upload.array('files', 5), async (req, res) => {
+  try {
+    // Check if database is available
+    if (!db) {
+      console.error('❌ Database connection not available');
+      return res.status(503).json({ 
+        error: 'Database connection not available. Please check DATABASE_URL environment variable.' 
+      });
+    }
+
+    // Extract form data
+    const formData = {
+      name: req.body.name,
+      email: req.body.email,
+      phone: req.body.phone || null,
+      studyYear: req.body.studyYear || null,
+      projectTitle: req.body.projectTitle,
+      domain: req.body.domain || null,
+      projectDetails: req.body.projectDetails,
+      dataset: req.body.dataset || null,
+      budgetMin: req.body.budgetMin ? parseInt(req.body.budgetMin) : null,
+      budgetMax: req.body.budgetMax ? parseInt(req.body.budgetMax) : null,
+      deadline: req.body.deadline ? new Date(req.body.deadline) : null,
+    };
+
+    // Validate form data
+    const validatedData = serviceInquirySchema.parse(formData);
+
+    // Create the inquiry in database first
+    const inquiry = await db.serviceInquiry.create({
+      data: {
+        name: validatedData.name,
+        email: validatedData.email,
+        phone: validatedData.phone,
+        studyYear: validatedData.studyYear,
+        projectTitle: validatedData.projectTitle,
+        domain: validatedData.domain,
+        projectDetails: validatedData.projectDetails,
+        dataset: validatedData.dataset,
+        budgetMin: validatedData.budgetMin,
+        budgetMax: validatedData.budgetMax,
+        deadline: validatedData.deadline,
+        fileUrl: null, // Will update after file upload
+      },
+    });
+
+    // Upload files to Vercel Blob if present
+    let fileUrls: string[] = [];
+    if (req.files && Array.isArray(req.files) && req.files.length > 0) {
+      if (!process.env.BLOB_READ_WRITE_TOKEN) {
+        console.warn('⚠️ BLOB_READ_WRITE_TOKEN not set, skipping file upload');
+      } else {
+        try {
+          const sanitizedName = validatedData.name.replace(/[^a-zA-Z0-9]/g, '_');
+          
+          for (const file of req.files) {
+            const filePath = `service-inquiries/${sanitizedName}/${file.originalname}`;
+            
+            const { url } = await put(filePath, file.buffer, {
+              access: 'public',
+              contentType: file.mimetype,
+            });
+            
+            fileUrls.push(url);
+          }
+          
+          // Update the inquiry with file URLs
+          if (fileUrls.length > 0) {
+            await db.serviceInquiry.update({
+              where: { id: inquiry.id },
+              data: {
+                fileUrl: fileUrls.join('\n'),
+              },
+            });
+          }
+          
+          console.log(`✅ Uploaded ${fileUrls.length} file(s) to Vercel Blob`);
+        } catch (fileError) {
+          console.error('❌ Error uploading files:', fileError);
+          // Continue even if file upload fails - inquiry is already saved
+        }
+      }
+    }
+
+    console.log(`✅ Service inquiry saved: ${inquiry.id}`);
+    console.log(`   Name: ${validatedData.name}`);
+    console.log(`   Email: ${validatedData.email}`);
+    console.log(`   Project: ${validatedData.projectTitle}`);
+
+    res.json({ 
+      success: true, 
+      message: 'Inquiry submitted successfully! I\'ll get back to you within 24 hours.',
+      inquiryId: inquiry.id
+    });
+    
+  } catch (error) {
+    console.error('❌ Failed to process service inquiry:', error);
+    
+    // Handle validation errors
+    if (error.name === 'ZodError' || error.issues) {
+      const zodError = error.issues ? error : { issues: error.errors };
+      return res.status(400).json({ 
+        error: 'Validation failed',
+        details: zodError.issues.map((e: any) => `${e.path.join('.')}: ${e.message}`)
+      });
+    }
+    
+    res.status(500).json({ 
+      error: 'Failed to process service inquiry. Please try again or contact me directly.' 
+    });
+  }
+});
+
 // Projects API endpoints
 const projectsDir = path.join(__dirname, 'src/data/projects');
 
@@ -118,22 +246,22 @@ function getAllProjects() {
     
     const projects = files
       .map(file => {
-        const filePath = path.join(projectsDir, file);
-        const fileContent = readFileSync(filePath, 'utf8');
+      const filePath = path.join(projectsDir, file);
+      const fileContent = readFileSync(filePath, 'utf8');
         
         // Filter out commented/hidden projects
         if (fileContent.trim().startsWith('<!--')) {
           return null;
         }
         
-        const { data: frontmatter, content } = matter(fileContent);
-        
-        return {
-          ...frontmatter,
-          slug: frontmatter.id, // Add slug field for frontend compatibility
-          content,
-          readingTime: Math.ceil(content.split(' ').length / 200)
-        };
+      const { data: frontmatter, content } = matter(fileContent);
+      
+      return {
+        ...frontmatter,
+        slug: frontmatter.id, // Add slug field for frontend compatibility
+        content,
+        readingTime: Math.ceil(content.split(' ').length / 200)
+      };
       })
       .filter(project => project !== null);
     

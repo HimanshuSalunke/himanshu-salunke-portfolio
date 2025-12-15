@@ -243,6 +243,30 @@ export const NavigationCards: React.FC = () => {
           </svg>
         }
       />
+
+      {/* Services Card */}
+      <NavigationCard
+        title="Freelance Services"
+        description="Need help with a project? I build AI/ML and software projects for students. Complete code, documentation, and deployment support. All projects under ₹6k."
+        icon={
+          <svg className="w-8 h-8 text-blue-100" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M21 13.255A23.931 23.931 0 0112 15c-3.183 0-6.22-.62-9-1.745M16 6V4a2 2 0 00-2-2h-4a2 2 0 00-2 2v2m4 6h.01M5 20h14a2 2 0 002-2V8a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z" />
+          </svg>
+        }
+        href="/services"
+        gradient="bg-gradient-to-br from-green-500/5 to-emerald-500/5"
+        stats={{
+          primary: { value: "₹6k", label: "Max Price" },
+          secondary: { value: "4", label: "Services" }
+        }}
+        categories={['Web Development', 'AI/ML', 'Mobile', 'Data Analytics']}
+        buttonText="View Services"
+        buttonIcon={
+          <svg className="w-5 h-5 group-hover:translate-x-1 transition-transform duration-300" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M17 8l4 4m0 0l-4 4m4-4H3" />
+          </svg>
+        }
+      />
     </div>
   )
 }

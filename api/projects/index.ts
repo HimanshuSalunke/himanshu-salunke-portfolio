@@ -16,8 +16,8 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
     
     const projects = files
       .map(file => {
-        const filePath = join(projectsDir, file)
-        const fileContent = readFileSync(filePath, 'utf8')
+      const filePath = join(projectsDir, file)
+      const fileContent = readFileSync(filePath, 'utf8')
         
         // Filter out commented/hidden projects
         // Projects are hidden by wrapping frontmatter in HTML comments
@@ -49,14 +49,14 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
           console.log(`[API] Filtering out project marked as commented: ${file}`)
           return null
         }
-        
-        return {
-          ...frontmatter,
-          slug: frontmatter.id,
-          content,
-          readingTime: Math.ceil(content.split(' ').length / 200)
-        }
-      })
+      
+      return {
+        ...frontmatter,
+        slug: frontmatter.id,
+        content,
+        readingTime: Math.ceil(content.split(' ').length / 200)
+      }
+    })
       .filter((project): project is NonNullable<typeof project> => project !== null)
     
     console.log(`[API] Total projects after filtering: ${projects.length}`)
