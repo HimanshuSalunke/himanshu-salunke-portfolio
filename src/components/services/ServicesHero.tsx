@@ -45,7 +45,7 @@ export const ServicesHero: React.FC = () => {
             <div className="flex flex-wrap gap-4">
               <Button
                 variant="primary"
-                className="bg-neutral-900 dark:bg-white text-white dark:text-black hover:bg-neutral-800 dark:hover:bg-neutral-200 border-none px-8 py-4 rounded-full font-medium"
+                className="!bg-neutral-900 !dark:bg-white !text-white !dark:text-black hover:!bg-neutral-800 dark:hover:!bg-neutral-300 border-none px-8 py-4 rounded-full font-medium"
                 onClick={() => document.getElementById('inquiry-form')?.scrollIntoView({ behavior: 'smooth' })}
               >
                 Initiate Protocol

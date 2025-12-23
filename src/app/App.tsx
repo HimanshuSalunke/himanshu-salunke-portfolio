@@ -38,29 +38,29 @@ const AppContent: React.FC = () => {
   const { isAnalyticsEnabled, enableAnalytics, disableAnalytics } = useAnalytics()
   const isSupported = false
   const isUpdated = false
-  const updateServiceWorker = () => {}
+  const updateServiceWorker = () => { }
 
   return (
     <Router future={{ v7_startTransition: true, v7_relativeSplatPath: true }}>
       {/* Scroll to top on route change */}
       <ScrollToTop />
-      
+
       {/* <ScrollOptimizer> */}
-        <div className="min-h-screen bg-neutral-50 dark:bg-neutral-950 transition-colors duration-300">
+      <div className="min-h-screen bg-neutral-50 dark:bg-neutral-950 transition-colors duration-300">
         {/* Performance Optimizations */}
         <FontPreloader />
         <FontDisplayOptimizer />
         <CriticalResourcePreloader />
-        
+
         {/* Accessibility Features */}
         <SkipLinks />
-        
+
         {/* Progress Tracker */}
         <ProgressTracker />
-        
-        
+
+
         <Header />
-        
+
         <main id="main-content" className="pt-16">
           <RouteErrorBoundary>
             <Suspense fallback={<LoadingSpinner />}>
@@ -81,20 +81,20 @@ const AppContent: React.FC = () => {
             </Suspense>
           </RouteErrorBoundary>
         </main>
-        
+
         <Footer />
-        
+
         {/* Back to Top Button */}
         <BackToTop />
-        
-        
+
+
         {/* Easter Egg */}
         <EasterEgg />
-        
+
         {/* Toast Notifications */}
         <ToastProvider />
         <ToastStyles />
-        
+
         {/* Analytics */}
         <VercelAnalytics isEnabled={isAnalyticsEnabled} />
         <AnalyticsBanner onAccept={enableAnalytics} onDecline={disableAnalytics} />
@@ -133,7 +133,7 @@ const AppContent: React.FC = () => {
             </div>
           </div>
         )}
-        </div>
+      </div>
       {/* </ScrollOptimizer> */}
     </Router>
   )
@@ -143,7 +143,7 @@ export const App: React.FC = () => {
   return (
     <HelmetProvider>
       <ThemeProvider>
-      <AppContent />
+        <AppContent />
       </ThemeProvider>
     </HelmetProvider>
   )

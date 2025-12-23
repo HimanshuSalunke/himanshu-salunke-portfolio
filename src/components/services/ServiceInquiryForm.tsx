@@ -5,6 +5,7 @@ import { zodResolver } from '@hookform/resolvers/zod'
 import toast from 'react-hot-toast'
 import { serviceInquirySchema, type ServiceInquiryFormData } from '../../lib/validations/serviceInquirySchema'
 import { CountrySelect } from '../ui/CountrySelect'
+import { countryCodes } from '../../data/countryCodes'
 
 const studyYears = [
   '1st Year',
@@ -135,8 +136,17 @@ export const ServiceInquiryForm: React.FC = () => {
                   <CountrySelect value={countryCode} onChange={setCountryCode} />
                   <input
                     {...register('phone')}
-                    placeholder="98765 00000"
+                    placeholder={countryCodes.find(c => c.dial_code === countryCode)?.format || '98765 00000'}
+                    maxLength={countryCodes.find(c => c.dial_code === countryCode)?.maxLength || 15}
                     className="input-field flex-1 min-w-0"
+                    onInput={(e) => {
+                      // Optional: Enforce specific character types if needed, but for now length is key
+                      const target = e.target as HTMLInputElement;
+                      const max = countryCodes.find(c => c.dial_code === countryCode)?.maxLength || 15;
+                      if (target.value.length > max) {
+                        target.value = target.value.slice(0, max);
+                      }
+                    }}
                   />
                 </div>
               </InputGroup>
