@@ -6,13 +6,18 @@ import { readFileSync, readdirSync } from 'fs';
 import matter from 'gray-matter';
 import multer from 'multer';
 import { put } from '@vercel/blob';
-
-// Imports removed to fix local dev check (TS files cannot be imported in JS server)
-// import { db } from './src/lib/db.js';
-// import { serviceInquirySchema } from './src/lib/validations/serviceInquirySchema.js';
+import { PrismaClient } from '@prisma/client';
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
+
+// Initialize Prisma Client
+let db;
+try {
+  db = new PrismaClient();
+} catch (e) {
+  console.warn('⚠️ Failed to initialize Prisma Client. DB features will be disabled.');
+}
 
 const app = express();
 const PORT = process.env.PORT || 5000;
@@ -130,22 +135,132 @@ app.post('/api/submit-form', async (req, res) => {
   }
 });
 
-// API endpoint for service inquiry form submission (MOCK IMPLEMENTATION)
+// API endpoint for service inquiry form submission
 app.post('/api/service-inquiry', upload.array('files', 5), async (req, res) => {
   try {
-    console.log('📝 [MOCK] Service Inquiry received:', req.body);
-    console.log('📁 [MOCK] Files received:', req.files?.length || 0);
+    console.log('📝 Service Inquiry received:', req.body);
+    const files = req.files || [];
+    const plainData = req.body;
 
-    // Mock successful response
-    // In production, this would validate data, upload to Blob, and save to DB
+    // 1. Upload files to Vercel Blob
+    const fileUrls = [];
+    if (files.length > 0) {
+      console.log(`Uploading ${files.length} files to Vercel Blob...`);
+      for (const file of files) {
+        try {
+          const blob = await put(file.originalname, file.buffer, {
+            access: 'public',
+            token: process.env.BLOB_READ_WRITE_TOKEN
+          });
+          fileUrls.push(blob.url);
+        } catch (uploadError) {
+          console.error('File upload failed:', uploadError);
+          // Continue without failing the whole request, but log it
+        }
+      }
+    }
 
-    // Simulate processing delay
-    await new Promise(resolve => setTimeout(resolve, 1000));
+    // 2. Save to Neon DB (PostgreSQL)
+    let inquiryId = 'N/A';
+    if (db) {
+      try {
+        const newInquiry = await db.serviceInquiry.create({
+          data: {
+            name: plainData.name,
+            email: plainData.email,
+            phone: plainData.phone || '',
+            clientType: plainData.clientType || '',
+            studyYear: plainData.studyYear || '',
+            projectTitle: plainData.projectTitle || 'Untitled Project',
+            domain: plainData.domain || '',
+            projectDetails: plainData.projectDetails || '',
+            dataset: plainData.dataset || '',
+            budgetMin: parseInt(plainData.budgetMin) || 0,
+            budgetMax: parseInt(plainData.budgetMax) || 0,
+            deadline: plainData.deadline ? new Date(plainData.deadline) : null,
+            fileUrl: fileUrls.join('\n')
+          }
+        });
+        inquiryId = newInquiry.id;
+        console.log('✅ Saved to DB:', inquiryId);
+      } catch (dbError) {
+        console.error('❌ Failed to save to DB:', dbError);
+      }
+    }
+
+    // 3. Send Notification to Slack
+    const SLACK_WEBHOOK_URL = process.env.SLACK_WEBHOOK_URL;
+    if (SLACK_WEBHOOK_URL) {
+      const budgetText = `₹${plainData.budgetMin || 0} - ₹${plainData.budgetMax || 0}`;
+
+      const slackMessage = {
+        blocks: [
+          {
+            type: 'header',
+            text: {
+              type: 'plain_text',
+              text: '🚀 New Service Inquiry',
+              emoji: true,
+            },
+          },
+          { type: 'divider' },
+          {
+            type: 'section',
+            fields: [
+              { type: 'mrkdwn', text: `*Client:*\n${plainData.name}` },
+              { type: 'mrkdwn', text: `*Email:*\n${plainData.email}` },
+              { type: 'mrkdwn', text: `*Phone:*\n${plainData.phone || 'N/A'}` },
+              { type: 'mrkdwn', text: `*Type:*\n${plainData.clientType || 'N/A'}` },
+            ],
+          },
+          {
+            type: 'section',
+            fields: [
+              { type: 'mrkdwn', text: `*Project Title:*\n${plainData.projectTitle}` },
+              { type: 'mrkdwn', text: `*Domain:*\n${plainData.domain}` },
+              { type: 'mrkdwn', text: `*Budget:*\n${budgetText}` },
+              { type: 'mrkdwn', text: `*Deadline:*\n${plainData.deadline || 'Flexible'}` },
+            ],
+          },
+          {
+            type: 'section',
+            text: {
+              type: 'mrkdwn',
+              text: `*Project Details:*\n${plainData.projectDetails}`
+            }
+          },
+          {
+            type: 'section',
+            text: {
+              type: 'mrkdwn',
+              text: `*Files attached:*\n${fileUrls.length > 0 ? fileUrls.join('\n') : 'None'}`
+            }
+          },
+          {
+            type: 'context',
+            elements: [
+              {
+                type: 'plain_text',
+                text: `ID: ${inquiryId} | Received on: ${new Date().toLocaleString('en-US', { timeZone: 'Asia/Kolkata' })}`,
+                emoji: true,
+              },
+            ],
+          },
+        ],
+      };
+
+      await fetch(SLACK_WEBHOOK_URL, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(slackMessage),
+      });
+      console.log('✅ Slack notification sent');
+    }
 
     res.json({
       success: true,
-      message: 'Inquiry submitted successfully! (Mock)',
-      inquiryId: 'mock-id-' + Date.now()
+      message: 'Inquiry submitted successfully!',
+      inquiryId: inquiryId
     });
 
   } catch (error) {

@@ -34,12 +34,32 @@ export const ServiceInquiryForm: React.FC = () => {
   const onSubmit = async (data: ServiceInquiryFormData) => {
     setIsSubmitting(true)
     try {
-      await new Promise(resolve => setTimeout(resolve, 2000))
+      const formData = new FormData()
+
+      // Append text fields
+      Object.entries(data).forEach(([key, value]) => {
+        if (value) formData.append(key, value.toString())
+      })
+
+      // Append files
+      selectedFiles.forEach(file => {
+        formData.append('files', file)
+      })
+
+      const response = await fetch('http://localhost:5000/api/service-inquiry', {
+        method: 'POST',
+        body: formData, // do NOT set Content-Type header when using FormData
+      })
+
+      if (!response.ok) throw new Error('Failed to submit')
+
+      await new Promise(resolve => setTimeout(resolve, 1000)) // Minimal UX delay
       toast.success('Inquiry submitted successfully!')
       reset()
       setSelectedFiles([])
     } catch (e) {
-      toast.error('Failed to submit inquiry')
+      console.error(e)
+      toast.error('Failed to submit inquiry. Please try again.')
     } finally {
       setIsSubmitting(false)
     }
