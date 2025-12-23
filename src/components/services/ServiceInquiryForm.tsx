@@ -4,6 +4,7 @@ import { useForm } from 'react-hook-form'
 import { zodResolver } from '@hookform/resolvers/zod'
 import toast from 'react-hot-toast'
 import { serviceInquirySchema, type ServiceInquiryFormData } from '../../lib/validations/serviceInquirySchema'
+import { CountrySelect } from '../ui/CountrySelect'
 
 const studyYears = [
   '1st Year',
@@ -18,6 +19,7 @@ const studyYears = [
 export const ServiceInquiryForm: React.FC = () => {
   const [isSubmitting, setIsSubmitting] = useState(false)
   const [selectedFiles, setSelectedFiles] = useState<File[]>([])
+  const [countryCode, setCountryCode] = useState('+91')
 
   const { register, handleSubmit, formState: { errors }, reset, watch, setValue } = useForm<ServiceInquiryFormData>({
     resolver: zodResolver(serviceInquirySchema)
@@ -38,7 +40,11 @@ export const ServiceInquiryForm: React.FC = () => {
 
       // Append text fields
       Object.entries(data).forEach(([key, value]) => {
-        if (value) formData.append(key, value.toString())
+        if (key === 'phone') {
+          formData.append('phone', `${countryCode} ${value}`)
+        } else if (value) {
+          formData.append(key, value.toString())
+        }
       })
 
       // Append files
@@ -67,8 +73,19 @@ export const ServiceInquiryForm: React.FC = () => {
 
   const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     if (e.target.files) {
-      setSelectedFiles(Array.from(e.target.files))
+      const newFiles = Array.from(e.target.files)
+      // Prevent duplicates based on name and size
+      setSelectedFiles(prev => {
+        const uniqueNewFiles = newFiles.filter(nf => !prev.some(pf => pf.name === nf.name && pf.size === nf.size))
+        return [...prev, ...uniqueNewFiles].slice(0, 5) // Limit to 5 max
+      })
     }
+    // Reset input so same file can be selected again if needed
+    e.target.value = ''
+  }
+
+  const removeFile = (index: number) => {
+    setSelectedFiles(prev => prev.filter((_, i) => i !== index))
   }
 
   return (
@@ -100,9 +117,18 @@ export const ServiceInquiryForm: React.FC = () => {
               <InputGroup label="Email Address *" error={errors.email?.message}>
                 <input {...register('email')} placeholder="john@example.com" className="input-field" />
               </InputGroup>
+
               <InputGroup label="Phone Number" error={errors.phone?.message}>
-                <input {...register('phone')} placeholder="+1 (555) 000-0000" className="input-field" />
+                <div className="flex gap-3 h-[58px]">
+                  <CountrySelect value={countryCode} onChange={setCountryCode} />
+                  <input
+                    {...register('phone')}
+                    placeholder="98765 00000"
+                    className="input-field flex-1 min-w-0"
+                  />
+                </div>
               </InputGroup>
+
               <InputGroup label="Profession *" error={errors.clientType?.message}>
                 <select {...register('clientType')} className="input-field">
                   <option value="">Select profession</option>
@@ -202,9 +228,20 @@ export const ServiceInquiryForm: React.FC = () => {
               {selectedFiles.length > 0 && (
                 <div className="mt-4 space-y-2">
                   {selectedFiles.map((f, i) => (
-                    <div key={i} className="flex justify-between items-center text-sm p-3 bg-neutral-50 dark:bg-neutral-900 border border-neutral-200 dark:border-neutral-800 rounded-lg">
-                      <span className="text-neutral-700 dark:text-neutral-300 truncate max-w-[200px]">{f.name}</span>
-                      <span className="text-neutral-500 text-xs">{(f.size / 1024).toFixed(1)}KB</span>
+                    <div key={i} className="flex justify-between items-center text-sm p-3 bg-neutral-50 dark:bg-neutral-900 border border-neutral-200 dark:border-neutral-800 rounded-lg group">
+                      <div className="flex items-center gap-3 overflow-hidden">
+                        <span className="text-neutral-700 dark:text-neutral-300 truncate max-w-[200px]">{f.name}</span>
+                        <span className="text-neutral-500 text-xs shrink-0">{(f.size / 1024).toFixed(1)}KB</span>
+                      </div>
+                      <button
+                        type="button"
+                        onClick={() => removeFile(i)}
+                        className="text-neutral-400 hover:text-red-500 p-1 rounded-full hover:bg-neutral-200 dark:hover:bg-neutral-800 transition-colors"
+                      >
+                        <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
+                        </svg>
+                      </button>
                     </div>
                   ))}
                 </div>

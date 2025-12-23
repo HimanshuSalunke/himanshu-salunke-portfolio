@@ -9,7 +9,7 @@ const baseSchema = z.object({
     .max(255, 'Email must be less than 255 characters'),
   phone: z.string()
     .min(10, 'Phone number must be at least 10 characters')
-    .max(15, 'Phone number must be less than 15 characters'),
+    .max(20, 'Phone number must be less than 20 characters'),
   clientType: z.enum(['student', 'professional', 'business_owner', 'researcher', 'startup', 'other'], {
     required_error: 'Please select your profession'
   }),
