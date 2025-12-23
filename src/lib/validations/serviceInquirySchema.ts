@@ -24,13 +24,13 @@ const baseSchema = z.object({
   dataset: z.enum(['provided', 'need_help', 'public_source'], {
     required_error: 'Please select a data/requirements availability option'
   }),
-  budgetMin: z.number({
+  budgetMin: z.coerce.number({
     required_error: 'Please enter minimum budget',
     invalid_type_error: 'Budget must be a number'
   }).refine((val) => !isNaN(val) && val >= 1000, (val) => ({
     message: isNaN(val) ? 'Please enter minimum budget' : 'Minimum budget must be at least ₹1,000'
   })),
-  budgetMax: z.number({
+  budgetMax: z.coerce.number({
     required_error: 'Please enter maximum budget',
     invalid_type_error: 'Budget must be a number'
   }).refine((val) => !isNaN(val) && val >= 1000, (val) => ({
