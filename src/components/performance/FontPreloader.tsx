@@ -9,7 +9,7 @@ interface FontPreloaderProps {
   }>
 }
 
-export const FontPreloader: React.FC<FontPreloaderProps> = ({ 
+export const FontPreloader: React.FC<FontPreloaderProps> = ({
   fonts = [
     { family: 'Inter', weight: '400', display: 'swap' },
     { family: 'Inter', weight: '500', display: 'swap' },
@@ -74,8 +74,6 @@ export const CriticalResourcePreloader: React.FC = () => {
     // Preload critical resources
     const preloadCriticalResources = () => {
       const criticalResources = [
-        { href: '/images/hero-bg.webp', as: 'image' },
-        { href: '/images/logo.svg', as: 'image' },
         { href: '/api/current-focus', as: 'fetch', crossOrigin: 'anonymous' },
       ]
 
