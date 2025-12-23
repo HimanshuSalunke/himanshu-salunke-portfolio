@@ -217,7 +217,7 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
     })
 
     // Handle file uploads if present
-    let fileUrls: string[] = []
+    const fileUrls: string[] = []
 
     if (files && files.length > 0) {
       if (!process.env.BLOB_READ_WRITE_TOKEN) {

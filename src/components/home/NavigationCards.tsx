@@ -42,7 +42,7 @@ const NavigationCard: React.FC<NavigationCardProps> = ({
     >
       {/* Background Gradient */}
       <div className={`absolute inset-0 ${gradient} opacity-0 group-hover:opacity-100 transition-opacity duration-500`} />
-      
+
       {/* Content */}
       <div className="relative z-10">
         {/* Icon */}
@@ -115,7 +115,7 @@ export const NavigationCards: React.FC = () => {
   const unifiedStats = useUnifiedStats()
   const [projects, setProjects] = useState<any[]>([])
   const [projectsLoading, setProjectsLoading] = useState(true)
-  
+
   // Fetch projects to get dynamic categories
   useEffect(() => {
     const loadProjects = async () => {
@@ -130,7 +130,7 @@ export const NavigationCards: React.FC = () => {
     }
     loadProjects()
   }, [])
-  
+
   // Calculate unique project categories dynamically
   const projectCategories = useMemo(() => {
     const categories = new Set<string>()
@@ -141,7 +141,7 @@ export const NavigationCards: React.FC = () => {
     })
     return Array.from(categories).sort()
   }, [projects])
-  
+
   // Calculate unique article categories dynamically
   const uniqueCategories = [...new Set(articles.map(article => article.category))]
   const categoryCount = uniqueCategories.length
@@ -256,7 +256,7 @@ export const NavigationCards: React.FC = () => {
         href="/services"
         gradient="bg-gradient-to-br from-green-500/5 to-emerald-500/5"
         stats={{
-          primary: { value: "₹15k+", label: "Starting" },
+          primary: { value: "₹5k+", label: "Starting" },
           secondary: { value: "2", label: "Services" }
         }}
         categories={['AI/ML', 'Data Science', 'LLM', 'Analytics']}

@@ -1,14 +1,10 @@
 import React, { useState, useEffect, useMemo } from 'react'
 import { Helmet } from 'react-helmet-async'
 import { motion } from 'framer-motion'
-import { 
-  FaGithub, FaLinkedin
-} from 'react-icons/fa'
-import { 
-  SiCodechef, SiGithub, SiLinkedin, SiX
+import {
+  SiGithub, SiLinkedin
 } from 'react-icons/si'
-import { useSocialStats } from '../../hooks/useSocialStats'
-import { useUnifiedStats } from '../../hooks/useUnifiedStats'
+import { useSocialStats, type SocialStats } from '../../hooks/useSocialStats'
 import { TechStack } from '../../components/developer/TechStack'
 import WebsiteInfo from '../../components/developer/WebsiteInfo'
 
@@ -26,7 +22,7 @@ interface SocialPlatform {
 }
 
 // This will be populated with real-time data
-const getSocialPlatforms = (socialStats: any): SocialPlatform[] => [
+const getSocialPlatforms = (socialStats: SocialStats): SocialPlatform[] => [
   {
     name: 'GitHub',
     icon: SiGithub,
@@ -50,54 +46,15 @@ const getSocialPlatforms = (socialStats: any): SocialPlatform[] => [
     stats: [
       { label: 'Followers', value: '24k+' },
       { label: 'Articles', value: socialStats.linkedin.isLoading ? 'Loading...' : `${socialStats.linkedin.articles || 0}+` },
-      // { label: 'Newsletter', value: 'Active' } // Commented out for now
+
     ]
   },
-  // {
-  //   name: 'LeetCode',
-  //   icon: SiLeetcode,
-  //   url: 'https://leetcode.com/u/himanshusalunke/',
-  //   username: 'himanshusalunke',
-  //   color: 'from-yellow-500 to-orange-500',
-  //   description: 'Solving problems, one algorithm at a time 🧠',
-  //   stats: [
-  //     { label: 'Problems Solved', value: socialStats.leetcode.isLoading ? 'Loading...' : socialStats.leetcode.totalSolved || 0 },
-  //     { label: 'Contest Rating', value: socialStats.leetcode.isLoading ? 'Loading...' : socialStats.leetcode.contestRating || 'N/A' },
-  //     { label: 'Ranking', value: socialStats.leetcode.isLoading ? 'Loading...' : socialStats.leetcode.ranking || 'N/A' }
-  //   ]
-  // },
-  // {
-  //   name: 'CodeChef',
-  //   icon: SiCodechef,
-  //   url: 'https://www.codechef.com/users/himanshuksalunke',
-  //   username: 'himanshuksalunke',
-  //   color: 'from-red-500 to-red-600',
-  //   description: 'Competitive programming adventures 🏆',
-  //   stats: [
-  //     { label: 'Problems Solved', value: socialStats.codechef.isLoading ? 'Loading...' : socialStats.codechef.problemsSolved || 'N/A' },
-  //     { label: 'Rating', value: socialStats.codechef.isLoading ? 'Loading...' : socialStats.codechef.rating || 'N/A' },
-  //     { label: 'Stars', value: socialStats.codechef.isLoading ? 'Loading...' : socialStats.codechef.stars || 'N/A' }
-  //   ]
-  // },
-  // {
-  //   name: 'X (Twitter)',
-  //   icon: SiX,
-  //   url: 'https://x.com/Wiser_0221',
-  //   username: 'Wiser_0221',
-  //   color: 'from-black to-gray-800',
-  //   description: 'Thoughts, updates & tech discussions 🐦',
-  //   stats: [
-  //     { label: 'Followers', value: socialStats.twitter.isLoading ? 'Loading...' : `${socialStats.twitter.followers > 1000 ? `${Math.floor(socialStats.twitter.followers / 1000)}k+` : `${socialStats.twitter.followers}+`}` },
-  //     { label: 'Following', value: socialStats.twitter.isLoading ? 'Loading...' : `${socialStats.twitter.following}+` },
-  //     { label: 'Tweets', value: socialStats.twitter.isLoading ? 'Loading...' : `${socialStats.twitter.tweets}+` }
-  //   ]
-  // }
+
 ]
 
 const Developer: React.FC = () => {
   const [mounted, setMounted] = useState(false)
   const socialStats = useSocialStats()
-  const unifiedStats = useUnifiedStats()
 
   useEffect(() => {
     setMounted(true)
@@ -138,7 +95,7 @@ const Developer: React.FC = () => {
             transition={{ duration: 0.6 }}
           >
             <h1 className="text-2xl sm:text-3xl md:text-4xl lg:text-5xl font-bold text-neutral-900 dark:text-white mb-3 sm:mb-4">
-              <span 
+              <span
                 className="bg-clip-text text-transparent"
                 style={{
                   background: 'linear-gradient(90deg, hsla(212, 93%, 49%, 1) 0%, hsla(210, 100%, 30%, 1) 100%)',
@@ -195,7 +152,7 @@ const Developer: React.FC = () => {
                 Follow my journey across different platforms and communities
               </p>
             </div>
-            
+
             <div className="flex flex-wrap justify-center gap-3 sm:gap-4 lg:gap-6">
               {socialPlatforms.map((platform, index) => (
                 <motion.div
@@ -215,7 +172,7 @@ const Developer: React.FC = () => {
                   >
                     {/* Background Gradient */}
                     <div className={`absolute inset-0 bg-gradient-to-br ${platform.color} opacity-0 group-hover:opacity-5 transition-opacity duration-500`} />
-                    
+
                     {/* Platform Icon */}
                     <div className="relative z-10 flex items-center gap-2 sm:gap-3 md:gap-4 mb-3 sm:mb-4">
                       <div className={`w-8 h-8 sm:w-10 sm:h-10 md:w-12 md:h-12 rounded-lg sm:rounded-xl bg-gradient-to-br ${platform.color} flex items-center justify-center shadow-lg`}>
@@ -274,7 +231,7 @@ const Developer: React.FC = () => {
             transition={{ duration: 0.6, delay: 1.0 }}
           >
             <blockquote className="text-sm sm:text-base md:text-lg italic text-neutral-600 dark:text-neutral-300 max-w-xl sm:max-w-2xl mx-auto px-4 sm:px-0">
-              "Code is like humor. When you have to explain it, it's bad." 
+              "Code is like humor. When you have to explain it, it's bad."
               <footer className="mt-2 text-xs sm:text-sm text-neutral-500 dark:text-neutral-400">
                 — Cory House (and every developer ever)
               </footer>

@@ -10,7 +10,7 @@ async function apiFetch<T>(endpoint: string): Promise<T> {
     // Add cache-busting query parameter to ensure fresh data
     const cacheBuster = `?t=${Date.now()}`
     const url = `${API_BASE_URL}${endpoint}${endpoint.includes('?') ? '&' : '?'}t=${Date.now()}`
-    
+
     const response = await fetch(url, {
       cache: 'no-store', // Disable browser cache
       headers: {
@@ -18,11 +18,11 @@ async function apiFetch<T>(endpoint: string): Promise<T> {
         'Pragma': 'no-cache'
       }
     })
-    
+
     if (!response.ok) {
       throw new Error(`HTTP error! status: ${response.status}`)
     }
-    
+
     return await response.json()
   } catch (error) {
     console.error(`API fetch error for ${endpoint}:`, error)
@@ -50,10 +50,7 @@ export async function fetchFeaturedProjects(): Promise<Project[]> {
   return apiFetch<Project[]>('/projects/featured')
 }
 
-// Fetch project navigation
-export async function fetchProjectNavigation(slug: string): Promise<{ previous: Project | null; next: Project | null }> {
-  return apiFetch<{ previous: Project | null; next: Project | null }>(`/projects/${slug}/navigation`)
-}
+
 
 // Fetch related projects
 export async function fetchRelatedProjects(slug: string, limit: number = 3): Promise<Project[]> {

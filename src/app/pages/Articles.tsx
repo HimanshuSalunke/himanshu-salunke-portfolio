@@ -4,7 +4,6 @@ import { motion } from 'framer-motion'
 import { Button } from '../../components/ui/Button'
 import { SearchAndFilter } from '../../components/ui/SearchAndFilter'
 import { ArticleCard } from '../../components/articles/ArticleCard'
-import { useUnifiedStats } from '../../hooks/useUnifiedStats'
 import { articles } from '../../data/articles'
 import ArticleEngagementMetrics from '../../components/articles/ArticleEngagementMetrics'
 import ArticleCategories from '../../components/articles/ArticleCategories'
@@ -22,8 +21,6 @@ const Articles: React.FC = () => {
   const [selectedCategory, setSelectedCategory] = useState('All')
   const [selectedStatus, setSelectedStatus] = useState('All')
   const [sortBy, setSortBy] = useState<'date' | 'title' | 'readTime'>('date')
-  
-  const unifiedStats = useUnifiedStats()
 
   // Dynamically calculate categories from articles
   const categories = useMemo(() => {
@@ -34,15 +31,15 @@ const Articles: React.FC = () => {
   const filteredArticles = useMemo(() => {
     const filtered = articles.filter(article => {
       const matchesSearch = article.title.toLowerCase().includes(searchTerm.toLowerCase()) ||
-                           article.excerpt.toLowerCase().includes(searchTerm.toLowerCase()) ||
-                           article.tags.some(tag => tag.toLowerCase().includes(searchTerm.toLowerCase())) ||
-                           article.author.toLowerCase().includes(searchTerm.toLowerCase())
-      
+        article.excerpt.toLowerCase().includes(searchTerm.toLowerCase()) ||
+        article.tags.some(tag => tag.toLowerCase().includes(searchTerm.toLowerCase())) ||
+        article.author.toLowerCase().includes(searchTerm.toLowerCase())
+
       const matchesCategory = selectedCategory === 'All' || article.category === selectedCategory
-      const matchesStatus = selectedStatus === 'All' || 
-                           (selectedStatus === 'Featured' && article.featured) ||
-                           (selectedStatus === 'Regular' && !article.featured)
-      
+      const matchesStatus = selectedStatus === 'All' ||
+        (selectedStatus === 'Featured' && article.featured) ||
+        (selectedStatus === 'Regular' && !article.featured)
+
       return matchesSearch && matchesCategory && matchesStatus
     })
 
@@ -82,7 +79,7 @@ const Articles: React.FC = () => {
             transition={{ duration: 0.6 }}
           >
             <h1 className="text-2xl sm:text-3xl md:text-4xl lg:text-5xl font-bold text-neutral-900 dark:text-white mb-3 sm:mb-4">
-              <span 
+              <span
                 className="bg-clip-text text-transparent"
                 style={{
                   background: 'linear-gradient(90deg, hsla(212, 93%, 49%, 1) 0%, hsla(210, 100%, 30%, 1) 100%)',
@@ -96,7 +93,7 @@ const Articles: React.FC = () => {
               </span>
             </h1>
             <p className="text-base sm:text-lg md:text-xl text-neutral-600 dark:text-neutral-400 max-w-2xl sm:max-w-3xl mx-auto px-4 sm:px-0">
-              Comprehensive articles on Machine Learning, Deep Learning, and Reinforcement Learning. 
+              Comprehensive articles on Machine Learning, Deep Learning, and Reinforcement Learning.
               Explore fundamental concepts, advanced techniques, and practical applications in AI/ML.
             </p>
           </motion.div>
@@ -142,7 +139,7 @@ const Articles: React.FC = () => {
           >
             <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-2">
               <p className="text-xs sm:text-sm text-neutral-600 dark:text-neutral-400">
-                {filteredArticles.length === articles.length 
+                {filteredArticles.length === articles.length
                   ? `Showing all ${articles.length} articles`
                   : `Showing ${filteredArticles.length} of ${articles.length} articles`
                 }

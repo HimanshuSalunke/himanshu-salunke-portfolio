@@ -59,7 +59,7 @@ const Work: React.FC = () => {
       selectedStatus,
       sortBy
     })
-    
+
     const filtered = projects.filter(project => {
       // Safety checks for undefined properties
       if (!project || !project.title || !project.summary || !project.techStack) {
@@ -68,12 +68,12 @@ const Work: React.FC = () => {
       }
 
       const matchesSearch = project.title.toLowerCase().includes(searchTerm.toLowerCase()) ||
-                           project.summary.toLowerCase().includes(searchTerm.toLowerCase()) ||
-                           project.techStack.some(tech => tech && tech.toLowerCase().includes(searchTerm.toLowerCase()))
-      
+        project.summary.toLowerCase().includes(searchTerm.toLowerCase()) ||
+        project.techStack.some(tech => tech && tech.toLowerCase().includes(searchTerm.toLowerCase()))
+
       const matchesCategory = selectedCategory === 'All' || project.category === selectedCategory
       const matchesStatus = selectedStatus === 'All' || project.status === selectedStatus
-      
+
       return matchesSearch && matchesCategory && matchesStatus
     })
 
@@ -95,7 +95,7 @@ const Work: React.FC = () => {
 
     console.log('✅ Work page - Filtered projects:', filtered.length)
     return filtered
-  }, [searchTerm, selectedCategory, selectedStatus, sortBy, projects])
+  }, [searchTerm, selectedCategory, selectedStatus, sortBy, projects, loading])
 
   // Show loading state
   if (loading) {
@@ -134,7 +134,7 @@ const Work: React.FC = () => {
             transition={{ duration: 0.6 }}
           >
             <h1 className="text-2xl sm:text-3xl md:text-4xl lg:text-5xl font-bold text-neutral-900 dark:text-white mb-3 sm:mb-4">
-              <span 
+              <span
                 className="bg-clip-text text-transparent"
                 style={{
                   background: 'linear-gradient(90deg, hsla(212, 93%, 49%, 1) 0%, hsla(210, 100%, 30%, 1) 100%)',
@@ -148,7 +148,7 @@ const Work: React.FC = () => {
               </span>
             </h1>
             <p className="text-base sm:text-lg md:text-xl text-neutral-600 dark:text-neutral-400 max-w-2xl sm:max-w-3xl mx-auto px-4 sm:px-0">
-              Explore my diverse portfolio of innovative projects, from AI/ML solutions to full-stack applications. 
+              Explore my diverse portfolio of innovative projects, from AI/ML solutions to full-stack applications.
               Each project tells a story of problem-solving, creativity, and technical excellence.
             </p>
           </motion.div>
@@ -222,8 +222,8 @@ const Work: React.FC = () => {
                     </Tag>
                   </div>
                   <div className="absolute bottom-4 left-4">
-                    <Tag 
-                      variant={project.status === 'Completed' ? 'success' : project.status === 'In Progress' ? 'warning' : 'default'} 
+                    <Tag
+                      variant={project.status === 'Completed' ? 'success' : project.status === 'In Progress' ? 'warning' : 'default'}
                       size="sm"
                     >
                       {project.status}

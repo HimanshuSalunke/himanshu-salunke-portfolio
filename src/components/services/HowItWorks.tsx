@@ -36,66 +36,66 @@ const steps = [
 
 export const HowItWorks: React.FC = () => {
   return (
-    <>
+    <div className="relative">
       <motion.div
-        className="text-center mb-12"
+        className="text-center mb-16"
         initial={{ opacity: 0, y: 20 }}
         whileInView={{ opacity: 1, y: 0 }}
         transition={{ duration: 0.6 }}
         viewport={{ once: true }}
       >
-        <h2 className="text-2xl sm:text-3xl font-bold text-neutral-900 dark:text-white mb-4">
+        <h2 className="text-3xl sm:text-4xl font-bold text-neutral-900 dark:text-white mb-4">
           How It Works
         </h2>
-        <p className="text-base sm:text-lg text-neutral-600 dark:text-neutral-400 max-w-2xl mx-auto">
+        <p className="px-4 text-base sm:text-lg text-neutral-600 dark:text-neutral-400 max-w-2xl mx-auto">
           Simple process from idea to working project. Express delivery available for urgent projects.
         </p>
       </motion.div>
 
-      <div className="relative max-w-6xl mx-auto">
-        {/* Single horizontal timeline line for desktop - aligned with icon centers */}
-        <div className="hidden md:block absolute top-[2.5rem] left-0 right-0 h-0.5 bg-gradient-to-r from-blue-500 via-blue-500 to-blue-600 z-0" />
-        
-        <div className="grid grid-cols-1 md:grid-cols-5 gap-8 md:gap-4 relative z-10">
+      <div className="relative max-w-4xl mx-auto">
+        {/* Connecting Line */}
+        <div className="absolute left-[28px] top-0 bottom-0 w-0.5 bg-gradient-to-b from-blue-500/0 via-blue-500/50 to-blue-500/0 md:left-1/2 md:-ml-px" />
+
+        <div className="space-y-12">
           {steps.map((step, index) => (
             <motion.div
               key={step.step}
-              className="relative flex flex-col items-center"
+              className={`relative flex items-start md:items-center ${index % 2 === 0 ? 'md:flex-row' : 'md:flex-row-reverse'
+                }`}
               initial={{ opacity: 0, y: 20 }}
               whileInView={{ opacity: 1, y: 0 }}
-              transition={{ duration: 0.6, delay: index * 0.1 }}
+              transition={{ duration: 0.5, delay: index * 0.1 }}
               viewport={{ once: true }}
             >
-              {/* Icon circle with step number */}
-              <div className="relative mb-6">
-                <div className="w-20 h-20 bg-gradient-to-br from-blue-500 to-blue-600 rounded-full flex items-center justify-center text-3xl border-4 border-white dark:border-neutral-800 shadow-lg relative z-20">
-                  {step.icon}
-                </div>
-                {/* Step number badge */}
-                <div className="absolute -top-2 -right-2 w-7 h-7 bg-blue-600 rounded-full flex items-center justify-center text-xs font-bold text-white border-2 border-white dark:border-neutral-800 shadow-md z-30">
-                  {step.step}
+              {/* Icon Bubble (Central Marker) */}
+              <div className="absolute left-0 md:left-1/2 md:-ml-7 flex-shrink-0 w-14 h-14 bg-white dark:bg-neutral-900 border-4 border-blue-500 rounded-full flex items-center justify-center text-2xl z-10 shadow-lg">
+                <span role="img" aria-label="Icon">{step.icon}</span>
+              </div>
+
+              {/* Content Card */}
+              <div className={`ml-20 md:ml-0 md:w-1/2 ${index % 2 === 0 ? 'md:pr-16' : 'md:pl-16'
+                }`}>
+                <div className="bg-white dark:bg-neutral-800 p-6 rounded-xl shadow-sm border border-neutral-200 dark:border-neutral-700 hover:shadow-md transition-shadow">
+                  <div className="flex items-center gap-3 mb-3">
+                    <span className="flex items-center justify-center w-6 h-6 rounded-full bg-blue-100 dark:bg-blue-900/30 text-blue-600 dark:text-blue-400 text-xs font-bold">
+                      {step.step}
+                    </span>
+                    <h3 className="text-xl font-bold text-neutral-900 dark:text-white">
+                      {step.title}
+                    </h3>
+                  </div>
+                  <p className="text-neutral-600 dark:text-neutral-400 leading-relaxed">
+                    {step.description}
+                  </p>
                 </div>
               </div>
-              
-              {/* Content */}
-              <div className="text-center flex-1">
-                <h3 className="text-lg font-semibold text-neutral-900 dark:text-white mb-2">
-                  {step.title}
-                </h3>
-                <p className="text-sm sm:text-base text-neutral-600 dark:text-neutral-400 leading-relaxed">
-                  {step.description}
-                </p>
-              </div>
-              
-              {/* Vertical connecting line for mobile */}
-              {index < steps.length - 1 && (
-                <div className="md:hidden absolute left-1/2 top-20 -bottom-8 w-0.5 h-16 bg-gradient-to-b from-blue-500 to-blue-600 transform -translate-x-1/2 z-0" />
-              )}
+
+              {/* Spacer for the other side on desktop */}
+              <div className="hidden md:block md:w-1/2" />
             </motion.div>
           ))}
         </div>
       </div>
-    </>
+    </div>
   )
 }
-

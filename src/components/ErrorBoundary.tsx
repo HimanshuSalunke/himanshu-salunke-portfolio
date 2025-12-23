@@ -1,4 +1,4 @@
-import React, { Component, ErrorInfo, ReactNode } from 'react'
+import React, { Component, type ErrorInfo, type ReactNode } from 'react'
 import { Button } from './ui/Button'
 
 interface Props {
@@ -51,8 +51,8 @@ class ErrorBoundary extends Component<Props, State> {
               <Button onClick={this.handleReset}>
                 Try Again
               </Button>
-              <Button 
-                variant="outline" 
+              <Button
+                variant="outline"
                 onClick={() => window.location.reload()}
               >
                 Refresh Page

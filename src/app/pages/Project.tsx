@@ -14,7 +14,7 @@ import { TechBadge } from '../../components/ui/TechBadge'
 import { ErrorBoundary } from '../../components/ErrorBoundary'
 import { formatDate } from '../../utils/formatDate'
 import { type Project } from '../../utils/clientMdx'
-import { fetchProject, fetchProjectNavigation, fetchRelatedProjects } from '../../utils/projectAPI'
+import { fetchProject, fetchRelatedProjects } from '../../utils/projectAPI'
 import { SITE_CONFIG, getCurrentUrl } from '../../config/site'
 import { useErrorHandler } from '../../hooks/useErrorHandler'
 import { useSafeWindow } from '../../hooks/useSafeWindow'
@@ -25,14 +25,13 @@ const Project: React.FC = () => {
   const navigate = useNavigate()
   const { handleError, handleAsyncError } = useErrorHandler()
   const { currentUrl } = useSafeWindow()
-  
+
   const [project, setProject] = useState<Project | null>(null)
   const [loading, setLoading] = useState(true)
-  const [navigationLoading, setNavigationLoading] = useState(false)
-  const [relatedLoading, setRelatedLoading] = useState(false)
+
   const [error, setError] = useState<string | null>(null)
-  const [navigation, setNavigation] = useState<{ previous: Project | null; next: Project | null }>({ previous: null, next: null })
   const [relatedProjects, setRelatedProjects] = useState<Project[]>([])
+  const [relatedLoading, setRelatedLoading] = useState(false)
 
   // Memoized project loading function
   const loadProject = useCallback(async () => {
@@ -45,13 +44,13 @@ const Project: React.FC = () => {
     try {
       setLoading(true)
       setError(null)
-      
+
       const projectData = await handleAsyncError(
         () => fetchProject(slug),
         'loadProject',
         { fallbackMessage: 'Failed to load project. Please try again.' }
       )
-      
+
       if (projectData) {
         setProject(projectData)
       } else {
@@ -67,37 +66,24 @@ const Project: React.FC = () => {
     }
   }, [slug, handleError, handleAsyncError])
 
-  // Memoized navigation and related projects loading
-  const loadNavigationAndRelated = useCallback(async (projectSlug: string) => {
+  // Memoized related projects loading
+  const loadRelatedProjectsOnly = useCallback(async (projectSlug: string) => {
     try {
-      setNavigationLoading(true)
       setRelatedLoading(true)
-      
-      const [navResult, relatedResult] = await Promise.allSettled([
-        handleAsyncError(
-          () => fetchProjectNavigation(projectSlug),
-          'loadNavigation',
-          { fallbackMessage: 'Failed to load navigation' }
-        ),
-        handleAsyncError(
-          () => fetchRelatedProjects(projectSlug, 3),
-          'loadRelatedProjects',
-          { fallbackMessage: 'Failed to load related projects' }
-        )
-      ])
 
-      if (navResult.status === 'fulfilled' && navResult.value) {
-        setNavigation(navResult.value)
-      }
-      
-      if (relatedResult.status === 'fulfilled' && relatedResult.value) {
-        setRelatedProjects(relatedResult.value)
+      const relatedResult = await handleAsyncError(
+        () => fetchRelatedProjects(projectSlug, 3),
+        'loadRelatedProjects',
+        { fallbackMessage: 'Failed to load related projects' }
+      )
+
+      if (relatedResult) {
+        setRelatedProjects(relatedResult)
       }
     } catch (err) {
-      // Navigation and related projects are not critical, so we don't show errors
-      console.warn('Failed to load navigation or related projects:', err)
+      // Related projects are not critical, so we don't show errors
+      console.warn('Failed to load related projects:', err)
     } finally {
-      setNavigationLoading(false)
       setRelatedLoading(false)
     }
   }, [handleAsyncError])
@@ -106,12 +92,12 @@ const Project: React.FC = () => {
     loadProject()
   }, [loadProject])
 
-  // Load navigation and related projects when project loads
+  // Load related projects when project loads
   useEffect(() => {
     if (project && project.slug) {
-      loadNavigationAndRelated(project.slug)
+      loadRelatedProjectsOnly(project.slug)
     }
-  }, [project, loadNavigationAndRelated])
+  }, [project, loadRelatedProjectsOnly])
 
   // Ensure page starts at top when project loads
   useEffect(() => {
@@ -123,7 +109,7 @@ const Project: React.FC = () => {
     if (document.body) {
       document.body.scrollTop = 0
     }
-    
+
     // Additional scroll reset after content loads
     const timeoutId = setTimeout(() => {
       window.scrollTo(0, 0)
@@ -134,14 +120,14 @@ const Project: React.FC = () => {
         document.body.scrollTop = 0
       }
     }, 100)
-    
+
     return () => clearTimeout(timeoutId)
   }, [slug])
 
   useEffect(() => {
     if (project) {
-      loadNavigationAndRelated(project.slug)
-      
+      loadRelatedProjectsOnly(project.slug)
+
       // Ensure scroll to top after project content is loaded
       setTimeout(() => {
         window.scrollTo(0, 0)
@@ -153,12 +139,12 @@ const Project: React.FC = () => {
         }
       }, 50)
     }
-  }, [project, loadNavigationAndRelated])
+  }, [project, loadRelatedProjectsOnly])
 
   // Memoized meta data
   const metaData = useMemo(() => {
     if (!project) return null
-    
+
     return {
       title: `${project.title} - ${SITE_CONFIG.name}`,
       description: project.summary,
@@ -180,7 +166,7 @@ const Project: React.FC = () => {
           animate={{ opacity: 1 }}
           transition={{ duration: 0.6 }}
         >
-          <div 
+          <div
             className="animate-spin rounded-full h-12 w-12 border-b-2 border-primary-500 mx-auto mb-4"
             role="status"
             aria-label="Loading project"
@@ -223,7 +209,7 @@ const Project: React.FC = () => {
         <meta name="keywords" content={metaData?.keywords || project.techStack.join(', ')} />
         <meta name="author" content={metaData?.author || SITE_CONFIG.author} />
         <meta name="robots" content="index, follow" />
-        
+
         {/* Open Graph */}
         <meta property="og:title" content={metaData?.title || `${project.title} - ${SITE_CONFIG.name}`} />
         <meta property="og:description" content={metaData?.description || project.summary} />
@@ -236,18 +222,18 @@ const Project: React.FC = () => {
         {project.techStack.map((tech, index) => (
           <meta key={index} property="article:tag" content={tech} />
         ))}
-        
+
         {/* Twitter */}
         <meta name="twitter:card" content="summary_large_image" />
         <meta name="twitter:title" content={metaData?.title || `${project.title} - ${SITE_CONFIG.name}`} />
         <meta name="twitter:description" content={metaData?.description || project.summary} />
         <meta name="twitter:image" content={`${SITE_CONFIG.url}/api/og/${project.slug}?title=${encodeURIComponent(project.title)}&description=${encodeURIComponent(project.summary)}&type=project&date=${project.date}&tags=${encodeURIComponent(project.techStack.join(','))}`} />
         <meta name="twitter:creator" content={metaData?.twitterHandle || SITE_CONFIG.twitterHandle} />
-        
+
         {/* Additional SEO */}
         <meta name="theme-color" content={SITE_CONFIG.themeColor} />
         <link rel="canonical" href={metaData?.url || getCurrentUrl()} />
-        
+
         {/* Structured Data */}
         <script type="application/ld+json">
           {JSON.stringify({
@@ -298,7 +284,7 @@ const Project: React.FC = () => {
                     </Tag>
                   )}
                 </div>
-                <SocialShare 
+                <SocialShare
                   url={currentUrl || getCurrentUrl()}
                   title={project.title}
                   description={project.summary}
@@ -319,8 +305,8 @@ const Project: React.FC = () => {
               transition={{ duration: 0.6 }}
             >
               <Link to="/work">
-                <Button 
-                  variant="outline" 
+                <Button
+                  variant="outline"
                   className="flex items-center gap-2 px-4 py-2 text-sm font-medium"
                   aria-label="Back to all projects"
                 >
@@ -371,11 +357,10 @@ const Project: React.FC = () => {
                   {project.readingTime} min read
                 </div>
                 <div className="flex items-center gap-1 sm:gap-2">
-                  <span className={`w-2 h-2 rounded-full ${
-                    project.status === 'completed' ? 'bg-green-500' :
+                  <span className={`w-2 h-2 rounded-full ${project.status === 'completed' ? 'bg-green-500' :
                     project.status === 'in-progress' ? 'bg-yellow-500' :
-                    'bg-blue-500'
-                  }`}></span>
+                      'bg-blue-500'
+                    }`}></span>
                   {project.status}
                 </div>
               </div>
@@ -390,7 +375,7 @@ const Project: React.FC = () => {
                     whileTap={{ scale: 0.98 }}
                   >
                     <svg className="w-4 h-4 sm:w-5 sm:h-5" fill="currentColor" viewBox="0 0 24 24">
-                      <path d="M12 0c-6.626 0-12 5.373-12 12 0 5.302 3.438 9.8 8.207 11.387.599.111.793-.261.793-.577v-2.234c-3.338.726-4.033-1.416-4.033-1.416-.546-1.387-1.333-1.756-1.333-1.756-1.089-.745.083-.729.083-.729 1.205.084 1.839 1.237 1.839 1.237 1.07 1.834 2.807 1.304 3.492.997.107-.775.418-1.305.762-1.604-2.665-.305-5.467-1.334-5.467-5.931 0-1.311.469-2.381 1.236-3.221-.124-.303-.535-1.524.117-3.176 0 0 1.008-.322 3.301 1.23.957-.266 1.983-.399 3.003-.404 1.02.005 2.047.138 3.006.404 2.291-1.552 3.297-1.23 3.297-1.23.653 1.653.242 2.874.118 3.176.77.84 1.235 1.911 1.235 3.221 0 4.609-2.807 5.624-5.479 5.921.43.372.823 1.102.823 2.222v3.293c0 .319.192.694.801.576 4.765-1.589 8.199-6.086 8.199-11.386 0-6.627-5.373-12-12-12z"/>
+                      <path d="M12 0c-6.626 0-12 5.373-12 12 0 5.302 3.438 9.8 8.207 11.387.599.111.793-.261.793-.577v-2.234c-3.338.726-4.033-1.416-4.033-1.416-.546-1.387-1.333-1.756-1.333-1.756-1.089-.745.083-.729.083-.729 1.205.084 1.839 1.237 1.839 1.237 1.07 1.834 2.807 1.304 3.492.997.107-.775.418-1.305.762-1.604-2.665-.305-5.467-1.334-5.467-5.931 0-1.311.469-2.381 1.236-3.221-.124-.303-.535-1.524.117-3.176 0 0 1.008-.322 3.301 1.23.957-.266 1.983-.399 3.003-.404 1.02.005 2.047.138 3.006.404 2.291-1.552 3.297-1.23 3.297-1.23.653 1.653.242 2.874.118 3.176.77.84 1.235 1.911 1.235 3.221 0 4.609-2.807 5.624-5.479 5.921.43.372.823 1.102.823 2.222v3.293c0 .319.192.694.801.576 4.765-1.589 8.199-6.086 8.199-11.386 0-6.627-5.373-12-12-12z" />
                     </svg>
                     View Code
                   </motion.a>
@@ -437,8 +422,8 @@ const Project: React.FC = () => {
                 animate={{ opacity: 1, y: 0 }}
                 transition={{ duration: 0.6, delay: 0.2 }}
               >
-                <ProjectGallery 
-                  images={project.images} 
+                <ProjectGallery
+                  images={project.images}
                   title={project.title}
                 />
               </motion.div>
@@ -463,7 +448,7 @@ const Project: React.FC = () => {
                 Built with modern technologies
               </p>
             </motion.div>
-            
+
             <motion.div
               className="flex flex-wrap justify-center gap-3"
               initial={{ opacity: 0, y: 20 }}
@@ -584,131 +569,7 @@ const Project: React.FC = () => {
           </section>
         )}
 
-        {/* Navigation Footer */}
-        <section className="bg-gradient-to-r from-neutral-50 to-white dark:from-neutral-900 dark:to-neutral-800 py-20">
-          <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
-            <motion.div
-              className="text-center mb-12"
-              initial={{ opacity: 0, y: 20 }}
-              whileInView={{ opacity: 1, y: 0 }}
-              transition={{ duration: 0.6 }}
-              viewport={{ once: true }}
-            >
-              <h2 className="text-3xl font-bold text-neutral-900 dark:text-white mb-4">
-                Explore More Projects
-              </h2>
-              <p className="text-lg text-neutral-600 dark:text-neutral-400">
-                Continue your journey through my portfolio
-              </p>
-            </motion.div>
-            <motion.div
-              className="flex flex-col lg:flex-row justify-between items-center gap-6 lg:gap-8"
-              initial={{ opacity: 0, y: 20 }}
-              whileInView={{ opacity: 1, y: 0 }}
-              transition={{ duration: 0.6, delay: 0.2 }}
-              viewport={{ once: true }}
-            >
-              {/* Previous Project */}
-              <div className="flex-1 w-full lg:w-auto">
-                {navigationLoading ? (
-                  <div className="p-4 sm:p-6 bg-white dark:bg-neutral-800 rounded-2xl shadow-lg border border-neutral-200 dark:border-neutral-700">
-                    <div className="animate-pulse flex items-center gap-4 sm:gap-6">
-                      <div className="w-10 h-10 sm:w-12 sm:h-12 bg-neutral-200 dark:bg-neutral-700 rounded-xl"></div>
-                      <div className="flex-1">
-                        <div className="h-3 sm:h-4 bg-neutral-200 dark:bg-neutral-700 rounded w-20 sm:w-24 mb-2"></div>
-                        <div className="h-4 sm:h-5 bg-neutral-200 dark:bg-neutral-700 rounded w-28 sm:w-32 mb-1"></div>
-                        <div className="h-2 sm:h-3 bg-neutral-200 dark:bg-neutral-700 rounded w-16 sm:w-20"></div>
-                      </div>
-                    </div>
-                  </div>
-                ) : navigation.previous ? (
-                  <Link
-                    to={`/projects/${navigation.previous.slug}`}
-                    className="group flex items-center gap-4 sm:gap-6 p-4 sm:p-6 bg-white dark:bg-neutral-800 rounded-2xl shadow-lg hover:shadow-xl transition-all duration-300 border border-neutral-200 dark:border-neutral-700 hover:border-primary-200 dark:hover:border-primary-800"
-                    aria-label={`Go to previous project: ${navigation.previous.title}`}
-                  >
-                    <div className="flex-shrink-0 w-10 h-10 sm:w-12 sm:h-12 bg-gradient-to-br from-primary-500 to-primary-600 rounded-xl flex items-center justify-center group-hover:scale-110 transition-transform duration-300">
-                      <svg className="w-5 h-5 sm:w-6 sm:h-6 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true">
-                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 19l-7-7 7-7" />
-                      </svg>
-                    </div>
-                    <div className="flex-1 min-w-0">
-                      <p className="text-xs sm:text-sm text-neutral-500 dark:text-neutral-400 mb-1">Previous Project</p>
-                      <p className="font-bold text-sm sm:text-lg text-neutral-900 dark:text-white group-hover:text-primary-500 transition-colors truncate">
-                        {navigation.previous.title}
-                      </p>
-                      <p className="text-xs sm:text-sm text-neutral-600 dark:text-neutral-400 mt-1">
-                        {navigation.previous.category}
-                      </p>
-                    </div>
-                  </Link>
-                ) : (
-                  <div className="p-4 opacity-50">
-                    <p className="text-xs sm:text-sm text-neutral-500 dark:text-neutral-400">No previous project</p>
-                  </div>
-                )}
-              </div>
 
-              {/* Back to Work */}
-              <div className="flex-shrink-0 order-first lg:order-none">
-                <Link to="/work">
-                  <Button 
-                    variant="primary" 
-                    className="flex items-center gap-2 sm:gap-3 px-4 sm:px-6 lg:px-8 py-3 sm:py-4 text-sm sm:text-lg font-semibold rounded-xl shadow-lg hover:shadow-xl transition-all duration-300"
-                    aria-label="View all projects"
-                  >
-                    <svg className="w-4 h-4 sm:w-5 sm:h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true">
-                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 11H5m14 0l-4-4m4 4l-4 4" />
-                    </svg>
-                    <span className="hidden sm:inline">All Projects</span>
-                    <span className="sm:hidden">All</span>
-                  </Button>
-                </Link>
-              </div>
-
-              {/* Next Project */}
-              <div className="flex-1 w-full lg:w-auto">
-                {navigationLoading ? (
-                  <div className="p-4 sm:p-6 bg-white dark:bg-neutral-800 rounded-2xl shadow-lg border border-neutral-200 dark:border-neutral-700">
-                    <div className="animate-pulse flex items-center gap-4 sm:gap-6">
-                      <div className="flex-1 text-right">
-                        <div className="h-3 sm:h-4 bg-neutral-200 dark:bg-neutral-700 rounded w-16 sm:w-20 mb-2 ml-auto"></div>
-                        <div className="h-4 sm:h-5 bg-neutral-200 dark:bg-neutral-700 rounded w-24 sm:w-32 mb-1 ml-auto"></div>
-                        <div className="h-2 sm:h-3 bg-neutral-200 dark:bg-neutral-700 rounded w-20 sm:w-24 ml-auto"></div>
-                      </div>
-                      <div className="w-10 h-10 sm:w-12 sm:h-12 bg-neutral-200 dark:bg-neutral-700 rounded-xl"></div>
-                    </div>
-                  </div>
-                ) : navigation.next ? (
-                  <Link
-                    to={`/projects/${navigation.next.slug}`}
-                    className="group flex items-center gap-4 sm:gap-6 p-4 sm:p-6 bg-white dark:bg-neutral-800 rounded-2xl shadow-lg hover:shadow-xl transition-all duration-300 border border-neutral-200 dark:border-neutral-700 hover:border-primary-200 dark:hover:border-primary-800"
-                    aria-label={`Go to next project: ${navigation.next.title}`}
-                  >
-                    <div className="text-right flex-1 min-w-0">
-                      <p className="text-xs sm:text-sm text-neutral-500 dark:text-neutral-400 mb-1">Next Project</p>
-                      <p className="font-bold text-sm sm:text-lg text-neutral-900 dark:text-white group-hover:text-primary-500 transition-colors truncate">
-                        {navigation.next.title}
-                      </p>
-                      <p className="text-xs sm:text-sm text-neutral-600 dark:text-neutral-400 mt-1">
-                        {navigation.next.category}
-                      </p>
-                    </div>
-                    <div className="flex-shrink-0 w-10 h-10 sm:w-12 sm:h-12 bg-gradient-to-br from-primary-500 to-primary-600 rounded-xl flex items-center justify-center group-hover:scale-110 transition-transform duration-300">
-                      <svg className="w-5 h-5 sm:w-6 sm:h-6 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true">
-                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
-                      </svg>
-                    </div>
-                  </Link>
-                ) : (
-                  <div className="p-4 sm:p-6 opacity-50 text-right">
-                    <p className="text-xs sm:text-sm text-neutral-500 dark:text-neutral-400">No next project</p>
-                  </div>
-                )}
-              </div>
-            </motion.div>
-          </div>
-        </section>
       </div>
     </ErrorBoundary>
   )

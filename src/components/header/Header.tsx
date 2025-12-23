@@ -12,8 +12,8 @@ interface NavigationItem {
 
 const navigation: NavigationItem[] = [
   { name: 'Home', href: '/' },
-  { 
-    name: 'About', 
+  {
+    name: 'About',
     href: '/about',
     submenu: [
       { name: 'My Tech Stack', href: '/developer' },
@@ -45,7 +45,7 @@ export const Header: React.FC = () => {
   const location = useLocation()
   const menuRef = useRef<HTMLDivElement>(null)
   const dropdownRef = useRef<HTMLDivElement>(null)
-  
+
 
   useEffect(() => {
     const handleScroll = () => {
@@ -95,11 +95,10 @@ export const Header: React.FC = () => {
   return (
     <motion.header
       ref={menuRef}
-      className={`fixed left-0 right-0 z-40 transition-all duration-300 top-0 ${
-        isScrolled
+      className={`fixed left-0 right-0 z-40 transition-all duration-300 top-0 ${isScrolled
           ? 'bg-white/90 dark:bg-neutral-950/90 backdrop-blur-md shadow-sm border-b border-neutral-200/20 dark:border-neutral-800/20'
           : 'bg-white/80 dark:bg-neutral-950/80 backdrop-blur-sm md:bg-transparent md:dark:bg-transparent'
-      }`}
+        }`}
       initial={{ y: -100 }}
       animate={{ y: 0 }}
       transition={{ duration: 0.6 }}
@@ -134,7 +133,7 @@ export const Header: React.FC = () => {
               <span className="text-base sm:text-lg md:text-xl font-bold drop-shadow-sm text-blue-600 dark:text-blue-300">
                 Himanshu
               </span>
-              <div className="text-xs sm:text-xs text-neutral-500 dark:text-neutral-300 -mt-0.5 sm:-mt-1 drop-shadow-sm hidden xs:block">
+              <div className="text-xs sm:text-xs text-neutral-500 dark:text-neutral-300 -mt-0.5 sm:-mt-1 drop-shadow-sm hidden sm:block">
                 Aspiring Data Scientist
               </div>
             </div>
@@ -153,11 +152,10 @@ export const Header: React.FC = () => {
                 >
                   <Link
                     to={item.href}
-                    className={`text-sm font-medium transition-all duration-200 relative hover:scale-105 flex items-center gap-1 ${
-                      location.pathname === item.href || (hasSubmenu && location.pathname.startsWith(item.href))
+                    className={`text-sm font-medium transition-all duration-200 relative hover:scale-105 flex items-center gap-1 ${location.pathname === item.href || (hasSubmenu && location.pathname.startsWith(item.href))
                         ? 'text-primary-500'
                         : 'text-neutral-600 hover:text-primary-500 dark:text-neutral-200 dark:hover:text-primary-400'
-                    }`}
+                      }`}
                     title={`${item.name} - ${getPageDescription(item.name)}`}
                   >
                     {item.name}
@@ -175,7 +173,7 @@ export const Header: React.FC = () => {
                       />
                     )}
                   </Link>
-                  
+
                   {/* Dropdown Menu */}
                   {hasSubmenu && openDropdown === item.name && (
                     <motion.div
@@ -213,7 +211,7 @@ export const Header: React.FC = () => {
             <motion.a
               href="/Himanshu_Salunke_Resume.pdf"
               download="Himanshu_Salunke_Resume.pdf"
-              className="hidden sm:flex items-center gap-2 px-3 py-2 bg-blue-600 hover:bg-blue-700 text-white text-sm font-medium rounded-lg transition-all duration-200 hover:scale-105 active:scale-95 shadow-sm hover:shadow-md" 
+              className="hidden sm:flex items-center gap-2 px-3 py-2 bg-blue-600 hover:bg-blue-700 text-white text-sm font-medium rounded-lg transition-all duration-200 hover:scale-105 active:scale-95 shadow-sm hover:shadow-md"
               whileHover={{ scale: 1.05 }}
               whileTap={{ scale: 0.95 }}
               title="Download Resume"
@@ -313,11 +311,10 @@ export const Header: React.FC = () => {
                     <div>
                       <Link
                         to={item.href}
-                        className={`block rounded-lg px-3 py-2.5 sm:py-3 text-sm sm:text-base font-medium transition-all duration-200 hover:scale-[1.02] active:scale-[0.98] touch-manipulation ${
-                          location.pathname === item.href || (item.submenu && location.pathname.startsWith(item.href))
+                        className={`block rounded-lg px-3 py-2.5 sm:py-3 text-sm sm:text-base font-medium transition-all duration-200 hover:scale-[1.02] active:scale-[0.98] touch-manipulation ${location.pathname === item.href || (item.submenu && location.pathname.startsWith(item.href))
                             ? 'bg-primary-100 text-primary-500 dark:bg-primary-900 dark:text-primary-400 shadow-sm'
                             : 'text-neutral-600 hover:bg-neutral-100 hover:text-neutral-900 dark:text-neutral-200 dark:hover:bg-neutral-800 dark:hover:text-white'
-                        }`}
+                          }`}
                       >
                         <div className="flex items-center justify-between">
                           <span>{item.name}</span>
@@ -343,7 +340,7 @@ export const Header: React.FC = () => {
                     </div>
                   </motion.div>
                 ))}
-                
+
                 {/* Mobile Resume Download */}
                 <motion.div
                   initial={{ opacity: 0, y: 10 }}
@@ -357,16 +354,16 @@ export const Header: React.FC = () => {
                     whileHover={{ scale: 1.02 }}
                     whileTap={{ scale: 0.98 }}
                   >
-                  <svg className="h-3.5 w-3.5 sm:h-4 sm:w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                    <path
-                      strokeLinecap="round"
-                      strokeLinejoin="round"
-                      strokeWidth={2}
-                      d="M12 10v6m0 0l-3-3m3 3l3-3m2 8H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"
-                    />
-                  </svg>
-                  <span className="hidden xs:inline">Download Resume</span>
-                  <span className="xs:hidden">Resume</span>
+                    <svg className="h-3.5 w-3.5 sm:h-4 sm:w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                      <path
+                        strokeLinecap="round"
+                        strokeLinejoin="round"
+                        strokeWidth={2}
+                        d="M12 10v6m0 0l-3-3m3 3l3-3m2 8H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"
+                      />
+                    </svg>
+                    <span className="hidden xs:inline">Download Resume</span>
+                    <span className="xs:hidden">Resume</span>
                   </motion.a>
                 </motion.div>
 

@@ -36,7 +36,7 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
               opacity: 0.8,
             }
           }),
-          
+
           // Main Content Container
           React.createElement('div', {
             key: 'main-container',
@@ -131,7 +131,7 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
                     color: 'white',
                   }
                 }, 'HS'),
-                
+
                 React.createElement('div', {
                   key: 'author-details',
                   style: {
@@ -148,7 +148,7 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
                       color: '#1e293b',
                     }
                   }, 'Himanshu Salunke'),
-                  
+
                   React.createElement('div', {
                     key: 'author-title',
                     style: {
@@ -168,8 +168,9 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
       )
 
       return imageResponse
-    } catch (e: any) {
-      console.log(`${e.message}`)
+    } catch (e: unknown) {
+      const errorMessage = e instanceof Error ? e.message : String(e)
+      console.log(`${errorMessage}`)
       // Fall back to HTML version
     }
   }
@@ -309,9 +310,9 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
             </div>
             ${tags ? `
               <div class="tags">
-                ${(tags as string).split(',').slice(0, 5).map(tag => 
-                  `<span class="tag">${tag.trim()}</span>`
-                ).join('')}
+                ${(tags as string).split(',').slice(0, 5).map(tag =>
+    `<span class="tag">${tag.trim()}</span>`
+  ).join('')}
               </div>
             ` : ''}
           </div>
@@ -324,6 +325,6 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
   // Set headers for image response
   res.setHeader('Content-Type', 'text/html')
   res.setHeader('Cache-Control', 'public, max-age=31536000, immutable')
-  
+
   return res.status(200).send(ogImageHtml)
 }
