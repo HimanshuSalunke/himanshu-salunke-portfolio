@@ -4,92 +4,68 @@ import { Button } from '../ui/Button'
 
 export const ServicesHero: React.FC = () => {
   return (
-    <section className="relative py-20 sm:py-24 md:py-32 bg-gradient-to-br from-blue-50 to-blue-100 dark:from-neutral-900 dark:to-neutral-800">
+    <section className="relative py-24 sm:py-32 bg-white dark:bg-neutral-900 border-b border-neutral-200 dark:border-neutral-800">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <motion.div
-          className="text-center"
-          initial={{ opacity: 0, y: 30 }}
+          className="text-center max-w-4xl mx-auto"
+          initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.8 }}
+          transition={{ duration: 0.6 }}
         >
           {/* Main Heading */}
-          <motion.h1
-            className="text-3xl sm:text-4xl md:text-5xl lg:text-6xl font-bold text-neutral-900 dark:text-white mb-6 sm:mb-8"
-            initial={{ opacity: 0, y: 20 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.6, delay: 0.1 }}
-          >
-            Professional AI/ML & Data Science Services
-          </motion.h1>
+          <h1 className="text-4xl sm:text-5xl md:text-6xl font-bold text-neutral-900 dark:text-white mb-6 tracking-tight">
+            I Build High-Performance <br className="hidden sm:block" />
+            <span className="text-blue-600 dark:text-blue-400">AI & Data Solutions</span>
+          </h1>
 
           {/* Description */}
-          <motion.p
-            className="text-lg sm:text-xl md:text-2xl text-neutral-700 dark:text-neutral-300 mb-8 sm:mb-12 max-w-3xl mx-auto leading-relaxed"
-            initial={{ opacity: 0, y: 20 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.6, delay: 0.2 }}
-          >
-            I build complete AI/ML and Data Science projects with production-ready code, comprehensive documentation, and deployment support. Industry-standard pricing with transparent quotes.
-          </motion.p>
+          <p className="text-xl text-neutral-600 dark:text-neutral-400 mb-10 leading-relaxed">
+            No buzzwords, just code that works. I help businesses and researchers turn complex data problems into reliable, production-ready software.
+          </p>
 
-          {/* Key Points */}
-          <motion.div
-            className="flex flex-wrap justify-center gap-4 sm:gap-6 mb-8 sm:mb-12"
-            initial={{ opacity: 0, y: 20 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.6, delay: 0.3 }}
-          >
-            <div className="flex items-center gap-2 text-neutral-700 dark:text-neutral-300">
-              <svg className="w-5 h-5 text-blue-600 dark:text-blue-400" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
-              </svg>
-              <span className="text-sm sm:text-base">Complete Code</span>
+          {/* Key Points - Clean & Simple */}
+          <div className="flex flex-wrap justify-center gap-6 mb-12 text-sm sm:text-base font-medium text-neutral-700 dark:text-neutral-300">
+            <div className="flex items-center gap-2">
+              <span className="w-2 h-2 rounded-full bg-green-500"></span>
+              Production-Ready Code
             </div>
-            <div className="flex items-center gap-2 text-neutral-700 dark:text-neutral-300">
-              <svg className="w-5 h-5 text-blue-600 dark:text-blue-400" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
-              </svg>
-              <span className="text-sm sm:text-base">Full Documentation</span>
+            <div className="flex items-center gap-2">
+              <span className="w-2 h-2 rounded-full bg-blue-500"></span>
+              Full Documentation
             </div>
-            <div className="flex items-center gap-2 text-neutral-700 dark:text-neutral-300">
-              <svg className="w-5 h-5 text-blue-600 dark:text-blue-400" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
-              </svg>
-              <span className="text-sm sm:text-base">Deployment Support</span>
+            <div className="flex items-center gap-2">
+              <span className="w-2 h-2 rounded-full bg-purple-500"></span>
+              End-to-End Support
             </div>
-            <div className="flex items-center gap-2 text-neutral-700 dark:text-neutral-300">
-              <svg className="w-5 h-5 text-blue-600 dark:text-blue-400" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
-              </svg>
-              <span className="text-sm sm:text-base">Transparent Pricing</span>
-            </div>
-          </motion.div>
+          </div>
 
           {/* CTA Button */}
-          <motion.div
-            initial={{ opacity: 0, y: 20 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.6, delay: 0.4 }}
-          >
-            <motion.div
-              whileHover={{ scale: 1.05 }}
-              whileTap={{ scale: 0.95 }}
+          <div className="flex flex-col sm:flex-row items-center justify-center gap-4">
+            <Button
+              variant="primary"
+              size="lg"
+              className="bg-neutral-900 hover:bg-neutral-800 dark:bg-white dark:text-neutral-900 dark:hover:bg-neutral-200"
+              onClick={() => {
+                const formElement = document.getElementById('inquiry-form')
+                if (formElement) {
+                  formElement.scrollIntoView({ behavior: 'smooth', block: 'start' })
+                }
+              }}
             >
-              <Button
-                variant="primary"
-                size="lg"
-                className="bg-blue-600 hover:bg-blue-700 dark:bg-blue-600 dark:hover:bg-blue-700"
-                onClick={() => {
-                  const formElement = document.getElementById('inquiry-form')
-                  if (formElement) {
-                    formElement.scrollIntoView({ behavior: 'smooth', block: 'start' })
-                  }
-                }}
-              >
-                Get Started
-              </Button>
-            </motion.div>
-          </motion.div>
+              Start Your Project
+            </Button>
+            <button
+              className="text-neutral-600 dark:text-neutral-400 hover:text-neutral-900 dark:hover:text-white transition-colors underline-offset-4 hover:underline"
+              onClick={() => {
+                const pricingElement = document.getElementById('pricing-section')
+                if (pricingElement) {
+                  pricingElement.scrollIntoView({ behavior: 'smooth' })
+                }
+              }}
+            >
+              View Pricing
+            </button>
+          </div>
         </motion.div>
       </div>
     </section>

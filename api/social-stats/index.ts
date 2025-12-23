@@ -5,12 +5,12 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
   res.setHeader('Access-Control-Allow-Origin', '*')
   res.setHeader('Access-Control-Allow-Methods', 'GET, OPTIONS')
   res.setHeader('Access-Control-Allow-Headers', 'Content-Type')
-  
+
   // Handle preflight requests
   if (req.method === 'OPTIONS') {
     return res.status(200).end()
   }
-  
+
   // Only allow GET requests
   if (req.method !== 'GET') {
     return res.status(405).json({ error: 'Method not allowed' })
@@ -45,8 +45,8 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
     res.status(200).json(result)
   } catch (error) {
     console.error(`Social stats API error:`, error)
-    
-    res.status(500).json({ 
+
+    res.status(500).json({
       error: error instanceof Error ? error.message : 'Unknown error',
       isLoading: false
     })
@@ -59,20 +59,20 @@ async function fetchGitHubStats(username: string) {
       headers: {
         'Accept': 'application/vnd.github.v3+json',
         'User-Agent': 'himanshu-portfolio-website',
-        'Authorization': process.env.GITHUB_TOKEN ? `token ${process.env.GITHUB_TOKEN}` : undefined
+        ...(process.env.GITHUB_TOKEN ? { 'Authorization': `token ${process.env.GITHUB_TOKEN}` } : {})
       }
     }),
     fetch(`https://api.github.com/users/${username}/repos?per_page=100&sort=updated`, {
       headers: {
         'Accept': 'application/vnd.github.v3+json',
         'User-Agent': 'himanshu-portfolio-website',
-        'Authorization': process.env.GITHUB_TOKEN ? `token ${process.env.GITHUB_TOKEN}` : undefined
+        ...(process.env.GITHUB_TOKEN ? { 'Authorization': `token ${process.env.GITHUB_TOKEN}` } : {})
       }
     })
   ])
 
   if (!userResponse.ok || !reposResponse.ok) {
-    throw new Error(`GitHub API error: ${userResponse.status}`)
+    throw new Error(`GitHub API error: User ${userResponse.status}, Repos ${reposResponse.status}`)
   }
 
   const userData = await userResponse.json()
@@ -220,10 +220,10 @@ async function fetchCodeChefStats(username: string) {
     // Try alternative approach
     try {
       const altResponse = await fetch(`https://codechef-api.vercel.app/${username}`)
-      
+
       if (altResponse.ok) {
         const altData = await altResponse.json()
-        
+
         return {
           rating: altData.rating || 0,
           stars: altData.stars || 0,
@@ -237,20 +237,20 @@ async function fetchCodeChefStats(username: string) {
     } catch (altError) {
       console.error('Alternative CodeChef API also failed:', altError)
     }
-    
+
     throw error
   }
 }
 
 async function fetchTwitterStats(username: string) {
   const cleanUsername = username.replace('@', '')
-  
+
   const bearerToken = process.env.TWITTER_BEARER_TOKEN
-  
+
   if (!bearerToken) {
     throw new Error('Twitter API token not configured')
   }
-  
+
   const response = await fetch(`https://api.twitter.com/2/users/by/username/${cleanUsername}?user.fields=public_metrics,verified`, {
     method: 'GET',
     headers: {

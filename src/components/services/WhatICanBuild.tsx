@@ -13,43 +13,41 @@ interface ServiceCard {
 const services: ServiceCard[] = [
   {
     title: 'AI & Machine Learning',
-    description: 'I build AI/ML projects including chatbots, computer vision, and predictive models. I specialize in LLM applications with production-ready code.',
+    description: 'Specialized LLM applications, custom chatbots, and computer vision solutions built with production-ready code.',
     icon: (
-      <svg className="w-8 h-8 text-blue-100" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9.663 17h4.673M12 3v1m6.364 1.636l-.707.707M21 12h-1M4 12H3m3.343-5.657l-.707-.707m2.828 9.9a5 5 0 117.072 0l-.548.547A3.374 3.374 0 0014 18.469V19a2 2 0 11-4 0v-.531c0-.895-.356-1.754-.988-2.386l-.548-.547z" />
+      <svg className="w-8 h-8" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M9.663 17h4.673M12 3v1m6.364 1.636l-.707.707M21 12h-1M4 12H3m3.343-5.657l-.707-.707m2.828 9.9a5 5 0 117.072 0l-.548.547A3.374 3.374 0 0014 18.469V19a2 2 0 11-4 0v-.531c0-.895-.356-1.754-.988-2.386l-.548-.547z" />
       </svg>
     ),
     features: [
-      'LLM & Generative AI applications',
-      'Computer vision and image processing',
-      'Natural language processing',
-      'Predictive analytics and forecasting',
+      'LLM & RAG application development',
+      'Computer vision & Image processing',
+      'Natural language processing (NLP)',
+      'Predictive analytics & Forecasting',
       'Recommendation systems',
-      'Model training and optimization',
       'Complete GitHub repository'
     ],
-    technologies: ['Python', 'TensorFlow', 'PyTorch', 'OpenAI', 'Hugging Face', 'LangChain'],
-    priceRange: '₹15k - ₹1L+'
+    technologies: ['Python', 'PyTorch', 'OpenAI', 'LangChain', 'Hugging Face'],
+    priceRange: '₹15k - ₹80k+'
   },
   {
     title: 'Data Science & Analytics',
-    description: 'I create data processing pipelines, analytics dashboards, and business intelligence solutions. I help you extract insights from your data.',
+    description: 'Transform raw data into actionable insights through robust pipelines and interactive visualization dashboards.',
     icon: (
-      <svg className="w-8 h-8 text-blue-100" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z" />
+      <svg className="w-8 h-8" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z" />
       </svg>
     ),
     features: [
-      'Data visualization dashboards',
-      'ETL/ELT pipelines',
-      'Business intelligence reports',
-      'Statistical analysis and modeling',
-      'Real-time analytics',
-      'Data warehousing solutions',
+      'Interactive Analytics Dashboards',
+      'ETL & Automated Data Pipelines',
+      'Statistical Modeling & Analysis',
+      'Business Intelligence (BI) Reports',
+      'Real-time Data Processing',
       'Complete GitHub repository'
     ],
-    technologies: ['Python', 'Tableau', 'Power BI', 'SQL', 'Pandas', 'Apache Spark'],
-    priceRange: '₹15k - ₹60k'
+    technologies: ['Python', 'SQL', 'Pandas', 'Tableau', 'Power BI'],
+    priceRange: '₹5k - ₹40k'
   }
 ]
 
@@ -57,94 +55,82 @@ export const WhatICanBuild: React.FC = () => {
   return (
     <>
       <motion.div
-        className="text-center mb-12"
+        className="text-center mb-16"
         initial={{ opacity: 0, y: 20 }}
         whileInView={{ opacity: 1, y: 0 }}
         transition={{ duration: 0.6 }}
         viewport={{ once: true }}
       >
-        <h2 className="text-2xl sm:text-3xl font-bold text-neutral-900 dark:text-white mb-4">
+        <h2 className="text-3xl font-bold text-neutral-900 dark:text-white mb-4">
           What I Can Build For You
         </h2>
-        <p className="text-base sm:text-lg text-neutral-600 dark:text-neutral-400 max-w-2xl mx-auto">
+        <p className="text-lg text-neutral-600 dark:text-neutral-400 max-w-2xl mx-auto">
           Specialized in AI/ML and Data Science solutions. I deliver production-ready models and analytics systems.
         </p>
       </motion.div>
 
-      <div className="grid grid-cols-1 md:grid-cols-2 gap-6 sm:gap-8">
+      <div className="grid grid-cols-1 md:grid-cols-2 gap-8 lg:gap-12">
         {services.map((service, index) => (
           <motion.div
             key={service.title}
-            className="group relative bg-white dark:bg-neutral-800 rounded-xl sm:rounded-2xl p-6 sm:p-8 shadow-lg border border-neutral-200 dark:border-neutral-700 hover:shadow-2xl transition-all duration-500 overflow-hidden"
+            className="group relative bg-white dark:bg-neutral-800 rounded-2xl p-8 shadow-sm border border-neutral-200 dark:border-neutral-700 hover:shadow-xl transition-all duration-300"
             initial={{ opacity: 0, y: 20 }}
             whileInView={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.6, delay: index * 0.1 }}
+            transition={{ duration: 0.5, delay: index * 0.1 }}
             viewport={{ once: true }}
-            whileHover={{ y: -4, scale: 1.01 }}
+            whileHover={{ y: -4 }}
           >
-            {/* Background Gradient */}
-            <div className="absolute inset-0 bg-gradient-to-br from-blue-500/5 to-purple-500/5 opacity-0 group-hover:opacity-100 transition-opacity duration-500" />
-
-            {/* Content */}
-            <div className="relative z-10">
-              {/* Icon */}
-              <div className="w-12 h-12 sm:w-16 sm:h-16 bg-gradient-to-br from-blue-500 to-blue-600 rounded-xl sm:rounded-2xl flex items-center justify-center mb-4 sm:mb-6 shadow-lg">
+            {/* Header: Icon */}
+            <div className="mb-6">
+              <div className="w-14 h-14 bg-neutral-100 dark:bg-neutral-700 rounded-xl flex items-center justify-center text-blue-600 dark:text-blue-400 group-hover:scale-105 transition-transform duration-300">
                 {service.icon}
-              </div>
-
-              {/* Title */}
-              <h3 className="text-xl sm:text-2xl font-bold text-neutral-900 dark:text-white mb-2 sm:mb-3">
-                {service.title}
-              </h3>
-
-              {/* Description */}
-              <p className="text-sm sm:text-base text-neutral-600 dark:text-neutral-300 mb-4 sm:mb-6 leading-relaxed">
-                {service.description}
-              </p>
-
-              {/* Features */}
-              <div className="mb-4 sm:mb-6">
-                <h4 className="text-sm font-semibold text-neutral-900 dark:text-white mb-2">
-                  What's Included:
-                </h4>
-                <ul className="space-y-1.5">
-                  {service.features.map((feature, idx) => (
-                    <li key={idx} className="flex items-start text-sm text-neutral-600 dark:text-neutral-400">
-                      <svg className="w-4 h-4 text-blue-600 dark:text-blue-400 mr-2 mt-0.5 flex-shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
-                      </svg>
-                      <span>{feature}</span>
-                    </li>
-                  ))}
-                </ul>
-              </div>
-
-              {/* Technologies */}
-              <div className="mb-4 sm:mb-6">
-                <h4 className="text-sm font-semibold text-neutral-900 dark:text-white mb-2">
-                  Technologies:
-                </h4>
-                <div className="flex flex-wrap gap-2">
-                  {service.technologies.map((tech) => (
-                    <span
-                      key={tech}
-                      className="px-2 sm:px-3 py-1 bg-neutral-100 dark:bg-neutral-700 text-neutral-700 dark:text-neutral-200 text-xs sm:text-sm font-medium rounded-full border border-neutral-200 dark:border-neutral-600"
-                    >
-                      {tech}
-                    </span>
-                  ))}
-                </div>
-              </div>
-
-              {/* Price Range */}
-              <div className="flex items-center justify-between pt-4 border-t border-neutral-200 dark:border-neutral-700">
-                <span className="text-sm text-neutral-500 dark:text-neutral-400">Starting from</span>
-                <span className="text-lg font-bold text-blue-600 dark:text-blue-400">{service.priceRange}</span>
               </div>
             </div>
 
-            {/* Decorative Elements */}
-            <div className="absolute top-4 right-4 w-20 h-20 bg-gradient-to-br from-blue-100/30 to-transparent dark:from-blue-800/30 rounded-full blur-xl opacity-0 group-hover:opacity-100 transition-opacity duration-500" />
+            {/* Title & Description */}
+            <h3 className="text-2xl font-bold text-neutral-900 dark:text-white mb-3">
+              {service.title}
+            </h3>
+            <p className="text-neutral-600 dark:text-neutral-300 mb-8 leading-relaxed">
+              {service.description}
+            </p>
+
+            {/* Features List */}
+            <div className="mb-8">
+              <h4 className="text-xs font-bold uppercase tracking-wider text-neutral-500 mb-4">What's Included</h4>
+              <ul className="space-y-3">
+                {service.features.map((feature, idx) => (
+                  <li key={idx} className="flex items-start text-sm text-neutral-700 dark:text-neutral-300">
+                    <svg className="w-5 h-5 text-green-500 mr-3 flex-shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
+                    </svg>
+                    <span>{feature}</span>
+                  </li>
+                ))}
+              </ul>
+            </div>
+
+            {/* Technologies - Simple Tags */}
+            <div className="mb-8">
+              <div className="flex flex-wrap gap-2">
+                {service.technologies.map((tech) => (
+                  <span
+                    key={tech}
+                    className="px-3 py-1 bg-neutral-100 dark:bg-neutral-900 text-neutral-600 dark:text-neutral-400 text-xs font-semibold rounded-md border border-neutral-200 dark:border-neutral-700"
+                  >
+                    {tech}
+                  </span>
+                ))}
+              </div>
+            </div>
+
+            {/* Footer: Price */}
+            <div className="pt-6 border-t border-neutral-100 dark:border-neutral-700 flex items-center justify-between">
+              <div>
+                <p className="text-xs text-neutral-500 mb-1">Starting from</p>
+                <p className="text-xl font-bold text-neutral-900 dark:text-white">{service.priceRange}</p>
+              </div>
+            </div>
           </motion.div>
         ))}
       </div>
