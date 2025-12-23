@@ -61,10 +61,10 @@ export const WhatICanBuild: React.FC = () => {
         transition={{ duration: 0.6 }}
         viewport={{ once: true }}
       >
-        <h2 className="text-3xl font-bold text-neutral-900 dark:text-white mb-4">
+        <h2 className="text-3xl font-bold text-neutral-900 dark:text-neutral-50 mb-4">
           What I Can Build For You
         </h2>
-        <p className="text-lg text-neutral-600 dark:text-neutral-400 max-w-2xl mx-auto">
+        <p className="text-lg text-neutral-600 dark:text-neutral-300 max-w-2xl mx-auto">
           Specialized in AI/ML and Data Science solutions. I deliver production-ready models and analytics systems.
         </p>
       </motion.div>
@@ -73,7 +73,7 @@ export const WhatICanBuild: React.FC = () => {
         {services.map((service, index) => (
           <motion.div
             key={service.title}
-            className="group relative bg-white dark:bg-neutral-800 rounded-2xl p-8 shadow-sm border border-neutral-200 dark:border-neutral-700 hover:shadow-xl transition-all duration-300"
+            className="group relative bg-white dark:bg-neutral-800 rounded-2xl p-8 shadow-sm border border-neutral-200 dark:border-neutral-700 hover:shadow-xl transition-all duration-300 hover:border-primary-500/30 dark:hover:border-primary-500/50"
             initial={{ opacity: 0, y: 20 }}
             whileInView={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.5, delay: index * 0.1 }}
@@ -82,13 +82,13 @@ export const WhatICanBuild: React.FC = () => {
           >
             {/* Header: Icon */}
             <div className="mb-6">
-              <div className="w-14 h-14 bg-neutral-100 dark:bg-neutral-700 rounded-xl flex items-center justify-center text-blue-600 dark:text-blue-400 group-hover:scale-105 transition-transform duration-300">
+              <div className="w-16 h-16 bg-gradient-to-br from-blue-500 to-blue-600 rounded-2xl flex items-center justify-center text-white shadow-lg group-hover:scale-110 transition-transform duration-300">
                 {service.icon}
               </div>
             </div>
 
             {/* Title & Description */}
-            <h3 className="text-2xl font-bold text-neutral-900 dark:text-white mb-3">
+            <h3 className="text-2xl font-bold text-neutral-900 dark:text-neutral-100 mb-3">
               {service.title}
             </h3>
             <p className="text-neutral-600 dark:text-neutral-300 mb-8 leading-relaxed">
@@ -97,11 +97,11 @@ export const WhatICanBuild: React.FC = () => {
 
             {/* Features List */}
             <div className="mb-8">
-              <h4 className="text-xs font-bold uppercase tracking-wider text-neutral-500 mb-4">What's Included</h4>
+              <h4 className="text-xs font-bold uppercase tracking-wider text-neutral-500 dark:text-neutral-400 mb-4">What's Included</h4>
               <ul className="space-y-3">
                 {service.features.map((feature, idx) => (
-                  <li key={idx} className="flex items-start text-sm text-neutral-700 dark:text-neutral-300">
-                    <svg className="w-5 h-5 text-green-500 mr-3 flex-shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                  <li key={idx} className="flex items-start text-sm text-neutral-700 dark:text-neutral-200">
+                    <svg className="w-5 h-5 text-primary-600 dark:text-primary-400 mr-3 flex-shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                       <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
                     </svg>
                     <span>{feature}</span>
@@ -116,7 +116,7 @@ export const WhatICanBuild: React.FC = () => {
                 {service.technologies.map((tech) => (
                   <span
                     key={tech}
-                    className="px-3 py-1 bg-neutral-100 dark:bg-neutral-900 text-neutral-600 dark:text-neutral-400 text-xs font-semibold rounded-md border border-neutral-200 dark:border-neutral-700"
+                    className="px-3 py-1 bg-blue-50 dark:bg-blue-500/10 text-blue-700 dark:text-blue-300 text-xs font-medium rounded-full border border-blue-100 dark:border-blue-500/20 transition-colors"
                   >
                     {tech}
                   </span>
@@ -125,9 +125,9 @@ export const WhatICanBuild: React.FC = () => {
             </div>
 
             {/* Footer: Price */}
-            <div className="pt-6 border-t border-neutral-100 dark:border-neutral-700 flex items-center justify-between">
+            <div className="pt-6 border-t border-neutral-100 dark:border-neutral-700/50 flex items-center justify-between">
               <div>
-                <p className="text-xs text-neutral-500 mb-1">Starting from</p>
+                <p className="text-xs text-neutral-500 dark:text-neutral-400 mb-1">Starting from</p>
                 <p className="text-xl font-bold text-neutral-900 dark:text-white">{service.priceRange}</p>
               </div>
             </div>

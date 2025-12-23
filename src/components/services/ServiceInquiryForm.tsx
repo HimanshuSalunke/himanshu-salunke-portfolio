@@ -136,7 +136,7 @@ export const ServiceInquiryForm: React.FC = () => {
       if (!response.ok) {
         // Handle validation errors
         if (response.status === 400 && responseData.details) {
-          const errorDetails = Array.isArray(responseData.details) 
+          const errorDetails = Array.isArray(responseData.details)
             ? responseData.details.join(', ')
             : responseData.error || 'Validation failed'
           toast.error(errorDetails, {
@@ -144,7 +144,7 @@ export const ServiceInquiryForm: React.FC = () => {
           })
           return
         }
-        
+
         throw new Error(responseData.error || 'Failed to submit inquiry')
       }
 
@@ -168,7 +168,7 @@ export const ServiceInquiryForm: React.FC = () => {
   return (
     <motion.div
       id="inquiry-form"
-      className="bg-white dark:bg-neutral-800 rounded-xl sm:rounded-2xl p-6 sm:p-8 shadow-lg border border-neutral-200 dark:border-neutral-700"
+      className="bg-white/50 dark:bg-neutral-800/60 backdrop-blur-md rounded-xl sm:rounded-2xl p-6 sm:p-8 shadow-lg border border-neutral-200 dark:border-neutral-700"
       initial={{ opacity: 0, y: 20 }}
       whileInView={{ opacity: 1, y: 0 }}
       transition={{ duration: 0.6 }}
@@ -186,9 +186,8 @@ export const ServiceInquiryForm: React.FC = () => {
               type="text"
               {...register('name')}
               placeholder="Your full name"
-              className={`w-full px-4 py-3 border rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-colors bg-white dark:bg-neutral-700 border-neutral-300 dark:border-neutral-600 text-neutral-900 dark:text-white ${
-                errors.name ? 'border-red-500' : ''
-              }`}
+              className={`w-full px-4 py-3 border rounded-lg focus:ring-2 focus:ring-primary-500 focus:border-primary-500 transition-colors bg-white dark:bg-neutral-950/50 border-neutral-300 dark:border-neutral-600 text-neutral-900 dark:text-white placeholder-neutral-400 dark:placeholder-neutral-500 ${errors.name ? 'border-red-500' : ''
+                }`}
             />
             {errors.name && (
               <p className="text-red-500 text-sm mt-1">{errors.name.message}</p>
@@ -204,9 +203,8 @@ export const ServiceInquiryForm: React.FC = () => {
               type="email"
               {...register('email')}
               placeholder="your.email@example.com"
-              className={`w-full px-4 py-3 border rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-colors bg-white dark:bg-neutral-700 border-neutral-300 dark:border-neutral-600 text-neutral-900 dark:text-white ${
-                errors.email ? 'border-red-500' : ''
-              }`}
+              className={`w-full px-4 py-3 border rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-colors bg-white dark:bg-neutral-700 border-neutral-300 dark:border-neutral-600 text-neutral-900 dark:text-white ${errors.email ? 'border-red-500' : ''
+                }`}
             />
             {errors.email && (
               <p className="text-red-500 text-sm mt-1">{errors.email.message}</p>
@@ -224,9 +222,8 @@ export const ServiceInquiryForm: React.FC = () => {
               type="tel"
               {...register('phone')}
               placeholder="+91 98765 43210"
-              className={`w-full px-4 py-3 border rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-colors bg-white dark:bg-neutral-700 border-neutral-300 dark:border-neutral-600 text-neutral-900 dark:text-white ${
-                errors.phone ? 'border-red-500' : ''
-              }`}
+              className={`w-full px-4 py-3 border rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-colors bg-white dark:bg-neutral-700 border-neutral-300 dark:border-neutral-600 text-neutral-900 dark:text-white ${errors.phone ? 'border-red-500' : ''
+                }`}
             />
             {errors.phone && (
               <p className="text-red-500 text-sm mt-1">{errors.phone.message}</p>
@@ -240,9 +237,8 @@ export const ServiceInquiryForm: React.FC = () => {
             <select
               id="clientType"
               {...register('clientType')}
-              className={`w-full px-4 py-3 border rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-colors bg-white dark:bg-neutral-700 border-neutral-300 dark:border-neutral-600 text-neutral-900 dark:text-white ${
-                errors.clientType ? 'border-red-500' : ''
-              }`}
+              className={`w-full px-4 py-3 border rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-colors bg-white dark:bg-neutral-700 border-neutral-300 dark:border-neutral-600 text-neutral-900 dark:text-white ${errors.clientType ? 'border-red-500' : ''
+                }`}
             >
               <option value="">Select your profession</option>
               {clientTypes.map((type) => (
@@ -263,9 +259,8 @@ export const ServiceInquiryForm: React.FC = () => {
             <select
               id="studyYear"
               {...register('studyYear', { required: isStudent ? 'Please select your study year' : false })}
-              className={`w-full px-4 py-3 border rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-colors bg-white dark:bg-neutral-700 border-neutral-300 dark:border-neutral-600 text-neutral-900 dark:text-white ${
-                errors.studyYear ? 'border-red-500' : ''
-              }`}
+              className={`w-full px-4 py-3 border rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-colors bg-white dark:bg-neutral-700 border-neutral-300 dark:border-neutral-600 text-neutral-900 dark:text-white ${errors.studyYear ? 'border-red-500' : ''
+                }`}
             >
               <option value="">Select your year</option>
               {studyYears.map((year) => (
@@ -288,9 +283,8 @@ export const ServiceInquiryForm: React.FC = () => {
             type="text"
             {...register('projectTitle')}
             placeholder="e.g., AI Chatbot with Document Retrieval"
-            className={`w-full px-4 py-3 border rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-colors bg-white dark:bg-neutral-700 border-neutral-300 dark:border-neutral-600 text-neutral-900 dark:text-white ${
-              errors.projectTitle ? 'border-red-500' : ''
-            }`}
+            className={`w-full px-4 py-3 border rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-colors bg-white dark:bg-neutral-700 border-neutral-300 dark:border-neutral-600 text-neutral-900 dark:text-white ${errors.projectTitle ? 'border-red-500' : ''
+              }`}
           />
           {errors.projectTitle && (
             <p className="text-red-500 text-sm mt-1">{errors.projectTitle.message}</p>
@@ -308,7 +302,7 @@ export const ServiceInquiryForm: React.FC = () => {
                   type="radio"
                   value={domain}
                   {...register('domain')}
-                  className="text-blue-600 focus:ring-blue-500"
+                  className="text-primary-600 focus:ring-primary-500"
                 />
                 <span className="text-sm text-neutral-700 dark:text-neutral-300">{domain}</span>
               </label>
@@ -328,9 +322,8 @@ export const ServiceInquiryForm: React.FC = () => {
             rows={6}
             {...register('projectDetails')}
             placeholder="Describe your project requirements, features needed, and any specific technologies you'd like to use..."
-            className={`w-full px-4 py-3 border rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-colors bg-white dark:bg-neutral-700 border-neutral-300 dark:border-neutral-600 text-neutral-900 dark:text-white resize-none ${
-              errors.projectDetails ? 'border-red-500' : ''
-            }`}
+            className={`w-full px-4 py-3 border rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-colors bg-white dark:bg-neutral-700 border-neutral-300 dark:border-neutral-600 text-neutral-900 dark:text-white resize-none ${errors.projectDetails ? 'border-red-500' : ''
+              }`}
           />
           {errors.projectDetails && (
             <p className="text-red-500 text-sm mt-1">{errors.projectDetails.message}</p>
@@ -349,7 +342,7 @@ export const ServiceInquiryForm: React.FC = () => {
                   type="radio"
                   value={option.value}
                   {...register('dataset')}
-                  className="text-blue-600 focus:ring-blue-500"
+                  className="text-primary-600 focus:ring-primary-500"
                 />
                 <span className="text-sm text-neutral-700 dark:text-neutral-300">{option.label}</span>
               </label>
@@ -371,9 +364,8 @@ export const ServiceInquiryForm: React.FC = () => {
               type="number"
               {...register('budgetMin')}
               placeholder="3000"
-              className={`w-full px-4 py-3 border rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-colors bg-white dark:bg-neutral-700 border-neutral-300 dark:border-neutral-600 text-neutral-900 dark:text-white ${
-                errors.budgetMin ? 'border-red-500' : ''
-              }`}
+              className={`w-full px-4 py-3 border rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-colors bg-white dark:bg-neutral-700 border-neutral-300 dark:border-neutral-600 text-neutral-900 dark:text-white ${errors.budgetMin ? 'border-red-500' : ''
+                }`}
             />
             {errors.budgetMin && (
               <p className="text-red-500 text-sm mt-1">{errors.budgetMin.message}</p>
@@ -389,9 +381,8 @@ export const ServiceInquiryForm: React.FC = () => {
               type="number"
               {...register('budgetMax')}
               placeholder="15000"
-              className={`w-full px-4 py-3 border rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-colors bg-white dark:bg-neutral-700 border-neutral-300 dark:border-neutral-600 text-neutral-900 dark:text-white ${
-                errors.budgetMax ? 'border-red-500' : ''
-              }`}
+              className={`w-full px-4 py-3 border rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-colors bg-white dark:bg-neutral-700 border-neutral-300 dark:border-neutral-600 text-neutral-900 dark:text-white ${errors.budgetMax ? 'border-red-500' : ''
+                }`}
             />
             {errors.budgetMax && (
               <p className="text-red-500 text-sm mt-1">{errors.budgetMax.message}</p>
@@ -407,9 +398,8 @@ export const ServiceInquiryForm: React.FC = () => {
               type="date"
               {...register('deadline')}
               min={new Date().toISOString().split('T')[0]}
-              className={`w-full px-4 py-3 border rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-colors bg-white dark:bg-neutral-700 border-neutral-300 dark:border-neutral-600 text-neutral-900 dark:text-white ${
-                errors.deadline ? 'border-red-500' : ''
-              }`}
+              className={`w-full px-4 py-3 border rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-colors bg-white dark:bg-neutral-700 border-neutral-300 dark:border-neutral-600 text-neutral-900 dark:text-white ${errors.deadline ? 'border-red-500' : ''
+                }`}
             />
             {errors.deadline && (
               <p className="text-red-500 text-sm mt-1">{errors.deadline.message}</p>
@@ -431,10 +421,10 @@ export const ServiceInquiryForm: React.FC = () => {
               onChange={handleFileChange}
               className="absolute inset-0 w-full h-full opacity-0 cursor-pointer z-10"
             />
-            <div className="border-2 border-dashed border-neutral-300 dark:border-neutral-600 rounded-lg p-6 text-center hover:border-blue-500 dark:hover:border-blue-500 transition-colors bg-neutral-50 dark:bg-neutral-700/50">
+            <div className="border-2 border-dashed border-neutral-300 dark:border-neutral-600 rounded-lg p-6 text-center hover:border-primary-500 dark:hover:border-primary-500 transition-colors bg-neutral-50 dark:bg-neutral-900/30">
               <div className="flex flex-col items-center space-y-3">
-                <div className="w-12 h-12 bg-blue-100 dark:bg-blue-900/30 rounded-full flex items-center justify-center">
-                  <svg className="w-6 h-6 text-blue-600 dark:text-blue-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <div className="w-12 h-12 bg-primary-100 dark:bg-primary-900/30 rounded-full flex items-center justify-center">
+                  <svg className="w-6 h-6 text-primary-600 dark:text-primary-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                     <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M7 16a4 4 0 01-.88-7.903A5 5 0 1115.9 6L16 6a5 5 0 011 9.9M15 13l-3-3m0 0l-3 3m3-3v12" />
                   </svg>
                 </div>
@@ -482,7 +472,7 @@ export const ServiceInquiryForm: React.FC = () => {
           disabled={isSubmitting}
           variant="primary"
           size="lg"
-          className="w-full bg-blue-600 hover:bg-blue-700 dark:bg-blue-600 dark:hover:bg-blue-700"
+          className="w-full"
         >
           {isSubmitting ? (
             <>

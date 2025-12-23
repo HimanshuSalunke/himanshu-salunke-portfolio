@@ -4,7 +4,7 @@ import { motion } from 'framer-motion'
 export const PaymentInfo: React.FC = () => {
   return (
     <motion.div
-      className="bg-white dark:bg-neutral-800 rounded-xl sm:rounded-2xl p-6 sm:p-8 shadow-lg border border-neutral-200 dark:border-neutral-700"
+      className="bg-white/50 dark:bg-neutral-800/60 backdrop-blur-md rounded-xl sm:rounded-2xl p-6 sm:p-8 shadow-lg border border-neutral-200 dark:border-neutral-700"
       initial={{ opacity: 0, y: 20 }}
       whileInView={{ opacity: 1, y: 0 }}
       transition={{ duration: 0.6 }}
@@ -22,7 +22,7 @@ export const PaymentInfo: React.FC = () => {
       <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mb-6">
         <div className="bg-blue-50 dark:bg-blue-900/20 p-6 rounded-lg border border-blue-200 dark:border-blue-800">
           <div className="flex items-center gap-3 mb-3">
-            <div className="w-12 h-12 bg-blue-600 rounded-full flex items-center justify-center text-white font-bold text-lg">
+            <div className="w-12 h-12 bg-blue-600 dark:bg-blue-500 rounded-full flex items-center justify-center text-white font-bold text-lg shadow-lg shadow-blue-500/20">
               1
             </div>
             <h3 className="text-lg font-semibold text-blue-800 dark:text-blue-300">
@@ -36,7 +36,7 @@ export const PaymentInfo: React.FC = () => {
 
         <div className="bg-green-50 dark:bg-green-900/20 p-6 rounded-lg border border-green-200 dark:border-green-800">
           <div className="flex items-center gap-3 mb-3">
-            <div className="w-12 h-12 bg-green-600 rounded-full flex items-center justify-center text-white font-bold text-lg">
+            <div className="w-12 h-12 bg-green-600 dark:bg-green-500 rounded-full flex items-center justify-center text-white font-bold text-lg shadow-lg shadow-green-500/20">
               2
             </div>
             <h3 className="text-lg font-semibold text-green-800 dark:text-green-300">
@@ -49,7 +49,7 @@ export const PaymentInfo: React.FC = () => {
         </div>
       </div>
 
-      <div className="bg-neutral-50 dark:bg-neutral-700/50 p-4 rounded-lg mb-4">
+      <div className="bg-neutral-50 dark:bg-neutral-900/50 p-4 rounded-lg mb-4 border border-neutral-100 dark:border-neutral-700">
         <p className="text-sm text-neutral-700 dark:text-neutral-300">
           <strong className="text-neutral-900 dark:text-white">Note:</strong> Payment can be done via UPI. I'll share the payment details after we finalize the project scope.
         </p>
