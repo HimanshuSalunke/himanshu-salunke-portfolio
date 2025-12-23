@@ -3,74 +3,68 @@ import { motion } from 'framer-motion'
 
 export const PaymentInfo: React.FC = () => {
   return (
-    <motion.div
-      className="bg-white/50 dark:bg-neutral-800/60 backdrop-blur-md rounded-xl sm:rounded-2xl p-6 sm:p-8 shadow-lg border border-neutral-200 dark:border-neutral-700"
-      initial={{ opacity: 0, y: 20 }}
-      whileInView={{ opacity: 1, y: 0 }}
-      transition={{ duration: 0.6 }}
-      viewport={{ once: true }}
-    >
-      <div className="text-center mb-6">
-        <h2 className="text-2xl sm:text-3xl font-bold text-neutral-900 dark:text-white mb-4">
-          Payment Structure
-        </h2>
-        <p className="text-base sm:text-lg text-neutral-600 dark:text-neutral-400">
-          I work on a 50/50 payment structure to keep things fair for both of us
-        </p>
-      </div>
+    <section className="py-12 bg-white dark:bg-black border-t border-neutral-200 dark:border-neutral-900 font-mono transition-colors">
+      <div className="max-w-4xl mx-auto px-4 sm:px-6">
+        <motion.div
+          initial={{ opacity: 0 }}
+          whileInView={{ opacity: 1 }}
+          viewport={{ once: true }}
+          className="bg-neutral-50 dark:bg-neutral-950 border border-dashed border-neutral-300 dark:border-neutral-800 rounded-xl p-8 md:p-12 relative"
+        >
+          <div className="absolute top-0 left-1/2 -translate-x-1/2 -translate-y-1/2 bg-white dark:bg-black px-4 text-xs text-neutral-500 tracking-widest uppercase">
+            Transaction Protocol
+          </div>
 
-      <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mb-6">
-        <div className="bg-blue-50 dark:bg-blue-900/20 p-6 rounded-lg border border-blue-200 dark:border-blue-800">
-          <div className="flex items-center gap-3 mb-3">
-            <div className="w-12 h-12 bg-blue-600 dark:bg-blue-500 rounded-full flex items-center justify-center text-white font-bold text-lg shadow-lg shadow-blue-500/20">
-              1
+          <div className="grid md:grid-cols-2 gap-8 mb-8">
+            {/* Block A */}
+            <div className="border border-blue-200 dark:border-blue-900/30 bg-blue-50 dark:bg-blue-900/5 p-6 rounded-lg pointer-events-none">
+              <div className="flex justify-between items-start mb-4">
+                <span className="text-4xl font-bold text-blue-600 dark:text-blue-500">50%</span>
+                <span className="text-xs text-blue-700 dark:text-blue-400 bg-blue-100 dark:bg-blue-900/20 px-2 py-1 rounded">INIT_PHASE</span>
+              </div>
+              <h4 className="text-neutral-900 dark:text-white font-bold mb-2">Initialization Resource</h4>
+              <p className="text-xs text-neutral-600 dark:text-neutral-400 leading-relaxed">
+                Required to allocate computational resources and begin the architecture phase.
+              </p>
             </div>
-            <h3 className="text-lg font-semibold text-blue-800 dark:text-blue-300">
-              50% Upfront Payment
-            </h3>
-          </div>
-          <p className="text-sm text-blue-700 dark:text-blue-300">
-            Required to start your project. This covers initial planning, setup, and development costs. Once you pay this, I begin working on your project.
-          </p>
-        </div>
 
-        <div className="bg-green-50 dark:bg-green-900/20 p-6 rounded-lg border border-green-200 dark:border-green-800">
-          <div className="flex items-center gap-3 mb-3">
-            <div className="w-12 h-12 bg-green-600 dark:bg-green-500 rounded-full flex items-center justify-center text-white font-bold text-lg shadow-lg shadow-green-500/20">
-              2
+            {/* Block B */}
+            <div className="border border-green-200 dark:border-green-900/30 bg-green-50 dark:bg-green-900/5 p-6 rounded-lg pointer-events-none">
+              <div className="flex justify-between items-start mb-4">
+                <span className="text-4xl font-bold text-green-600 dark:text-green-500">50%</span>
+                <span className="text-xs text-green-700 dark:text-green-400 bg-green-100 dark:bg-green-900/20 px-2 py-1 rounded">FINAL_PHASE</span>
+              </div>
+              <h4 className="text-neutral-900 dark:text-white font-bold mb-2">Completion Resource</h4>
+              <p className="text-xs text-neutral-600 dark:text-neutral-400 leading-relaxed">
+                Transferred upon successful system deployment and handover of all assets.
+              </p>
             </div>
-            <h3 className="text-lg font-semibold text-green-800 dark:text-green-300">
-              50% Completion Payment
-            </h3>
           </div>
-          <p className="text-sm text-green-700 dark:text-green-300">
-            Due when your project is complete and delivered. This covers final testing, documentation, and project handover. You get everything before making this payment.
-          </p>
-        </div>
-      </div>
 
-      <div className="bg-neutral-50 dark:bg-neutral-900/50 p-4 rounded-lg mb-4 border border-neutral-100 dark:border-neutral-700">
-        <p className="text-sm text-neutral-700 dark:text-neutral-300">
-          <strong className="text-neutral-900 dark:text-white">Note:</strong> Payment can be done via UPI. I'll share the payment details after we finalize the project scope.
-        </p>
-      </div>
-
-      <div className="bg-amber-50 dark:bg-amber-900/20 p-4 rounded-lg border border-amber-200 dark:border-amber-800">
-        <div className="flex items-start gap-3">
-          <svg className="w-5 h-5 text-amber-600 dark:text-amber-400 mt-0.5 flex-shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
-          </svg>
-          <div>
-            <p className="text-sm font-semibold text-amber-800 dark:text-amber-300 mb-1">
-              Additional Hosting & Cloud Services
-            </p>
-            <p className="text-sm text-amber-700 dark:text-amber-300">
-              If your project requires hosting or cloud services (AWS, GCP, Azure, or any other platform), those charges are separate and will be paid directly by you to the service provider. I'll help you set up and configure these services, but the ongoing costs are your responsibility.
-            </p>
+          <div className="mt-8 pt-6 border-t border-neutral-200 dark:border-neutral-900">
+            <h5 className="text-sm font-bold text-neutral-900 dark:text-white mb-4">Important Notes</h5>
+            <ul className="space-y-2 text-sm text-neutral-600 dark:text-neutral-400">
+              <li className="flex items-start gap-2">
+                <span className="text-blue-500 mt-1">•</span>
+                <span><strong>Hosting & API Costs:</strong> You are responsible for all cloud (AWS/GCP) and API (OpenAI/Midjourney) billing. I will help you set up the accounts.</span>
+              </li>
+              <li className="flex items-start gap-2">
+                <span className="text-blue-500 mt-1">•</span>
+                <span><strong>Code Ownership:</strong> You receive 100% intellectual property rights and full source code upon final payment.</span>
+              </li>
+              <li className="flex items-start gap-2">
+                <span className="text-blue-500 mt-1">•</span>
+                <span><strong>Payment Methods:</strong> I accept UPI and Bank Transfer. 50% advance is required to book a slot.</span>
+              </li>
+              <li className="flex items-start gap-2">
+                <span className="text-blue-500 mt-1">•</span>
+                <span><strong>Support:</strong> All projects include 14 days of post-delivery support for bug fixes and minor tweaks.</span>
+              </li>
+            </ul>
           </div>
-        </div>
+
+        </motion.div>
       </div>
-    </motion.div>
+    </section>
   )
 }
-

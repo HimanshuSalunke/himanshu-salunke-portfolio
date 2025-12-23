@@ -1,119 +1,81 @@
 import React from 'react'
-import { motion, useScroll, useSpring } from 'framer-motion'
+import { motion } from 'framer-motion'
 
 const steps = [
   {
-    step: 1,
-    title: 'Share Your Requirements',
-    description: 'Tell me about your project idea, timeline, and any specific requirements. I\'ll listen and ask questions to understand what you need.',
-    icon: '📝'
+    id: '01',
+    title: 'Requirement Injection',
+    desc: 'Analysis of project constraints, data sources, and desired outputs.',
+    status: 'INITIALIZING'
   },
   {
-    step: 2,
-    title: 'I\'ll Give You a Quote',
-    description: 'I analyze your requirements and provide a detailed quote with timeline. No hidden costs - everything is transparent.',
-    icon: '💰'
+    id: '02',
+    title: 'Architecture Design',
+    desc: 'Drafting the blueprint: Model selection, pipeline design, and tech stack.',
+    status: 'PLANNING'
   },
   {
-    step: 3,
-    title: 'I Build Your Project',
-    description: 'I build your project with regular updates and progress tracking. You\'ll see the work as it happens.',
-    icon: '⚡'
+    id: '03',
+    title: 'Development Cycle',
+    desc: 'Iterative coding of the core logic, model training, and integration.',
+    status: 'PROCESSING'
   },
   {
-    step: 4,
-    title: 'Delivery & Testing',
-    description: 'You get working code, documentation, and live testing. Everything is ready to use and deploy.',
-    icon: '🎯'
-  },
-  {
-    step: 5,
-    title: 'Support & Questions',
-    description: 'I provide post-delivery support and answer all your questions. I want to make sure you understand everything.',
-    icon: '🤝'
+    id: '04',
+    title: 'System Deployment',
+    desc: 'Production rollout, load testing, and final handshake.',
+    status: 'COMPLETE'
   }
 ]
 
 export const HowItWorks: React.FC = () => {
-  const containerRef = React.useRef<HTMLDivElement>(null)
-  const { scrollYProgress } = useScroll({
-    target: containerRef,
-    offset: ["start end", "end start"]
-  })
-
-  const scaleY = useSpring(scrollYProgress, {
-    stiffness: 100,
-    damping: 30,
-    restDelta: 0.001
-  })
-
   return (
-    <div className="relative">
-      <motion.div
-        className="text-center mb-16"
-        initial={{ opacity: 0, y: 20 }}
-        whileInView={{ opacity: 1, y: 0 }}
-        transition={{ duration: 0.6 }}
-        viewport={{ once: true }}
-      >
-        <h2 className="text-3xl sm:text-4xl font-bold text-neutral-900 dark:text-white mb-4">
-          How It Works
-        </h2>
-        <p className="px-4 text-base sm:text-lg text-neutral-600 dark:text-neutral-200 max-w-2xl mx-auto">
-          Simple process from idea to working project. Express delivery available for urgent projects.
-        </p>
-      </motion.div>
+    <section className="py-24 bg-white dark:bg-black border-t border-neutral-200 dark:border-neutral-900 font-mono transition-colors">
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
 
-      <div ref={containerRef} className="relative max-w-4xl mx-auto">
-        {/* Connecting Line - Background (Base) */}
-        <div className="absolute left-[28px] top-0 bottom-0 w-0.5 bg-neutral-200 dark:bg-neutral-800 md:left-1/2 md:-ml-px" />
-
-        {/* Connecting Line - Animated (Progress) */}
-        <motion.div
-          className="absolute left-[28px] top-0 bottom-0 w-0.5 bg-gradient-to-b from-blue-500 via-purple-500 to-blue-500 md:left-1/2 md:-ml-px origin-top"
-          style={{ scaleY }}
-        />
-
-        <div className="space-y-12">
-          {steps.map((step, index) => (
-            <motion.div
-              key={step.step}
-              className={`relative flex items-start md:items-center ${index % 2 === 0 ? 'md:flex-row' : 'md:flex-row-reverse'
-                }`}
-              initial={{ opacity: 0, y: 20 }}
-              whileInView={{ opacity: 1, y: 0 }}
-              transition={{ duration: 0.5, delay: index * 0.1 }}
-              viewport={{ once: true }}
-            >
-              {/* Icon Bubble (Central Marker) */}
-              <div className="absolute left-0 md:left-1/2 md:-ml-9 flex-shrink-0 w-18 h-18 bg-white dark:bg-neutral-800 border-4 border-primary-50 dark:border-primary-500/20 rounded-full flex items-center justify-center text-3xl z-10 shadow-lg dark:shadow-primary-900/30">
-                <span role="img" aria-label="Icon" className="filter drop-shadow-md">{step.icon}</span>
-              </div>
-
-              {/* Content Card */}
-              <div className={`ml-20 md:ml-0 md:w-1/2 ${index % 2 === 0 ? 'md:pr-16' : 'md:pl-16'
-                }`}>
-                <div className="bg-white dark:bg-neutral-800 p-6 rounded-xl shadow-sm border border-neutral-200 dark:border-neutral-700 hover:shadow-md transition-shadow">
-                  <div className="flex items-center gap-3 mb-3">
-                    <span className="flex items-center justify-center w-6 h-6 rounded-full bg-primary-100 dark:bg-primary-900/50 text-primary-600 dark:text-primary-400 text-xs font-bold border border-primary-200 dark:border-primary-700">
-                      {step.step}
-                    </span>
-                    <h3 className="text-xl font-bold text-neutral-900 dark:text-white">
-                      {step.title}
-                    </h3>
-                  </div>
-                  <p className="text-sm text-neutral-600 dark:text-neutral-200 mb-6 leading-relaxed">
-                    {step.description}
-                  </p>
-                </div>
-              </div>
-
-              {/* Spacer for the other side on desktop */}
-              <div className="hidden md:block md:w-1/2" />
-            </motion.div>
-          ))}
+        <div className="text-center mb-20">
+          <span className="text-blue-600 dark:text-blue-500 text-xs tracking-widest uppercase">/// PROCESS</span>
+          <h2 className="text-3xl md:text-4xl font-bold text-neutral-900 dark:text-white mt-4">How It Works</h2>
         </div>
+
+        <div className="relative">
+          {/* Desktop Center Line */}
+          <div className="hidden lg:block absolute top-[40px] left-0 w-full h-[1px] bg-neutral-200 dark:bg-neutral-800" />
+
+          {/* Grid Configuration: 1 col (Mobile) -> 2 cols (Tablet) -> 4 cols (Desktop) */}
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-x-8 gap-y-12">
+            {steps.map((step, i) => (
+              <motion.div
+                key={step.id}
+                initial={{ opacity: 0, y: 20 }}
+                whileInView={{ opacity: 1, y: 0 }}
+                transition={{ delay: i * 0.1 }}
+                viewport={{ once: true }}
+                className="relative group flex md:block items-start gap-6"
+              >
+                {/* Mobile Timeline Line (Left Side) */}
+                <div className="md:hidden absolute left-[19px] top-10 bottom-[-48px] w-[1px] bg-neutral-200 dark:bg-neutral-800 z-0" />
+
+                {/* Node Marker */}
+                <div className="relative z-10 flex-shrink-0 w-10 h-10 rounded-full bg-white dark:bg-black border-2 border-neutral-300 dark:border-neutral-700 group-hover:border-blue-500 group-hover:scale-110 transition-all flex items-center justify-center md:mx-auto md:mb-8">
+                  <div className="w-3 h-3 rounded-full bg-neutral-300 dark:bg-neutral-700 group-hover:bg-blue-500 transition-colors" />
+                </div>
+
+                {/* Content Card */}
+                <div className="flex-1 bg-neutral-50 dark:bg-neutral-900/50 border border-neutral-200 dark:border-neutral-800 p-6 rounded-lg group-hover:bg-neutral-100 dark:group-hover:bg-neutral-900 group-hover:border-neutral-400 dark:group-hover:border-neutral-600 transition-colors">
+                  <div className="flex justify-between items-center mb-4">
+                    <span className="text-3xl font-bold text-neutral-800 dark:text-neutral-800 group-hover:text-neutral-900 dark:group-hover:text-neutral-700 transition-colors">{step.id}</span>
+                    <span className="text-[10px] text-green-700 dark:text-green-500 bg-green-100 dark:bg-green-900/20 px-2 py-1 rounded">{step.status}</span>
+                  </div>
+                  <h3 className="text-lg font-bold text-neutral-900 dark:text-white mb-2">{step.title}</h3>
+                  <p className="text-sm text-neutral-600 dark:text-neutral-400 leading-relaxed">{step.desc}</p>
+                </div>
+              </motion.div>
+            ))}
+          </div>
+        </div>
+
       </div>
-    </div>
+    </section>
   )
 }

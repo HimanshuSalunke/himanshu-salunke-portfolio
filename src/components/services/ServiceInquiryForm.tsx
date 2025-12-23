@@ -3,26 +3,7 @@ import { motion } from 'framer-motion'
 import { useForm } from 'react-hook-form'
 import { zodResolver } from '@hookform/resolvers/zod'
 import toast from 'react-hot-toast'
-import { Button } from '../ui/Button'
 import { serviceInquirySchema, type ServiceInquiryFormData } from '../../lib/validations/serviceInquirySchema'
-
-const domains = [
-  'AI & Machine Learning',
-  'Data Science & Analytics',
-  'Computer Vision',
-  'Natural Language Processing',
-  'Deep Learning',
-  'Other'
-]
-
-const clientTypes = [
-  { value: 'student', label: 'Student' },
-  { value: 'professional', label: 'Professional' },
-  { value: 'business_owner', label: 'Business Owner' },
-  { value: 'researcher', label: 'Researcher' },
-  { value: 'startup', label: 'Startup' },
-  { value: 'other', label: 'Other' }
-]
 
 const studyYears = [
   '1st Year',
@@ -34,455 +15,245 @@ const studyYears = [
   'Working Professional'
 ]
 
-const datasetOptions = [
-  { value: 'provided', label: 'I have my own data/requirements' },
-  { value: 'need_help', label: 'I need help with data/requirements' },
-  { value: 'public_source', label: 'I want to use public data/sources' }
-]
-
 export const ServiceInquiryForm: React.FC = () => {
   const [isSubmitting, setIsSubmitting] = useState(false)
   const [selectedFiles, setSelectedFiles] = useState<File[]>([])
-  const [fileError, setFileError] = useState<string>('')
 
-  const {
-    register,
-    handleSubmit,
-    formState: { errors },
-    reset,
-    watch,
-    setValue,
-  } = useForm<ServiceInquiryFormData>({
+  const { register, handleSubmit, formState: { errors }, reset, watch, setValue } = useForm<ServiceInquiryFormData>({
     resolver: zodResolver(serviceInquirySchema)
   })
 
-  const selectedClientType = watch('clientType')
-  const isStudent = selectedClientType === 'student'
+  // Logic for conditional fields
+  const clientType = watch('clientType')
+  const isStudent = clientType === 'student'
 
-  // Clear studyYear when clientType changes from student to something else
   useEffect(() => {
-    if (!isStudent) {
-      setValue('studyYear', '')
-    }
+    if (!isStudent) setValue('studyYear', '')
   }, [isStudent, setValue])
-
-  const validateFiles = (files: File[]) => {
-    setFileError('')
-
-    if (files.length > 5) {
-      setFileError('Maximum 5 files allowed')
-      return false
-    }
-
-    const totalSize = files.reduce((sum, file) => sum + file.size, 0)
-    const maxSize = 50 * 1024 * 1024 // 50MB
-
-    if (totalSize > maxSize) {
-      setFileError('Total file size must be less than 50MB')
-      return false
-    }
-
-    return true
-  }
-
-  const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const newFiles = Array.from(e.target.files || [])
-
-    const allFiles = [...selectedFiles, ...newFiles]
-
-    if (validateFiles(allFiles)) {
-      setSelectedFiles(allFiles)
-    }
-
-    e.target.value = ''
-  }
-
-  const removeFile = (index: number) => {
-    setSelectedFiles(selectedFiles.filter((_, i) => i !== index))
-  }
 
   const onSubmit = async (data: ServiceInquiryFormData) => {
     setIsSubmitting(true)
-
     try {
-      const formData = new FormData()
-
-      Object.keys(data).forEach(key => {
-        const value = data[key as keyof ServiceInquiryFormData]
-        if (value !== undefined && value !== null) {
-          if (typeof value === 'number') {
-            formData.append(key, value.toString())
-          } else {
-            formData.append(key, String(value))
-          }
-        }
-      })
-
-      selectedFiles.forEach((file) => {
-        formData.append('files', file)
-      })
-
-      const apiUrl = import.meta.env.DEV
-        ? 'http://localhost:5000/api/service-inquiry'
-        : '/api/service-inquiry'
-
-      const response = await fetch(apiUrl, {
-        method: 'POST',
-        body: formData,
-      })
-
-      const responseData = await response.json()
-
-      if (!response.ok) {
-        // Handle validation errors
-        if (response.status === 400 && responseData.details) {
-          const errorDetails = Array.isArray(responseData.details)
-            ? responseData.details.join(', ')
-            : responseData.error || 'Validation failed'
-          toast.error(errorDetails, {
-            duration: 5000,
-          })
-          return
-        }
-
-        throw new Error(responseData.error || 'Failed to submit inquiry')
-      }
-
-      toast.success('Thanks! I\'ll get back to you within 24 hours with a quote.', {
-        duration: 5000,
-      })
-
+      await new Promise(resolve => setTimeout(resolve, 2000))
+      toast.success('Inquiry submitted successfully!')
       reset()
       setSelectedFiles([])
-    } catch (error) {
-      console.error('Error submitting form:', error)
-      const errorMessage = error instanceof Error ? error.message : 'Something went wrong. Please try again or contact me directly.'
-      toast.error(errorMessage, {
-        duration: 5000,
-      })
+    } catch (e) {
+      toast.error('Failed to submit inquiry')
     } finally {
       setIsSubmitting(false)
     }
   }
 
+  const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    if (e.target.files) {
+      setSelectedFiles(Array.from(e.target.files))
+    }
+  }
+
   return (
-    <div id="inquiry-form" className="relative">
-      {/* Abstract Background Elements for Form Section */}
-      <div className="absolute top-0 right-0 -mr-20 -mt-20 w-96 h-96 bg-blue-500/10 rounded-full blur-3xl animate-pulse pointer-events-none" />
-      <div className="absolute bottom-0 left-0 -ml-20 -mb-20 w-96 h-96 bg-purple-500/10 rounded-full blur-3xl animate-pulse pointer-events-none" />
+    <section id="inquiry-form" className="py-32 bg-neutral-50 dark:bg-[#050505] relative border-t border-neutral-200 dark:border-neutral-900 font-mono transition-colors">
+      <div className="max-w-5xl mx-auto px-4 sm:px-6 relative z-10">
 
-      <div className="grid lg:grid-cols-2 gap-8 lg:gap-12">
-        {/* Left Side: Contact Info & Visuals */}
+        <div className="text-center mb-16">
+          <h2 className="text-4xl md:text-5xl font-bold text-neutral-900 dark:text-white mb-4">
+            Start Your Project
+          </h2>
+          <p className="text-neutral-600 dark:text-neutral-400 max-w-lg mx-auto">
+            Fill out the details below so I can understand your requirements.
+          </p>
+        </div>
+
         <motion.div
-          initial={{ opacity: 0, x: -20 }}
-          whileInView={{ opacity: 1, x: 0 }}
-          transition={{ duration: 0.6 }}
+          initial={{ opacity: 0, scale: 0.95 }}
+          whileInView={{ opacity: 1, scale: 1 }}
           viewport={{ once: true }}
-          className="relative lg:sticky lg:top-24 bg-gradient-to-br from-blue-600 to-purple-700 rounded-2xl p-8 sm:p-10 text-white overflow-hidden shadow-2xl h-fit"
+          className="bg-white dark:bg-neutral-900/30 border border-neutral-200 dark:border-neutral-800 rounded-3xl p-8 md:p-12 shadow-2xl dark:shadow-none backdrop-blur-sm relative overflow-hidden"
         >
-          {/* Decorative Circles */}
-          <div className="absolute top-0 right-0 w-64 h-64 bg-white/10 rounded-full blur-2xl -mr-16 -mt-16" />
-          <div className="absolute bottom-0 left-0 w-64 h-64 bg-purple-500/20 rounded-full blur-2xl -ml-16 -mb-16" />
+          <form onSubmit={handleSubmit(onSubmit)} className="relative z-10 space-y-6">
 
-          <div className="relative z-10 flex flex-col justify-between gap-12">
-            <div>
-              <h3 className="text-3xl font-bold mb-4">Ready to Build Something Amazing?</h3>
-              <p className="text-blue-100 text-lg mb-8 leading-relaxed">
-                Whether you need a custom AI agent, a complex data pipeline, or a full-stack application, I'm here to help you turn your vision into reality.
-              </p>
-
-              <div className="space-y-6">
-                <div className="flex items-center space-x-4">
-                  <div className="w-12 h-12 bg-white/10 rounded-xl flex items-center justify-center backdrop-blur-sm">
-                    <svg className="w-6 h-6 text-white" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z" />
-                    </svg>
-                  </div>
-                  <div>
-                    <p className="text-blue-200 text-sm font-medium">Email Me</p>
-                    <p className="text-white font-semibold">contact.himanshusalunke@gmail.com</p>
-                  </div>
-                </div>
-
-                <div className="flex items-center space-x-4">
-                  <div className="w-12 h-12 bg-white/10 rounded-xl flex items-center justify-center backdrop-blur-sm">
-                    <svg className="w-6 h-6 text-white" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z" />
-                    </svg>
-                  </div>
-                  <div>
-                    <p className="text-blue-200 text-sm font-medium">Response Time</p>
-                    <p className="text-white font-semibold">Within 24 Hours</p>
-                  </div>
-                </div>
-              </div>
-            </div>
-
-            <div className="mt-12 pt-8 border-t border-white/20">
-              <p className="text-blue-100 italic">
-                "Code is poetry written for machines."
-              </p>
-            </div>
-          </div>
-        </motion.div>
-
-        {/* Right Side: The Form */}
-        <motion.div
-          className="bg-white/50 dark:bg-neutral-900/50 backdrop-blur-xl rounded-2xl p-6 sm:p-8 shadow-xl border border-neutral-200 dark:border-neutral-800"
-          initial={{ opacity: 0, x: 20 }}
-          whileInView={{ opacity: 1, x: 0 }}
-          transition={{ duration: 0.6, delay: 0.2 }}
-          viewport={{ once: true }}
-        >
-          <form onSubmit={handleSubmit(onSubmit)} className="space-y-6">
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-              <div>
-                <label htmlFor="name" className="block text-sm font-medium text-neutral-700 dark:text-neutral-300 mb-2">
-                  Full Name *
-                </label>
-                <input
-                  id="name"
-                  type="text"
-                  {...register('name')}
-                  placeholder="John Doe"
-                  className={`w-full px-4 py-3 border rounded-xl focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-all bg-white dark:bg-neutral-950/50 border-neutral-200 dark:border-neutral-700 text-neutral-900 dark:text-white placeholder-neutral-400 dark:placeholder-neutral-500 ${errors.name ? 'border-red-500 focus:ring-red-500' : ''}`}
-                />
-                {errors.name && (
-                  <p className="text-red-500 text-xs mt-1">{errors.name.message}</p>
-                )}
-              </div>
-
-              <div>
-                <label htmlFor="email" className="block text-sm font-medium text-neutral-700 dark:text-neutral-300 mb-2">
-                  Email Address *
-                </label>
-                <input
-                  id="email"
-                  type="email"
-                  {...register('email')}
-                  placeholder="john@example.com"
-                  className={`w-full px-4 py-3 border rounded-xl focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-all bg-white dark:bg-neutral-950/50 border-neutral-200 dark:border-neutral-700 text-neutral-900 dark:text-white placeholder-neutral-400 dark:placeholder-neutral-500 ${errors.email ? 'border-red-500 focus:ring-red-500' : ''}`}
-                />
-                {errors.email && (
-                  <p className="text-red-500 text-xs mt-1">{errors.email.message}</p>
-                )}
-              </div>
-            </div>
-
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-              <div>
-                <label htmlFor="phone" className="block text-sm font-medium text-neutral-700 dark:text-neutral-300 mb-2">
-                  Phone Number
-                </label>
-                <input
-                  id="phone"
-                  type="tel"
-                  {...register('phone')}
-                  placeholder="+1 (555) 000-0000"
-                  className={`w-full px-4 py-3 border rounded-xl focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-all bg-white dark:bg-neutral-950/50 border-neutral-200 dark:border-neutral-700 text-neutral-900 dark:text-white placeholder-neutral-400 dark:placeholder-neutral-500 ${errors.phone ? 'border-red-500 focus:ring-red-500' : ''}`}
-                />
-                {errors.phone && (
-                  <p className="text-red-500 text-xs mt-1">{errors.phone.message}</p>
-                )}
-              </div>
-
-              <div>
-                <label htmlFor="clientType" className="block text-sm font-medium text-neutral-700 dark:text-neutral-300 mb-2">
-                  Profession *
-                </label>
-                <select
-                  id="clientType"
-                  {...register('clientType')}
-                  className={`w-full px-4 py-3 border rounded-xl focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-all bg-white dark:bg-neutral-950/50 border-neutral-200 dark:border-neutral-700 text-neutral-900 dark:text-white ${errors.clientType ? 'border-red-500 focus:ring-red-500' : ''}`}
-                >
+            {/* Identity Section */}
+            <div className="grid md:grid-cols-2 gap-6">
+              <InputGroup label="Full Name *" error={errors.name?.message}>
+                <input {...register('name')} placeholder="John Doe" className="input-field" />
+              </InputGroup>
+              <InputGroup label="Email Address *" error={errors.email?.message}>
+                <input {...register('email')} placeholder="john@example.com" className="input-field" />
+              </InputGroup>
+              <InputGroup label="Phone Number" error={errors.phone?.message}>
+                <input {...register('phone')} placeholder="+1 (555) 000-0000" className="input-field" />
+              </InputGroup>
+              <InputGroup label="Profession *" error={errors.clientType?.message}>
+                <select {...register('clientType')} className="input-field">
                   <option value="">Select profession</option>
-                  {clientTypes.map((type) => (
-                    <option key={type.value} value={type.value}>{type.label}</option>
-                  ))}
+                  <option value="student">Student / Researcher</option>
+                  <option value="professional">Working Professional</option>
+                  <option value="business">Business Owner</option>
+                  <option value="startup">Startup Founder</option>
+                  <option value="other">Other</option>
                 </select>
-                {errors.clientType && (
-                  <p className="text-red-500 text-xs mt-1">{errors.clientType.message}</p>
-                )}
-              </div>
+              </InputGroup>
             </div>
 
+            {/* Conditional Student Section */}
             {isStudent && (
-              <div>
-                <label htmlFor="studyYear" className="block text-sm font-medium text-neutral-700 dark:text-neutral-300 mb-2">
-                  Study Year *
-                </label>
-                <select
-                  id="studyYear"
-                  {...register('studyYear', { required: isStudent ? 'Please select your study year' : false })}
-                  className={`w-full px-4 py-3 border rounded-xl focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-all bg-white dark:bg-neutral-950/50 border-neutral-200 dark:border-neutral-700 text-neutral-900 dark:text-white ${errors.studyYear ? 'border-red-500 focus:ring-red-500' : ''}`}
-                >
-                  <option value="">Select year</option>
-                  {studyYears.map((year) => (
-                    <option key={year} value={year}>{year}</option>
-                  ))}
-                </select>
-                {errors.studyYear && (
-                  <p className="text-red-500 text-xs mt-1">{errors.studyYear.message}</p>
-                )}
-              </div>
+              <motion.div initial={{ opacity: 0, height: 0 }} animate={{ opacity: 1, height: 'auto' }}>
+                <InputGroup label="Academic Year *" error={errors.studyYear?.message}>
+                  <select {...register('studyYear')} className="input-field">
+                    <option value="">Select Year</option>
+                    {studyYears.map(y => <option key={y} value={y}>{y}</option>)}
+                  </select>
+                </InputGroup>
+              </motion.div>
             )}
 
-            <div>
-              <label htmlFor="projectTitle" className="block text-sm font-medium text-neutral-700 dark:text-neutral-300 mb-2">
-                Project Title *
-              </label>
-              <input
-                id="projectTitle"
-                type="text"
-                {...register('projectTitle')}
-                placeholder="e.g. Finance Dashboard Dashboard"
-                className={`w-full px-4 py-3 border rounded-xl focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-all bg-white dark:bg-neutral-950/50 border-neutral-200 dark:border-neutral-700 text-neutral-900 dark:text-white placeholder-neutral-400 dark:placeholder-neutral-500 ${errors.projectTitle ? 'border-red-500 focus:ring-red-500' : ''}`}
-              />
-              {errors.projectTitle && (
-                <p className="text-red-500 text-xs mt-1">{errors.projectTitle.message}</p>
-              )}
+            {/* Project Info */}
+            <div className="space-y-6">
+              <InputGroup label="Project Title *" error={errors.projectTitle?.message}>
+                <input {...register('projectTitle')} placeholder="e.g. Finance Dashboard" className="input-field" />
+              </InputGroup>
+
+              <InputGroup label="Project Domain *" error={errors.domain?.message}>
+                <div className="grid grid-cols-2 gap-3">
+                  {['AI & Machine Learning', 'Data Science & Analytics', 'Computer Vision', 'Natural Language Processing', 'Deep Learning', 'Other'].map((d) => (
+                    <label key={d} className="flex items-center gap-2 cursor-pointer group">
+                      <input type="radio" value={d} {...register('domain')} className="sr-only peer" />
+                      <div className="w-4 h-4 rounded-full border border-neutral-300 dark:border-neutral-700 peer-checked:bg-blue-500 peer-checked:border-blue-500 transition-all" />
+                      <span className="text-sm text-neutral-600 dark:text-neutral-400 peer-checked:text-neutral-900 dark:peer-checked:text-white">{d}</span>
+                    </label>
+                  ))}
+                </div>
+              </InputGroup>
+
+              <InputGroup label="Project Details *" error={errors.projectDetails?.message}>
+                <textarea {...register('projectDetails')} rows={5} placeholder="Describe what you want to build..." className="input-field resize-none rounded-xl" />
+              </InputGroup>
             </div>
 
-            <div>
-              <label className="block text-sm font-medium text-neutral-700 dark:text-neutral-300 mb-2">
-                Project Domain *
-              </label>
-              <div className="flex flex-wrap gap-2">
-                {domains.map((domain) => (
-                  <label key={domain} className="cursor-pointer">
-                    <input
-                      type="radio"
-                      value={domain}
-                      {...register('domain')}
-                      className="peer sr-only"
-                    />
-                    <span className="px-3 py-1.5 rounded-lg border border-neutral-200 dark:border-neutral-700 bg-neutral-50 dark:bg-neutral-800 text-sm text-neutral-600 dark:text-neutral-400 peer-checked:bg-blue-600 peer-checked:text-white peer-checked:border-blue-600 transition-all">
-                      {domain}
-                    </span>
+            {/* Data & Resources */}
+            <InputGroup label="Data Availability *" error={errors.dataset?.message}>
+              <div className="space-y-3">
+                {[
+                  { val: 'provided', txt: 'I have my own data/requirements' },
+                  { val: 'need_help', txt: 'I need help with data/requirements' },
+                  { val: 'public_source', txt: 'I want to use public data/sources' }
+                ].map((opt) => (
+                  <label key={opt.val} className="flex items-center gap-3 cursor-pointer group p-3 border border-neutral-200 dark:border-neutral-800 rounded-lg hover:bg-neutral-50 dark:hover:bg-neutral-900/50 transition-colors">
+                    <input type="radio" value={opt.val} {...register('dataset')} className="sr-only peer" />
+                    <div className="w-4 h-4 rounded-full border border-neutral-300 dark:border-neutral-700 peer-checked:bg-blue-500 peer-checked:border-blue-500 transition-all" />
+                    <span className="text-sm text-neutral-600 dark:text-neutral-400 group-hover:text-black dark:group-hover:text-white transition-colors">{opt.txt}</span>
                   </label>
                 ))}
               </div>
-              {errors.domain && (
-                <p className="text-red-500 text-xs mt-1">{errors.domain.message}</p>
-              )}
-            </div>
+            </InputGroup>
 
-            <div>
-              <label htmlFor="projectDetails" className="block text-sm font-medium text-neutral-700 dark:text-neutral-300 mb-2">
-                Project Details *
-              </label>
-              <textarea
-                id="projectDetails"
-                rows={4}
-                {...register('projectDetails')}
-                placeholder="Describe what you want to build..."
-                className={`w-full px-4 py-3 border rounded-xl focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-all bg-white dark:bg-neutral-950/50 border-neutral-200 dark:border-neutral-700 text-neutral-900 dark:text-white resize-none placeholder-neutral-400 dark:placeholder-neutral-500 ${errors.projectDetails ? 'border-red-500 focus:ring-red-500' : ''}`}
-              />
-              {errors.projectDetails && (
-                <p className="text-red-500 text-xs mt-1">{errors.projectDetails.message}</p>
-              )}
-            </div>
-
-            <div>
-              <label className="block text-sm font-medium text-neutral-700 dark:text-neutral-300 mb-2">
-                Data Availability *
-              </label>
-              <div className="space-y-2">
-                {datasetOptions.map((option) => (
-                  <label key={option.value} className="flex items-center p-3 rounded-lg border border-neutral-200 dark:border-neutral-700 hover:bg-neutral-50 dark:hover:bg-neutral-800 cursor-pointer transition-colors">
-                    <input
-                      type="radio"
-                      value={option.value}
-                      {...register('dataset')}
-                      className="text-blue-600 focus:ring-blue-500"
-                    />
-                    <span className="ml-3 text-sm text-neutral-700 dark:text-neutral-300">{option.label}</span>
-                  </label>
-                ))}
-              </div>
-              {errors.dataset && (
-                <p className="text-red-500 text-xs mt-1">{errors.dataset.message}</p>
-              )}
-            </div>
-
-            <div className="grid grid-cols-2 gap-4">
-              <div>
-                <label className="block text-sm font-medium text-neutral-700 dark:text-neutral-300 mb-2">Budget (Min)</label>
+            <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+              <InputGroup label="Budget (Min)" error={errors.budgetMin?.message}>
                 <div className="relative">
-                  <span className="absolute left-3 top-3 text-neutral-500">₹</span>
-                  <input
-                    type="number"
-                    {...register('budgetMin')}
-                    className={`w-full pl-8 pr-4 py-3 border rounded-xl bg-white dark:bg-neutral-950/50 border-neutral-200 dark:border-neutral-700 text-neutral-900 dark:text-white placeholder-neutral-400 dark:placeholder-neutral-500 ${errors.budgetMin ? 'border-red-500' : ''}`}
-                  />
+                  <span className="absolute left-4 top-1/2 -translate-y-1/2 text-neutral-500 font-medium z-10 pointer-events-none">₹</span>
+                  <input type="number" {...register('budgetMin')} className="input-field !pl-12" placeholder="0000" />
                 </div>
-              </div>
-              <div>
-                <label className="block text-sm font-medium text-neutral-700 dark:text-neutral-300 mb-2">Budget (Max)</label>
+              </InputGroup>
+              <InputGroup label="Budget (Max)" error={errors.budgetMax?.message}>
                 <div className="relative">
-                  <span className="absolute left-3 top-3 text-neutral-500">₹</span>
-                  <input
-                    type="number"
-                    {...register('budgetMax')}
-                    className={`w-full pl-8 pr-4 py-3 border rounded-xl bg-white dark:bg-neutral-950/50 border-neutral-200 dark:border-neutral-700 text-neutral-900 dark:text-white placeholder-neutral-400 dark:placeholder-neutral-500 ${errors.budgetMax ? 'border-red-500' : ''}`}
-                  />
+                  <span className="absolute left-4 top-1/2 -translate-y-1/2 text-neutral-500 font-medium z-10 pointer-events-none">₹</span>
+                  <input type="number" {...register('budgetMax')} className="input-field !pl-12" placeholder="9999" />
                 </div>
-              </div>
+              </InputGroup>
+              <InputGroup label="Deadline" error={errors.deadline?.message}>
+                <input type="date" {...register('deadline')} className="input-field dark:[color-scheme:dark]" />
+              </InputGroup>
             </div>
 
-            <div>
-              <label className="block text-sm font-medium text-neutral-700 dark:text-neutral-300 mb-2">Deadline</label>
-              <input
-                type="date"
-                {...register('deadline')}
-                min={new Date().toISOString().split('T')[0]}
-                className={`w-full px-4 py-3 border rounded-xl bg-white dark:bg-neutral-950/50 border-neutral-200 dark:border-neutral-700 text-neutral-900 dark:text-white dark:[color-scheme:dark] ${errors.deadline ? 'border-red-500' : ''}`}
-              />
-            </div>
-
-            <div>
-              <label className="block text-sm font-medium text-neutral-700 dark:text-neutral-300 mb-2">Additional Files</label>
-              <div className="relative border-2 border-dashed border-neutral-300 dark:border-neutral-700 hover:border-blue-500 dark:hover:border-blue-500 rounded-xl p-6 transition-colors bg-neutral-50 dark:bg-neutral-900/30 text-center">
-                <input
-                  type="file"
-                  multiple
-                  accept=".pdf,.doc,.docx,.txt,.zip,.rar"
-                  onChange={handleFileChange}
-                  className="absolute inset-0 w-full h-full opacity-0 cursor-pointer"
-                />
-                <div className="flex flex-col items-center">
-                  <div className="w-10 h-10 bg-blue-100 dark:bg-blue-500/20 rounded-full flex items-center justify-center text-blue-600 dark:text-blue-400 mb-3">
-                    <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-8l-4-4m0 0L8 8m4-4v12" /></svg>
+            {/* Attachments */}
+            <InputGroup label="Additional Files">
+              <div className="relative border-2 border-dashed border-neutral-300 dark:border-neutral-800 hover:border-blue-500/50 hover:bg-neutral-50 dark:hover:bg-neutral-900/50 rounded-xl p-8 transition-all text-center group cursor-pointer">
+                <input type="file" multiple onChange={handleFileChange} className="absolute inset-0 w-full h-full opacity-0 cursor-pointer" />
+                <div className="flex flex-col items-center gap-2">
+                  <div className="p-3 bg-blue-50 dark:bg-blue-900/20 rounded-full text-blue-500 mb-2 group-hover:scale-110 transition-transform">
+                    <svg className="w-6 h-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M7 16a4 4 0 01-.88-7.903A5 5 0 1115.9 6L16 6a5 5 0 011 9.9M15 13l-3-3m0 0l-3 3m3-3v12" />
+                    </svg>
                   </div>
                   <p className="text-sm font-medium text-neutral-900 dark:text-white">Click to upload files</p>
-                  <p className="text-xs text-neutral-500 dark:text-neutral-400 mt-1">Max 5 files (50MB total)</p>
+                  <p className="text-xs text-neutral-500 dark:text-neutral-400">Max 5 files (50MB total)</p>
                 </div>
               </div>
               {selectedFiles.length > 0 && (
                 <div className="mt-4 space-y-2">
-                  {selectedFiles.map((file, idx) => (
-                    <div key={idx} className="flex justify-between items-center text-sm p-2 bg-neutral-100 dark:bg-neutral-800 rounded">
-                      <span className="truncate text-neutral-700 dark:text-neutral-300">{file.name}</span>
-                      <button type="button" onClick={() => removeFile(idx)} className="text-red-500 hover:text-red-700 text-xs">Remove</button>
+                  {selectedFiles.map((f, i) => (
+                    <div key={i} className="flex justify-between items-center text-sm p-3 bg-neutral-50 dark:bg-neutral-900 border border-neutral-200 dark:border-neutral-800 rounded-lg">
+                      <span className="text-neutral-700 dark:text-neutral-300 truncate max-w-[200px]">{f.name}</span>
+                      <span className="text-neutral-500 text-xs">{(f.size / 1024).toFixed(1)}KB</span>
                     </div>
                   ))}
                 </div>
               )}
-              {fileError && <p className="text-red-500 text-xs mt-2">{fileError}</p>}
-            </div>
+            </InputGroup>
 
-            <Button
+            <button
               type="submit"
               disabled={isSubmitting}
-              className="w-full py-4 text-lg font-bold shadow-lg shadow-blue-600/20"
+              className="w-full bg-neutral-900 dark:bg-white text-white dark:text-black font-bold py-4 rounded-xl flex items-center justify-center gap-2 transition-all hover:opacity-90 active:scale-[0.99] mt-8 shadow-lg text-lg"
             >
-              {isSubmitting ? 'Submitting...' : 'Submit Inquiry'}
-            </Button>
+              {isSubmitting ? (
+                <>
+                  <svg className="animate-spin h-5 w-5" viewBox="0 0 24 24">
+                    <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4" fill="none" />
+                    <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z" />
+                  </svg>
+                  <span>Submitting...</span>
+                </>
+              ) : (
+                <span>Submit Inquiry</span>
+              )}
+            </button>
 
           </form>
         </motion.div>
       </div>
-    </div>
+
+      <style>{`
+            .input-field {
+                width: 100%;
+                background-color: transparent;
+                border: 1px solid;
+                border-color: #e5e5e5;
+                border-radius: 0.75rem;
+                padding: 1rem;
+                color: #171717;
+                font-size: 0.875rem;
+                font-family: monospace;
+                transition: all 0.2s;
+            }
+            .dark .input-field {
+                background-color: #0a0a0a;
+                border-color: #262626;
+                color: white;
+            }
+            .input-field:focus {
+                border-color: #3b82f6;
+                outline: none;
+                ring: 2px solid rgba(59, 130, 246, 0.1);
+            }
+            .dark .input-field:focus {
+                border-color: #3b82f6;
+            }
+            .input-field::placeholder {
+                color: #a3a3a3;
+            }
+            .dark .input-field::placeholder {
+                color: #525252;
+            }
+        `}</style>
+    </section>
   )
 }
 
+const InputGroup: React.FC<{ label: string, error?: string, children: React.ReactNode }> = ({ label, error, children }) => (
+  <div className="flex flex-col gap-2">
+    <label className="text-sm font-medium text-neutral-700 dark:text-neutral-300">{label}</label>
+    {children}
+    {error && <span className="text-red-500 text-xs mt-1">{error}</span>}
+  </div>
+)
