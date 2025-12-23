@@ -95,19 +95,21 @@ export const WhatICanBuild: React.FC = () => {
               {service.description}
             </p>
 
-            {/* Features List */}
+            {/* Features Bento Grid */}
             <div className="mb-8">
-              <h4 className="text-xs font-bold uppercase tracking-wider text-neutral-500 dark:text-neutral-400 mb-4">What's Included</h4>
-              <ul className="space-y-3">
+              <h4 className="text-xs font-bold uppercase tracking-wider text-neutral-500 dark:text-neutral-400 mb-4 ml-1">What's Included</h4>
+              <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
                 {service.features.map((feature, idx) => (
-                  <li key={idx} className="flex items-start text-sm text-neutral-700 dark:text-neutral-200">
-                    <svg className="w-5 h-5 text-primary-600 dark:text-primary-400 mr-3 flex-shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
-                    </svg>
-                    <span>{feature}</span>
-                  </li>
+                  <div key={idx} className="flex items-center p-3 rounded-xl bg-neutral-50 dark:bg-neutral-900/50 border border-neutral-100 dark:border-neutral-700/50 hover:border-blue-500/30 transition-colors group/feature">
+                    <div className="w-8 h-8 rounded-lg bg-blue-100 dark:bg-blue-500/20 flex items-center justify-center mr-3 group-hover/feature:bg-blue-500 group-hover/feature:text-white transition-colors">
+                      <svg className="w-4 h-4 text-blue-600 dark:text-blue-400 group-hover/feature:text-white" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
+                      </svg>
+                    </div>
+                    <span className="text-sm font-medium text-neutral-700 dark:text-neutral-200 leading-tight">{feature}</span>
+                  </div>
                 ))}
-              </ul>
+              </div>
             </div>
 
             {/* Technologies - Simple Tags */}

@@ -2,6 +2,8 @@ import React from 'react'
 import { Helmet } from 'react-helmet-async'
 import { motion } from 'framer-motion'
 import { ServicesHero } from '../../components/services/ServicesHero'
+import { TechMarquee } from '../../components/services/TechMarquee'
+import { ServiceShowcase } from '../../components/services/ServiceShowcase'
 import { WhatICanBuild } from '../../components/services/WhatICanBuild'
 import { PricingSection } from '../../components/services/PricingSection'
 import { HowItWorks } from '../../components/services/HowItWorks'
@@ -19,9 +21,15 @@ const Services: React.FC = () => {
         <meta property="og:type" content="website" />
       </Helmet>
 
-      <div className="min-h-screen pt-16">
+      <div className="min-h-screen">
         {/* Hero Section */}
         <ServicesHero />
+
+        {/* Tech Stack Marquee */}
+        <TechMarquee />
+
+        {/* Visual Showcase (3D Icons) */}
+        <ServiceShowcase />
 
         {/* What I Can Build */}
         <section className="py-20">
@@ -53,7 +61,7 @@ const Services: React.FC = () => {
 
         {/* Inquiry Form */}
         <section className="py-20">
-          <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
+          <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
             <motion.div
               initial={{ opacity: 0, y: 20 }}
               whileInView={{ opacity: 1, y: 0 }}

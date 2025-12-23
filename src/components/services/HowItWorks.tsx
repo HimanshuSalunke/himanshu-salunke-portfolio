@@ -1,5 +1,5 @@
 import React from 'react'
-import { motion } from 'framer-motion'
+import { motion, useScroll, useSpring } from 'framer-motion'
 
 const steps = [
   {
@@ -35,6 +35,18 @@ const steps = [
 ]
 
 export const HowItWorks: React.FC = () => {
+  const containerRef = React.useRef<HTMLDivElement>(null)
+  const { scrollYProgress } = useScroll({
+    target: containerRef,
+    offset: ["start end", "end start"]
+  })
+
+  const scaleY = useSpring(scrollYProgress, {
+    stiffness: 100,
+    damping: 30,
+    restDelta: 0.001
+  })
+
   return (
     <div className="relative">
       <motion.div
@@ -52,9 +64,15 @@ export const HowItWorks: React.FC = () => {
         </p>
       </motion.div>
 
-      <div className="relative max-w-4xl mx-auto">
-        {/* Connecting Line */}
-        <div className="absolute left-[28px] top-0 bottom-0 w-0.5 bg-gradient-to-b from-primary-500/0 via-primary-500/30 to-primary-500/0 md:left-1/2 md:-ml-px" />
+      <div ref={containerRef} className="relative max-w-4xl mx-auto">
+        {/* Connecting Line - Background (Base) */}
+        <div className="absolute left-[28px] top-0 bottom-0 w-0.5 bg-neutral-200 dark:bg-neutral-800 md:left-1/2 md:-ml-px" />
+
+        {/* Connecting Line - Animated (Progress) */}
+        <motion.div
+          className="absolute left-[28px] top-0 bottom-0 w-0.5 bg-gradient-to-b from-blue-500 via-purple-500 to-blue-500 md:left-1/2 md:-ml-px origin-top"
+          style={{ scaleY }}
+        />
 
         <div className="space-y-12">
           {steps.map((step, index) => (
