@@ -7,9 +7,9 @@
     "node": "22.x"
   },
   "scripts": {
-    "dev": "npx -y kill-port 3000 3001 3002 5000 5173 && concurrently \"node server.js\" \"vite\"",
+    "dev": "npx -y kill-port 3000 3001 3002 5000 5173 && concurrently \"node --env-file=.env server.js\" \"vite\"",
     "dev:frontend": "vite",
-    "dev:backend": "node server.js",
+    "dev:backend": "node --env-file=.env server.js",
     "build": "vite build",
     "start": "vite preview",
     "preview": "vite preview",

@@ -36,6 +36,11 @@ app.use(cors({
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 
+console.log('🔧 Server Environment Check:');
+console.log('   - DATABASE_URL:', process.env.DATABASE_URL ? '✅ Set' : '❌ Missing');
+console.log('   - BLOB_TOKEN:', process.env.BLOB_READ_WRITE_TOKEN ? '✅ Set' : '❌ Missing');
+console.log('   - SLACK_WEBHOOK:', process.env.SLACK_WEBHOOK_URL ? '✅ Set' : '❌ Missing');
+
 // Configure multer for file uploads (memory storage)
 const upload = multer({
   storage: multer.memoryStorage(),

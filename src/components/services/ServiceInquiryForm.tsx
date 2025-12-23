@@ -46,7 +46,7 @@ export const ServiceInquiryForm: React.FC = () => {
         formData.append('files', file)
       })
 
-      const response = await fetch('http://localhost:5000/api/service-inquiry', {
+      const response = await fetch('/api/service-inquiry', {
         method: 'POST',
         body: formData, // do NOT set Content-Type header when using FormData
       })
