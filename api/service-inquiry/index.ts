@@ -74,7 +74,7 @@ async function sendToSlack(data: any): Promise<boolean> {
           },
           {
             type: 'mrkdwn',
-            text: `*Project:*\n${data.projectTitle}`
+            text: `*Project Title:*\n${data.projectTitle}`
           },
           {
             type: 'mrkdwn',
