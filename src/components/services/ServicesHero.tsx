@@ -13,16 +13,12 @@ export const ServicesHero: React.FC = () => {
         <div className="grid lg:grid-cols-2 gap-12 items-center">
 
           {/* Text Content */}
-          <motion.div
-            initial={{ opacity: 0, x: -50 }}
-            animate={{ opacity: 1, x: 0 }}
-            transition={{ duration: 0.8, ease: "easeOut" }}
-          >
+          <div className="flex flex-col justify-center">
             <motion.div
               initial={{ opacity: 0, scale: 0.9 }}
               animate={{ opacity: 1, scale: 1 }}
               transition={{ duration: 0.5 }}
-              className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-blue-500/10 border border-blue-500/20 text-blue-600 dark:text-blue-400 text-xs font-mono mb-6"
+              className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-blue-500/10 border border-blue-500/20 text-blue-600 dark:text-blue-400 text-xs font-mono mb-6 w-fit"
             >
               <span className="relative flex h-2 w-2">
                 <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-blue-400 opacity-75"></span>
@@ -38,7 +34,7 @@ export const ServicesHero: React.FC = () => {
               </span>
             </h1>
 
-            <p className="text-lg md:text-xl text-neutral-600 dark:text-neutral-400 max-w-2xl mx-auto leading-relaxed mb-10">
+            <p className="text-lg md:text-xl text-neutral-600 dark:text-neutral-400 max-w-2xl leading-relaxed mb-10">
               I build custom AI systems and data pipelines that solve real business problems. From predictive analytics to intelligent agents, I turn chaos into clarity.
             </p>
 
@@ -57,7 +53,7 @@ export const ServicesHero: React.FC = () => {
                 View Capabilities
               </button>
             </div>
-          </motion.div>
+          </div>
 
           {/* Visual: Data Sphere / Hologram */}
           <motion.div
