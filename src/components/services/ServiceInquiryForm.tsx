@@ -154,9 +154,10 @@ export const ServiceInquiryForm: React.FC = () => {
               <InputGroup label="Profession *" error={errors.clientType?.message}>
                 <select {...register('clientType')} className="input-field">
                   <option value="">Select profession</option>
-                  <option value="student">Student / Researcher</option>
+                  <option value="student">Student</option>
+                  <option value="researcher">Researcher</option>
                   <option value="professional">Working Professional</option>
-                  <option value="business">Business Owner</option>
+                  <option value="business_owner">Business Owner</option>
                   <option value="startup">Startup Founder</option>
                   <option value="other">Other</option>
                 </select>
