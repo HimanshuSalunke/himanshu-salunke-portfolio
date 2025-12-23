@@ -57,15 +57,19 @@ export const ServiceInquiryForm: React.FC = () => {
         body: formData, // do NOT set Content-Type header when using FormData
       })
 
-      if (!response.ok) throw new Error('Failed to submit')
+      const result = await response.json()
+
+      if (!response.ok) {
+        throw new Error(result.error || result.details || 'Failed to submit')
+      }
 
       await new Promise(resolve => setTimeout(resolve, 1000)) // Minimal UX delay
       toast.success('Inquiry submitted successfully!')
       reset()
       setSelectedFiles([])
-    } catch (e) {
+    } catch (e: any) {
       console.error(e)
-      toast.error('Failed to submit inquiry. Please try again.')
+      toast.error(e.message || 'Failed to submit inquiry. Please try again.')
     } finally {
       setIsSubmitting(false)
     }
@@ -74,9 +78,17 @@ export const ServiceInquiryForm: React.FC = () => {
   const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     if (e.target.files) {
       const newFiles = Array.from(e.target.files)
+
+      // Filter for PDFs only
+      const pdfFiles = newFiles.filter(file => file.type === 'application/pdf')
+
+      if (pdfFiles.length < newFiles.length) {
+        toast.error('Only PDF files are allowed')
+      }
+
       // Prevent duplicates based on name and size
       setSelectedFiles(prev => {
-        const uniqueNewFiles = newFiles.filter(nf => !prev.some(pf => pf.name === nf.name && pf.size === nf.size))
+        const uniqueNewFiles = pdfFiles.filter(nf => !prev.some(pf => pf.name === nf.name && pf.size === nf.size))
         return [...prev, ...uniqueNewFiles].slice(0, 5) // Limit to 5 max
       })
     }
@@ -214,7 +226,13 @@ export const ServiceInquiryForm: React.FC = () => {
             {/* Attachments */}
             <InputGroup label="Additional Files">
               <div className="relative border-2 border-dashed border-neutral-300 dark:border-neutral-800 hover:border-blue-500/50 hover:bg-neutral-50 dark:hover:bg-neutral-900/50 rounded-xl p-8 transition-all text-center group cursor-pointer">
-                <input type="file" multiple onChange={handleFileChange} className="absolute inset-0 w-full h-full opacity-0 cursor-pointer" />
+                <input
+                  type="file"
+                  multiple
+                  accept="application/pdf"
+                  onChange={handleFileChange}
+                  className="absolute inset-0 w-full h-full opacity-0 cursor-pointer"
+                />
                 <div className="flex flex-col items-center gap-2">
                   <div className="p-3 bg-blue-50 dark:bg-blue-900/20 rounded-full text-blue-500 mb-2 group-hover:scale-110 transition-transform">
                     <svg className="w-6 h-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
@@ -222,7 +240,7 @@ export const ServiceInquiryForm: React.FC = () => {
                     </svg>
                   </div>
                   <p className="text-sm font-medium text-neutral-900 dark:text-white">Click to upload files</p>
-                  <p className="text-xs text-neutral-500 dark:text-neutral-400">Max 5 files (50MB total)</p>
+                  <p className="text-xs text-neutral-500 dark:text-neutral-400">PDFs only (Max 5 files, 50MB)</p>
                 </div>
               </div>
               {selectedFiles.length > 0 && (
