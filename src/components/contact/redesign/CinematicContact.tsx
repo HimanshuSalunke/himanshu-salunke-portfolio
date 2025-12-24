@@ -38,11 +38,11 @@ const contactDetails = [
 
 export const CinematicContact: React.FC = () => {
     return (
-        <section className="relative min-h-screen flex items-center pt-24 pb-12 bg-neutral-950 overflow-hidden">
+        <section className="relative min-h-screen flex items-center pt-24 pb-12 bg-neutral-50 dark:bg-neutral-950 overflow-hidden transition-colors duration-300">
             {/* Cinematic Background */}
-            <div className="absolute inset-0 grid-pattern opacity-[0.05]" />
-            <div className="absolute top-0 right-0 w-[600px] h-[600px] bg-blue-600/10 blur-[120px] rounded-full pointer-events-none" />
-            <div className="absolute bottom-0 left-0 w-[400px] h-[400px] bg-indigo-600/10 blur-[100px] rounded-full pointer-events-none" />
+            <div className="absolute inset-0 grid-pattern opacity-[0.03] dark:opacity-[0.05]" />
+            <div className="absolute top-0 right-0 w-[600px] h-[600px] bg-blue-500/5 dark:bg-blue-600/10 blur-[120px] rounded-full pointer-events-none" />
+            <div className="absolute bottom-0 left-0 w-[400px] h-[400px] bg-indigo-500/5 dark:bg-indigo-600/10 blur-[100px] rounded-full pointer-events-none" />
 
             <div className="relative z-10 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 w-full">
                 <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 lg:gap-24 items-start">
@@ -53,19 +53,19 @@ export const CinematicContact: React.FC = () => {
                         animate={{ opacity: 1, x: 0 }}
                         transition={{ duration: 0.8 }}
                     >
-                        <div className="mb-4 inline-flex items-center gap-2 px-3 py-1 rounded-full bg-blue-500/10 border border-blue-500/20 text-blue-400 text-sm font-medium">
-                            <span className="w-2 h-2 rounded-full bg-blue-400 animate-pulse" />
+                        <div className="mb-4 inline-flex items-center gap-2 px-3 py-1 rounded-full bg-blue-50 dark:bg-blue-500/10 border border-blue-200 dark:border-blue-500/20 text-blue-600 dark:text-blue-400 text-sm font-medium">
+                            <span className="w-2 h-2 rounded-full bg-blue-500 dark:bg-blue-400 animate-pulse" />
                             Open to Opportunities
                         </div>
 
-                        <h1 className="text-5xl md:text-7xl font-bold text-white tracking-tight mb-6">
+                        <h1 className="text-5xl md:text-7xl font-bold text-neutral-900 dark:text-white tracking-tight mb-6">
                             Let's Build the <br />
-                            <span className="text-transparent bg-clip-text bg-gradient-to-r from-blue-400 to-indigo-500">
+                            <span className="text-transparent bg-clip-text bg-gradient-to-r from-blue-600 to-indigo-600 dark:from-blue-400 dark:to-indigo-500">
                                 Future.
                             </span>
                         </h1>
 
-                        <p className="text-lg text-neutral-400 mb-10 max-w-lg leading-relaxed">
+                        <p className="text-lg text-neutral-600 dark:text-neutral-400 mb-10 max-w-lg leading-relaxed">
                             Have a project in mind? Looking for a data science partner?
                             Or just want to chat about AI? I'm just a message away.
                         </p>
@@ -83,26 +83,26 @@ export const CinematicContact: React.FC = () => {
                                             href={item.href}
                                             target={item.href.startsWith('mailto') ? undefined : "_blank"}
                                             rel={item.href.startsWith('mailto') ? undefined : "noopener noreferrer"}
-                                            className="group flex items-center gap-5 p-3 rounded-2xl bg-white/5 border border-white/5 hover:bg-white/10 hover:border-white/10 transition-all duration-300"
+                                            className="group flex items-center gap-5 p-3 rounded-2xl bg-white dark:bg-white/5 border border-neutral-200 dark:border-white/5 hover:border-blue-500/20 dark:hover:bg-white/10 dark:hover:border-white/10 shadow-sm dark:shadow-none hover:shadow-md transition-all duration-300"
                                         >
-                                            <div className="w-10 h-10 rounded-xl bg-neutral-900 border border-neutral-800 flex items-center justify-center group-hover:scale-110 transition-transform">
+                                            <div className="w-10 h-10 rounded-xl bg-neutral-100 dark:bg-neutral-900 border border-neutral-200 dark:border-neutral-800 flex items-center justify-center group-hover:scale-110 transition-transform">
                                                 {item.icon}
                                             </div>
                                             <div>
                                                 <p className="text-xs text-neutral-500 font-medium mb-0.5">{item.label}</p>
-                                                <p className="text-base text-white font-medium group-hover:text-blue-400 transition-colors">
+                                                <p className="text-base text-neutral-900 dark:text-white font-medium group-hover:text-blue-600 dark:group-hover:text-blue-400 transition-colors">
                                                     {item.value}
                                                 </p>
                                             </div>
                                         </a>
                                     ) : (
-                                        <div className="flex items-center gap-5 p-3 rounded-2xl bg-white/5 border border-white/5">
-                                            <div className="w-10 h-10 rounded-xl bg-neutral-900 border border-neutral-800 flex items-center justify-center">
+                                        <div className="flex items-center gap-5 p-3 rounded-2xl bg-white dark:bg-white/5 border border-neutral-200 dark:border-white/5 shadow-sm dark:shadow-none">
+                                            <div className="w-10 h-10 rounded-xl bg-neutral-100 dark:bg-neutral-900 border border-neutral-200 dark:border-neutral-800 flex items-center justify-center">
                                                 {item.icon}
                                             </div>
                                             <div>
                                                 <p className="text-xs text-neutral-500 font-medium mb-0.5">{item.label}</p>
-                                                <p className="text-base text-white font-medium">
+                                                <p className="text-base text-neutral-900 dark:text-white font-medium">
                                                     {item.value}
                                                 </p>
                                             </div>
@@ -114,9 +114,9 @@ export const CinematicContact: React.FC = () => {
 
                         {/* Quick Actions */}
                         <div>
-                            <h3 className="text-sm font-semibold text-neutral-400 uppercase tracking-wider mb-4">Quick Actions</h3>
+                            <h3 className="text-sm font-semibold text-neutral-500 dark:text-neutral-400 uppercase tracking-wider mb-4">Quick Actions</h3>
                             <div className="flex flex-wrap gap-4">
-                                <Link to="/articles" className="flex items-center gap-2 px-5 py-3 rounded-xl bg-purple-500/10 border border-purple-500/20 text-purple-300 hover:bg-purple-500/20 hover:text-white transition-all">
+                                <Link to="/articles" className="flex items-center gap-2 px-5 py-3 rounded-xl bg-purple-50 dark:bg-purple-500/10 border border-purple-200 dark:border-purple-500/20 text-purple-700 dark:text-purple-300 hover:bg-purple-100 dark:hover:bg-purple-500/20 transition-all font-medium">
                                     <BookOpen className="w-4 h-4" />
                                     <span>Read My Articles</span>
                                 </Link>
@@ -124,7 +124,7 @@ export const CinematicContact: React.FC = () => {
                                     href="https://github.com/HimanshuSalunke"
                                     target="_blank"
                                     rel="noopener noreferrer"
-                                    className="flex items-center gap-2 px-5 py-3 rounded-xl bg-neutral-800 border border-neutral-700 text-neutral-300 hover:bg-neutral-700 hover:text-white transition-all"
+                                    className="flex items-center gap-2 px-5 py-3 rounded-xl bg-neutral-100 dark:bg-neutral-800 border border-neutral-200 dark:border-neutral-700 text-neutral-700 dark:text-neutral-300 hover:bg-neutral-200 dark:hover:bg-neutral-700 hover:text-neutral-900 dark:hover:text-white transition-all font-medium"
                                 >
                                     <Github className="w-4 h-4" />
                                     <span>View GitHub</span>

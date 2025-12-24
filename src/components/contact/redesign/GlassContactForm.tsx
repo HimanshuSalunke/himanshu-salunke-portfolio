@@ -118,7 +118,7 @@ export const GlassContactForm: React.FC = () => {
             <motion.div
                 initial={{ opacity: 0, scale: 0.9 }}
                 animate={{ opacity: 1, scale: 1 }}
-                className="h-full flex flex-col items-center justify-center text-center p-8 bg-white/5 backdrop-blur-xl border border-white/10 rounded-3xl"
+                className="h-full flex flex-col items-center justify-center text-center p-8 bg-white dark:bg-white/5 backdrop-blur-xl border border-neutral-200 dark:border-white/10 rounded-3xl shadow-xl dark:shadow-none"
             >
                 <motion.div
                     initial={{ scale: 0 }}
@@ -128,13 +128,13 @@ export const GlassContactForm: React.FC = () => {
                 >
                     <span className="text-4xl">✨</span>
                 </motion.div>
-                <h3 className="text-2xl font-bold text-white mb-4">Message Sent!</h3>
-                <p className="text-neutral-400 mb-8 max-w-sm">
+                <h3 className="text-2xl font-bold text-neutral-900 dark:text-white mb-4">Message Sent!</h3>
+                <p className="text-neutral-600 dark:text-neutral-400 mb-8 max-w-sm">
                     Thanks for reaching out. I'll get back to you within 24 hours.
                 </p>
                 <button
                     onClick={() => setSubmitStatus('idle')}
-                    className="px-6 py-2 rounded-full border border-white/10 hover:bg-white/5 text-white transition-colors"
+                    className="px-6 py-2 rounded-full border border-neutral-200 dark:border-white/10 hover:bg-neutral-100 dark:hover:bg-white/5 text-neutral-900 dark:text-white transition-colors"
                 >
                     Send Another
                 </button>
@@ -144,8 +144,8 @@ export const GlassContactForm: React.FC = () => {
 
     // --- Cinematic Form View ---
     return (
-        <div className="bg-neutral-900/50 backdrop-blur-md border border-white/5 rounded-3xl p-6 sm:p-8 shadow-2xl">
-            <h3 className="text-xl font-bold text-white mb-6">Send a Message</h3>
+        <div className="bg-white/80 dark:bg-neutral-900/50 backdrop-blur-md border border-neutral-200 dark:border-white/5 rounded-3xl p-6 sm:p-8 shadow-2xl transition-colors duration-300">
+            <h3 className="text-xl font-bold text-neutral-900 dark:text-white mb-6">Send a Message</h3>
 
             <form onSubmit={handleSubmit(onSubmit)} className="space-y-6">
                 <input type="text" {...register('honeypot')} className="hidden" />
@@ -153,47 +153,47 @@ export const GlassContactForm: React.FC = () => {
                 {/* Grid for Name/Email */}
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                     <div className="space-y-2">
-                        <label className="text-sm font-medium text-neutral-400 ml-1">Name</label>
+                        <label className="text-sm font-medium text-neutral-700 dark:text-neutral-400 ml-1">Name</label>
                         <input
                             {...register('name')}
                             placeholder="John Doe"
-                            className="w-full bg-white/5 border border-white/10 rounded-xl px-4 py-3 text-white placeholder-neutral-600 focus:outline-none focus:ring-2 focus:ring-blue-500/50 focus:bg-white/10 transition-all"
+                            className="w-full bg-neutral-50 dark:bg-white/5 border border-neutral-200 dark:border-white/10 rounded-xl px-4 py-3 text-neutral-900 dark:text-white placeholder-neutral-400 dark:placeholder-neutral-600 focus:outline-none focus:ring-2 focus:ring-blue-500/50 focus:bg-white dark:focus:bg-white/10 transition-all"
                         />
-                        {errors.name && <p className="text-xs text-red-400 ml-1">{errors.name.message}</p>}
+                        {errors.name && <p className="text-xs text-red-500 dark:text-red-400 ml-1">{errors.name.message}</p>}
                     </div>
 
                     <div className="space-y-2">
-                        <label className="text-sm font-medium text-neutral-400 ml-1">Email</label>
+                        <label className="text-sm font-medium text-neutral-700 dark:text-neutral-400 ml-1">Email</label>
                         <input
                             {...register('email')}
                             placeholder="john@example.com"
-                            className="w-full bg-white/5 border border-white/10 rounded-xl px-4 py-3 text-white placeholder-neutral-600 focus:outline-none focus:ring-2 focus:ring-blue-500/50 focus:bg-white/10 transition-all"
+                            className="w-full bg-neutral-50 dark:bg-white/5 border border-neutral-200 dark:border-white/10 rounded-xl px-4 py-3 text-neutral-900 dark:text-white placeholder-neutral-400 dark:placeholder-neutral-600 focus:outline-none focus:ring-2 focus:ring-blue-500/50 focus:bg-white dark:focus:bg-white/10 transition-all"
                         />
-                        {errors.email && <p className="text-xs text-red-400 ml-1">{errors.email.message}</p>}
+                        {errors.email && <p className="text-xs text-red-500 dark:text-red-400 ml-1">{errors.email.message}</p>}
                     </div>
                 </div>
 
                 {/* Subject */}
                 <div className="space-y-2">
-                    <label className="text-sm font-medium text-neutral-400 ml-1">Subject</label>
+                    <label className="text-sm font-medium text-neutral-700 dark:text-neutral-400 ml-1">Subject</label>
                     <input
                         {...register('subject')}
                         placeholder={`What's this about? (min ${SUBJECT_MIN_WORDS} words)`}
-                        className="w-full bg-white/5 border border-white/10 rounded-xl px-4 py-3 text-white placeholder-neutral-600 focus:outline-none focus:ring-2 focus:ring-blue-500/50 focus:bg-white/10 transition-all"
+                        className="w-full bg-neutral-50 dark:bg-white/5 border border-neutral-200 dark:border-white/10 rounded-xl px-4 py-3 text-neutral-900 dark:text-white placeholder-neutral-400 dark:placeholder-neutral-600 focus:outline-none focus:ring-2 focus:ring-blue-500/50 focus:bg-white dark:focus:bg-white/10 transition-all"
                     />
-                    {errors.subject && <p className="text-xs text-red-400 ml-1">{errors.subject.message}</p>}
+                    {errors.subject && <p className="text-xs text-red-500 dark:text-red-400 ml-1">{errors.subject.message}</p>}
                 </div>
 
                 {/* Message */}
                 <div className="space-y-2">
-                    <label className="text-sm font-medium text-neutral-400 ml-1">Message</label>
+                    <label className="text-sm font-medium text-neutral-700 dark:text-neutral-400 ml-1">Message</label>
                     <textarea
                         {...register('message')}
                         rows={5}
                         placeholder={`Tell me about your project... (min ${MESSAGE_MIN_WORDS} words)`}
-                        className="w-full bg-white/5 border border-white/10 rounded-xl px-4 py-3 text-white placeholder-neutral-600 focus:outline-none focus:ring-2 focus:ring-blue-500/50 focus:bg-white/10 transition-all resize-none"
+                        className="w-full bg-neutral-50 dark:bg-white/5 border border-neutral-200 dark:border-white/10 rounded-xl px-4 py-3 text-neutral-900 dark:text-white placeholder-neutral-400 dark:placeholder-neutral-600 focus:outline-none focus:ring-2 focus:ring-blue-500/50 focus:bg-white dark:focus:bg-white/10 transition-all resize-none"
                     />
-                    {errors.message && <p className="text-xs text-red-400 ml-1">{errors.message.message}</p>}
+                    {errors.message && <p className="text-xs text-red-500 dark:text-red-400 ml-1">{errors.message.message}</p>}
                 </div>
 
                 {/* Submit Button */}
@@ -202,7 +202,7 @@ export const GlassContactForm: React.FC = () => {
                     disabled={isSubmitting || !isFormValid}
                     className={`w-full py-4 rounded-xl font-bold text-lg transition-all transform hover:scale-[1.02] active:scale-[0.98] ${isFormValid
                         ? 'bg-gradient-to-r from-blue-600 to-indigo-600 text-white shadow-lg shadow-blue-500/20'
-                        : 'bg-neutral-800 text-neutral-500 cursor-not-allowed'
+                        : 'bg-neutral-200 dark:bg-neutral-800 text-neutral-400 dark:text-neutral-500 cursor-not-allowed'
                         }`}
                 >
                     {isSubmitting ? 'Sending...' : 'Send Message'}
