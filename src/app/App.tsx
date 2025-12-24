@@ -1,13 +1,12 @@
-import React from 'react'
-import { BrowserRouter as Router, Routes, Route } from 'react-router-dom'
+import React, { lazy, Suspense } from 'react'
+import { BrowserRouter as Router, Routes, Route, useLocation } from 'react-router-dom'
 import { HelmetProvider } from 'react-helmet-async'
+import { motion, AnimatePresence } from 'framer-motion'
 import { ThemeProvider } from '../context/ThemeContext'
 import { CinematicHeader } from '../components/header/redesign/CinematicHeader'
 import { CinematicFooter } from '../components/footer/redesign/CinematicFooter'
 import { ProgressTracker, EasterEgg } from '../components/gamification/ProgressTracker'
-import { PageTransition } from '../components/animations/PageTransition'
 import { ScrollToTop } from '../components/ui/ScrollToTop'
-import { BackToTop } from '../components/ui/BackToTop'
 import { FontPreloader, FontDisplayOptimizer, CriticalResourcePreloader } from '../components/performance/FontPreloader'
 import { RouteErrorBoundary, RouteLoadingFallback } from '../components/performance/RouteErrorBoundary'
 import { SkipLinks } from '../components/accessibility/SkipLinks'
@@ -17,14 +16,11 @@ import { VercelAnalytics } from '../components/analytics/VercelAnalytics'
 import { useAnalytics } from '../hooks/useAnalytics'
 
 // Lazy load pages for better performance
-import { lazy, Suspense } from 'react'
-
 const Home = lazy(() => import('./pages/Home.tsx'))
 const About = lazy(() => import('./pages/About.tsx'))
 const Work = lazy(() => import('./pages/Work.tsx'))
 const Project = lazy(() => import('./pages/Project.tsx'))
 const Articles = lazy(() => import('./pages/Articles.tsx'))
-// Article page removed - articles are external LinkedIn posts
 const Contact = lazy(() => import('./pages/Contact.tsx'))
 const Developer = lazy(() => import('./pages/Developer.tsx'))
 const Services = lazy(() => import('./pages/Services.tsx'))
@@ -33,73 +29,70 @@ const NotFound = lazy(() => import('./pages/NotFound.tsx'))
 // Loading component
 const LoadingSpinner: React.FC = () => <RouteLoadingFallback />
 
-// Inner App component that has access to all contexts
-const AppContent: React.FC = () => {
+// Separated Routes component to use useLocation hook inside Router context
+const AppRoutes: React.FC = () => {
+  const location = useLocation()
   const { isAnalyticsEnabled, enableAnalytics, disableAnalytics } = useAnalytics()
   const isSupported = false
   const isUpdated = false
   const updateServiceWorker = () => { }
 
-  return (
-    <Router future={{ v7_startTransition: true, v7_relativeSplatPath: true }}>
-      {/* Scroll to top on route change */}
-      <ScrollToTop />
+  // Scroll reset effect
+  React.useEffect(() => {
+    window.scrollTo(0, 0)
+    const timeoutId = setTimeout(() => window.scrollTo(0, 0), 50)
+    return () => clearTimeout(timeoutId)
+  }, [location.pathname])
 
-      {/* <ScrollOptimizer> */}
+  return (
+    <>
+      <ScrollToTop />
       <div className="min-h-screen bg-neutral-50 dark:bg-neutral-950 transition-colors duration-300">
-        {/* Performance Optimizations */}
         <FontPreloader />
         <FontDisplayOptimizer />
         <CriticalResourcePreloader />
-
-        {/* Accessibility Features */}
         <SkipLinks />
-
-        {/* Progress Tracker */}
         <ProgressTracker />
-
 
         <CinematicHeader />
 
         <main id="main-content" className="pt-16">
           <RouteErrorBoundary>
-            <Suspense fallback={<LoadingSpinner />}>
-              <PageTransition>
-                <Routes>
-                  <Route path="/" element={<Home />} />
-                  <Route path="/about" element={<About />} />
-                  <Route path="/work" element={<Work />} />
-                  <Route path="/work/:slug" element={<Project />} />
-                  <Route path="/projects/:slug" element={<Project />} />
-                  <Route path="/articles" element={<Articles />} />
-                  <Route path="/contact" element={<Contact />} />
-                  <Route path="/developer" element={<Developer />} />
-                  <Route path="/services" element={<Services />} />
-                  <Route path="*" element={<NotFound />} />
-                </Routes>
-              </PageTransition>
-            </Suspense>
+            <AnimatePresence mode="wait">
+              <motion.div
+                key={location.pathname}
+                initial={{ opacity: 0, y: 20, scale: 0.98 }}
+                animate={{ opacity: 1, y: 0, scale: 1 }}
+                exit={{ opacity: 0, y: -20, scale: 1.02 }}
+                transition={{ duration: 0.4, ease: 'easeInOut' }}
+                className="min-h-screen"
+              >
+                <Suspense fallback={<LoadingSpinner />}>
+                  <Routes location={location}>
+                    <Route path="/" element={<Home />} />
+                    <Route path="/about" element={<About />} />
+                    <Route path="/work" element={<Work />} />
+                    <Route path="/work/:slug" element={<Project />} />
+                    <Route path="/projects/:slug" element={<Project />} />
+                    <Route path="/articles" element={<Articles />} />
+                    <Route path="/contact" element={<Contact />} />
+                    <Route path="/developer" element={<Developer />} />
+                    <Route path="/services" element={<Services />} />
+                    <Route path="*" element={<NotFound />} />
+                  </Routes>
+                </Suspense>
+              </motion.div>
+            </AnimatePresence>
           </RouteErrorBoundary>
         </main>
 
         <CinematicFooter />
-
-        {/* Back to Top Button */}
-
-
-
-        {/* Easter Egg */}
         <EasterEgg />
-
-        {/* Toast Notifications */}
         <ToastProvider />
         <ToastStyles />
-
-        {/* Analytics */}
         <VercelAnalytics isEnabled={isAnalyticsEnabled} />
         <AnalyticsBanner onAccept={enableAnalytics} onDecline={disableAnalytics} />
 
-        {/* Service Worker Update Notification */}
         {isSupported && isUpdated && (
           <div className="fixed bottom-4 right-4 z-50 bg-white dark:bg-neutral-800 border border-neutral-200 dark:border-neutral-700 rounded-lg shadow-lg p-4 max-w-sm">
             <div className="flex items-start gap-3">
@@ -134,7 +127,14 @@ const AppContent: React.FC = () => {
           </div>
         )}
       </div>
-      {/* </ScrollOptimizer> */}
+    </>
+  )
+}
+
+const AppContent: React.FC = () => {
+  return (
+    <Router future={{ v7_startTransition: true, v7_relativeSplatPath: true }}>
+      <AppRoutes />
     </Router>
   )
 }
