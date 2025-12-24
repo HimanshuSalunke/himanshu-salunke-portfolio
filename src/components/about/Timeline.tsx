@@ -20,7 +20,7 @@ interface TimelineItem {
 const timelineData: TimelineItem[] = [
   // Work Experience (Most Recent First)
   // Note: Hackathon achievements have been moved to the Achievements section
-  
+
   // Education (Most Recent First)
   {
     id: 'btech-degree',
@@ -32,14 +32,14 @@ const timelineData: TimelineItem[] = [
     current: false,
     cgpa: '7.39',
     location: 'Shirpur, Maharashtra',
-    duration: '2.5 Years',
+    duration: '3 Years',
     achievements: [
       'Completed major projects in Computer Vision and NLP',
       'Active participant in technical workshops and seminars',
       'Contributed to multiple data science research initiatives'
     ],
     subjects: [
-      'Machine Learning', 'Statistics', 'Data Analysis', 
+      'Machine Learning', 'Statistics', 'Data Analysis',
       'Python Programming', 'Database Management', 'Big Data Analytics'
     ]
   },
@@ -96,9 +96,9 @@ const timelineData: TimelineItem[] = [
   }
 ]
 
-const DetailDropdown: React.FC<{ detailedDescription: string; itemId: string }> = ({ 
-  detailedDescription, 
-  itemId 
+const DetailDropdown: React.FC<{ detailedDescription: string; itemId: string }> = ({
+  detailedDescription,
+  itemId
 }) => {
   const [isOpen, setIsOpen] = useState(false)
 
@@ -120,7 +120,7 @@ const DetailDropdown: React.FC<{ detailedDescription: string; itemId: string }> 
           <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" />
         </motion.svg>
       </button>
-      
+
       <motion.div
         initial={false}
         animate={{ height: isOpen ? 'auto' : 0, opacity: isOpen ? 1 : 0 }}
@@ -141,12 +141,12 @@ export const Timeline: React.FC = () => {
   const workExperience = timelineData.filter(item => item.type === 'work')
   const education = timelineData.filter(item => item.type === 'education')
 
-  const TimelineSection = ({ 
-    title, 
-    items, 
-    color, 
-    icon 
-  }: { 
+  const TimelineSection = ({
+    title,
+    items,
+    color,
+    icon
+  }: {
     title: string
     items: TimelineItem[]
     color: string
@@ -157,11 +157,11 @@ export const Timeline: React.FC = () => {
         <span className="text-3xl">{icon}</span>
         {title}
       </h3>
-      
+
       <div className="relative">
         {/* Timeline Line */}
         <div className={`absolute left-2 sm:left-3 md:left-4 top-0 bottom-0 w-0.5 bg-gradient-to-b ${color}`} />
-        
+
         <div className="space-y-4 sm:space-y-6">
           {items.map((item, index) => (
             <motion.div
@@ -173,13 +173,12 @@ export const Timeline: React.FC = () => {
             >
               {/* Timeline Dot */}
               <div className="relative z-10 flex-shrink-0">
-                <div className={`w-5 h-5 sm:w-6 sm:h-6 md:w-8 md:h-8 rounded-full border-2 sm:border-3 md:border-4 border-white dark:border-neutral-900 ${
-                  item.current 
-                    ? 'bg-blue-500' 
-                    : item.type === 'work' 
-                      ? 'bg-blue-500' 
-                      : 'bg-emerald-500'
-                }`} />
+                <div className={`w-5 h-5 sm:w-6 sm:h-6 md:w-8 md:h-8 rounded-full border-2 sm:border-3 md:border-4 border-white dark:border-neutral-900 ${item.current
+                  ? 'bg-blue-500'
+                  : item.type === 'work'
+                    ? 'bg-blue-500'
+                    : 'bg-emerald-500'
+                  }`} />
                 {item.current && (
                   <motion.div
                     className="absolute inset-0 w-5 h-5 sm:w-6 sm:h-6 md:w-8 md:h-8 rounded-full bg-blue-500"
@@ -188,7 +187,7 @@ export const Timeline: React.FC = () => {
                   />
                 )}
               </div>
-              
+
               {/* Content */}
               <div className="flex-1 min-w-0">
                 <motion.div
@@ -221,13 +220,13 @@ export const Timeline: React.FC = () => {
                       )}
                     </div>
                   </div>
-                  
+
                   <div className="mb-3">
                     <p className="text-sm text-neutral-600 dark:text-neutral-300 leading-relaxed">
-                    {item.description}
-                  </p>
+                      {item.description}
+                    </p>
                     {item.detailedDescription && (
-                      <DetailDropdown 
+                      <DetailDropdown
                         detailedDescription={item.detailedDescription}
                         itemId={item.id}
                       />
@@ -275,14 +274,13 @@ export const Timeline: React.FC = () => {
                       )}
                     </div>
                   )}
-                  
+
                   {/* Type Badge */}
                   <div className="mt-3">
-                    <span className={`inline-block px-2 py-1 text-xs font-medium rounded-full ${
-                      item.type === 'work'
-                        ? 'bg-blue-100 text-blue-800 dark:bg-blue-900 dark:text-blue-200'
-                        : 'bg-green-100 text-green-800 dark:bg-green-900 dark:text-green-200'
-                    }`}>
+                    <span className={`inline-block px-2 py-1 text-xs font-medium rounded-full ${item.type === 'work'
+                      ? 'bg-blue-100 text-blue-800 dark:bg-blue-900 dark:text-blue-200'
+                      : 'bg-green-100 text-green-800 dark:bg-green-900 dark:text-green-200'
+                      }`}>
                       {item.type === 'work' ? '💼 Work Experience' : '🎓 Education'}
                     </span>
                   </div>
@@ -290,15 +288,14 @@ export const Timeline: React.FC = () => {
               </div>
             </motion.div>
           ))}
-          
+
           {/* Timeline Ending Dot */}
           <div className="relative flex items-start gap-3 sm:gap-6">
             <div className="relative z-10 flex-shrink-0">
-              <div className={`w-6 h-6 sm:w-8 sm:h-8 rounded-full border-2 sm:border-4 border-white dark:border-neutral-900 ${
-                color.includes('primary') ? 'bg-primary-500' : 
-                color.includes('emerald') ? 'bg-emerald-500' : 
-                color.includes('blue') ? 'bg-blue-500' : 'bg-secondary-500'
-              }`} />
+              <div className={`w-6 h-6 sm:w-8 sm:h-8 rounded-full border-2 sm:border-4 border-white dark:border-neutral-900 ${color.includes('primary') ? 'bg-primary-500' :
+                color.includes('emerald') ? 'bg-emerald-500' :
+                  color.includes('blue') ? 'bg-blue-500' : 'bg-secondary-500'
+                }`} />
             </div>
             <div className="flex-1 min-w-0">
               <div className="h-4" /> {/* Spacer for visual balance */}
@@ -319,7 +316,7 @@ export const Timeline: React.FC = () => {
       <h2 className="text-3xl font-bold text-neutral-900 dark:text-white mb-8">
         Experience & Education
       </h2>
-      
+
       <div className="space-y-12">
         <TimelineSection
           title="Work Experience"
@@ -327,7 +324,7 @@ export const Timeline: React.FC = () => {
           color="from-blue-500 to-blue-600"
           icon="💼"
         />
-        
+
         <TimelineSection
           title="Education"
           items={education}

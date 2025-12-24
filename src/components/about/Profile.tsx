@@ -46,7 +46,7 @@ export const Profile: React.FC = () => {
           {/* Name */}
           <h1 className="text-2xl sm:text-3xl md:text-4xl lg:text-5xl font-bold text-neutral-900 dark:text-white px-4 sm:px-0">
             Hi, I'm{' '}
-            <span 
+            <span
               className="text-transparent bg-clip-text"
               style={{
                 background: 'linear-gradient(90deg, hsla(212, 93%, 49%, 1) 0%, hsla(210, 100%, 30%, 1) 100%)',
@@ -59,23 +59,23 @@ export const Profile: React.FC = () => {
               Himanshu Kishor Salunke
             </span>
           </h1>
-          
+
           {/* Title */}
           <h2 className="text-lg sm:text-xl lg:text-2xl text-neutral-600 dark:text-neutral-300 font-medium px-4 sm:px-0">
             Aspiring Data Scientist & ML Engineer
           </h2>
-          
+
           {/* Description */}
           <div className="max-w-3xl mx-auto space-y-4 px-4 sm:px-0">
             <p className="text-base sm:text-lg text-neutral-600 dark:text-neutral-300 leading-relaxed">
-              I'm passionate about building intelligent solutions with Python, Machine Learning, and AI. 
+              I'm passionate about building intelligent solutions with Python, Machine Learning, and AI.
               Currently preparing for GATE - 2026 while building innovative AI projects and learning new technologies.
             </p>
-            
+
             <p className="text-sm sm:text-base text-neutral-600 dark:text-neutral-300 leading-relaxed">
-              I have a strong foundation in computer science and data science, with hands-on experience 
-              in machine learning, statistical analysis, and data visualization. My journey has been 
-              marked by resilience and determination, overcoming significant challenges to achieve my 
+              I have a strong foundation in computer science and data science, with hands-on experience
+              in machine learning, statistical analysis, and data visualization. My journey has been
+              marked by resilience and determination, overcoming significant challenges to achieve my
               academic and professional goals.
             </p>
           </div>
@@ -155,8 +155,8 @@ export const Profile: React.FC = () => {
               whileHover={{ scale: 1.05 }}
               whileTap={{ scale: 0.95 }}
             >
-              <a 
-                href="/Himanshu_Salunke_Resume.pdf" 
+              <a
+                href="/Himanshu_Salunke_Resume.pdf"
                 download="Himanshu_Salunke_Resume.pdf"
                 className="inline-block w-full sm:w-auto"
               >
