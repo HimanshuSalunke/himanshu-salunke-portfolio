@@ -76,7 +76,7 @@ export const CredentialGrid: React.FC = () => {
         <section className="py-20 relative px-4 bg-neutral-50 dark:bg-neutral-950 transition-colors duration-300">
             <div className="max-w-7xl mx-auto">
                 <div className="mb-12">
-                    <h2 className="text-3xl font-bold text-neutral-900 dark:text-white mb-2">The Arsenal</h2>
+                    <h2 className="text-3xl font-bold text-neutral-900 dark:text-white mb-2">The Toolkit</h2>
                     <p className="text-neutral-600 dark:text-neutral-400">Certifications, Skills, and Continuous Learning.</p>
                 </div>
 
