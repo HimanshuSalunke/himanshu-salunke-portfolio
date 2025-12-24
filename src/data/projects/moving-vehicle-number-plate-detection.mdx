@@ -38,6 +38,26 @@ outputLink:
 tag: "Computer Vision"
 ---
 
+
+## 🎯 Project Overview
+
+Traffic management and security systems require instant, accurate vehicle identification, but real-world conditions (blur, poor lighting, high speeds) make license plate detection notoriously difficult.
+**The Goal:** Engineer a robust computer vision pipeline capable of detecting and reading license plates from moving vehicles in real-time with over 94% accuracy, suitable for automated tolling and security applications.
+
+## Detection Pipeline
+
+```mermaid
+graph TD
+    Input[Video Stream] -->|Resize & Norm| Pre[Preprocessing]
+    Pre -->|YOLOv7| Det[Vehicle Detection]
+    Det -->|Crop| Region[Plate Isolation]
+    Region -->|Enhance| OCR_In[OCR Pre-processing]
+    OCR_In -->|EasyOCR| Text1[Reading 1]
+    OCR_In -->|Plate Rec API| Text2[Reading 2]
+    Text1 & Text2 -->|Voting Logic| Val{Validation}
+    Val -->|Regex Match| Output[Final Plate Number]
+```
+
 ## Key Achievements
 
 - **Achieved 94.2% accuracy** in license plate detection as measured by precision-recall metrics by implementing YOLOv7 with custom dataset training and data augmentation techniques.

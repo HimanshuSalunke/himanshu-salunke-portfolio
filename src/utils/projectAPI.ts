@@ -2,7 +2,7 @@
 import { type Project } from './clientMdx'
 
 // API base URL - use relative path for production, localhost for development
-const API_BASE_URL = import.meta.env.DEV ? 'http://localhost:5000/api' : '/api'
+const API_BASE_URL = '/api'
 
 // Generic fetch function with error handling
 async function apiFetch<T>(endpoint: string): Promise<T> {

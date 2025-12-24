@@ -39,6 +39,24 @@ outputLink:
 tag: "Computer Vision"
 ---
 
+
+## 🎯 Project Overview
+
+Measuring human height digitally usually requires expensive hardware like LiDAR or depth sensors. Webcam-based solutions are notoriously inaccurate due to lens distortion and variable distances.
+**The Goal:** Create a purely software-based solution using standard webcams that achieves hardware-grade accuracy (±2cm) through advanced computer vision and mathematical filtering.
+
+## System Architecture
+
+```mermaid
+graph TD
+    Cam[Webcam Feed] -->|Frames| MP[MediaPipe Holistic]
+    MP -->|Landmarks| Pose{Keypoint Extraction}
+    Pose -->|Shoulder/Hip/Heel| Calc[Geometric Calc]
+    Calc -->|Raw Height| KF[Kalman Filter]
+    KF -->|Smoothing| AutoCal[Auto-Calibration]
+    AutoCal -->|Refined| UI[React UI Overlay]
+```
+
 ## Key Achievements
 
 - **Achieved ±2cm precision accuracy** as measured by real-world testing by implementing advanced computer vision with MediaPipe holistic pose detection and Kalman filtering for smooth measurements.

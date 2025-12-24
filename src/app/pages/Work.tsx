@@ -1,6 +1,6 @@
 import React, { useState, useMemo, useEffect } from 'react'
 import { Helmet } from 'react-helmet-async'
-import { motion } from 'framer-motion'
+import { motion, AnimatePresence } from 'framer-motion'
 import { Link } from 'react-router-dom'
 import { Tag } from '../../components/ui/Tag'
 import { Button } from '../../components/ui/Button'
@@ -9,8 +9,9 @@ import { ImageWithShimmer } from '../../components/ui/ImageWithShimmer'
 import { formatDate } from '../../utils/formatDate'
 import { fetchAllProjects } from '../../utils/projectAPI'
 import { type Project } from '../../utils/clientMdx'
-import ProjectCategories from '../../components/work/ProjectCategories'
-import ProjectTimeline from '../../components/work/ProjectTimeline'
+import WorkHero from '../../components/work/redesign/WorkHero'
+import WorkToolbar from '../../components/work/redesign/WorkToolbar'
+import BentoGrid from '../../components/work/redesign/BentoGrid'
 
 const Work: React.FC = () => {
   const [projects, setProjects] = useState<Project[]>([])
@@ -118,219 +119,53 @@ const Work: React.FC = () => {
     <>
       <Helmet>
         <title>Work - Portfolio</title>
-        <meta name="description" content="Explore my portfolio of web development projects, AI/ML applications, and case studies showcasing modern development practices." />
-        <meta property="og:title" content="Work - Portfolio" />
-        <meta property="og:description" content="Explore my portfolio of web development projects, AI/ML applications, and case studies." />
-        <meta property="og:type" content="website" />
+        <meta name="description" content="Explore my portfolio of web development projects, AI/ML applications, and case studies." />
       </Helmet>
 
-      <div className="min-h-screen py-16">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          {/* Header */}
-          <motion.div
-            className="text-center mb-12 sm:mb-16"
-            initial={{ opacity: 0, y: 20 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.6 }}
-          >
-            <h1 className="text-2xl sm:text-3xl md:text-4xl lg:text-5xl font-bold text-neutral-900 dark:text-white mb-3 sm:mb-4">
-              <span
-                className="bg-clip-text text-transparent"
-                style={{
-                  background: 'linear-gradient(90deg, hsla(212, 93%, 49%, 1) 0%, hsla(210, 100%, 30%, 1) 100%)',
-                  WebkitBackgroundClip: 'text',
-                  WebkitTextFillColor: 'transparent',
-                  MozBackgroundClip: 'text',
-                  filter: 'progid:DXImageTransform.Microsoft.gradient(startColorstr="#0974F1", endColorstr="#003A7A", GradientType=1)'
-                }}
-              >
-                Project Portfolio
-              </span>
-            </h1>
-            <p className="text-base sm:text-lg md:text-xl text-neutral-600 dark:text-neutral-400 max-w-2xl sm:max-w-3xl mx-auto px-4 sm:px-0">
-              Explore my diverse portfolio of innovative projects, from AI/ML solutions to full-stack applications.
-              Each project tells a story of problem-solving, creativity, and technical excellence.
-            </p>
-          </motion.div>
+      <div className="min-h-screen bg-neutral-50 dark:bg-neutral-950 transition-colors duration-300">
 
+        {/* Cinematic Hero */}
+        <WorkHero />
 
-          {/* Project Categories */}
-          <motion.div
-            className="mb-12 sm:mb-16"
-            initial={{ opacity: 0, y: 20 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.6, delay: 0.4 }}
-          >
-            <ProjectCategories projects={projects} />
-          </motion.div>
+        <motion.div
+          className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10"
+          initial={{ opacity: 0 }}
+          animate={{ opacity: 1 }}
+          transition={{ duration: 0.8, delay: 0.5 }}
+        >
+          {/* Sticky Toolbar */}
+          <WorkToolbar
+            categories={categories}
+            activeCategory={selectedCategory}
+            onCategoryChange={setSelectedCategory}
+            searchQuery={searchTerm}
+            onSearchChange={setSearchTerm}
+          />
 
-          {/* Search and Filter */}
-          <motion.div
-            className="mb-8 sm:mb-12"
-            initial={{ opacity: 0, y: 20 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.6, delay: 0.6 }}
-          >
-            <SearchAndFilter
-              searchTerm={searchTerm}
-              onSearchChange={setSearchTerm}
-              categories={categories}
-              selectedCategory={selectedCategory}
-              onCategoryChange={setSelectedCategory}
-              statuses={statuses}
-              selectedStatus={selectedStatus}
-              onStatusChange={setSelectedStatus}
-              sortBy={sortBy}
-              onSortChange={(value) => setSortBy(value as 'date' | 'title' | 'featured' | 'readTime')}
-              sortOptions={sortOptions}
-            />
-          </motion.div>
-
-          {/* Projects Grid */}
-          <motion.div
-            className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 sm:gap-6 lg:gap-8"
-            initial={{ opacity: 0 }}
-            animate={{ opacity: 1 }}
-            transition={{ duration: 0.6, delay: 0.4 }}
-          >
-            {filteredProjects.map((project, index) => (
+          {/* Dynamic Bento Grid */}
+          <div className="min-h-screen pb-20">
+            <AnimatePresence mode="wait">
               <motion.div
-                key={project.id}
-                className="bg-white dark:bg-neutral-800 rounded-xl overflow-hidden shadow-sm hover:shadow-lg transition-all duration-300 border border-neutral-200 dark:border-neutral-700"
+                key={selectedCategory + searchTerm}
                 initial={{ opacity: 0, y: 20 }}
                 animate={{ opacity: 1, y: 0 }}
-                transition={{ duration: 0.6, delay: 0.5 + index * 0.1 }}
-                whileHover={{ y: -5 }}
+                exit={{ opacity: 0, y: -20 }}
+                transition={{ duration: 0.5 }}
               >
-                {/* Project Image */}
-                <div className="relative overflow-hidden">
-                  <ImageWithShimmer
-                    src={project.coverImage}
-                    alt={project.title}
-                    className="w-full h-auto object-contain transition-transform duration-300 hover:scale-105"
-                  />
-                  {project.featured && (
-                    <div className="absolute top-4 left-4">
-                      <div className="bg-gradient-to-r from-primary-500 to-secondary-500 text-white px-3 py-1.5 rounded-full text-xs font-bold shadow-lg border border-white/20 backdrop-blur-sm">
-                        ⭐ Featured
-                      </div>
-                    </div>
-                  )}
-                  <div className="absolute top-4 right-4">
-                    <Tag variant="default" size="sm">
-                      {project.category}
-                    </Tag>
+                {filteredProjects.length > 0 ? (
+                  <BentoGrid projects={filteredProjects} />
+                ) : (
+                  <div className="flex flex-col items-center justify-center py-20 text-center">
+                    <div className="text-6xl mb-4 opacity-50">🔭</div>
+                    <h3 className="text-2xl font-bold text-neutral-900 dark:text-white mb-2">No projects found</h3>
+                    <p className="text-neutral-600 dark:text-neutral-400">Try adjusting your search or filters.</p>
                   </div>
-                  <div className="absolute bottom-4 left-4">
-                    <Tag
-                      variant={project.status === 'Completed' ? 'success' : project.status === 'In Progress' ? 'warning' : 'default'}
-                      size="sm"
-                    >
-                      {project.status}
-                    </Tag>
-                  </div>
-                </div>
-
-                {/* Project Content */}
-                <div className="p-4 sm:p-5 md:p-6">
-                  <div className="mb-3 sm:mb-4">
-                    <h3 className="text-lg sm:text-xl font-semibold text-neutral-900 dark:text-white mb-2 font-bold">
-                      {project.title}
-                    </h3>
-                    <p className="text-neutral-600 dark:text-neutral-400 text-sm leading-relaxed">
-                      {project.summary}
-                    </p>
-                  </div>
-
-                  {/* Metrics */}
-                  <div className="mb-3 sm:mb-4">
-                    <div className="grid grid-cols-2 gap-2">
-                      {(project.metrics || []).slice(0, 2).map((metric, idx) => (
-                        <div key={idx} className="text-center">
-                          <div className="text-base sm:text-lg font-bold text-primary-600 dark:text-primary-500">
-                            {metric.value}
-                          </div>
-                          <div className="text-xs text-neutral-500 dark:text-neutral-400">
-                            {metric.label}
-                          </div>
-                        </div>
-                      ))}
-                    </div>
-                  </div>
-
-                  {/* Tech Stack */}
-                  <div className="mb-3 sm:mb-4">
-                    <div className="flex flex-wrap gap-1.5 sm:gap-2">
-                      {project.techStack.slice(0, 3).map((tech) => (
-                        <Tag key={tech} variant="primary" size="sm">
-                          {tech}
-                        </Tag>
-                      ))}
-                      {project.techStack.length > 3 && (
-                        <Tag variant="default" size="sm">
-                          +{project.techStack.length - 3} more
-                        </Tag>
-                      )}
-                    </div>
-                  </div>
-
-                  {/* Date and Actions */}
-                  <div className="flex items-center justify-between">
-                    <span className="text-xs sm:text-sm text-neutral-500 dark:text-neutral-400">
-                      {formatDate(project.date)}
-                    </span>
-                    <div className="flex gap-1.5 sm:gap-2">
-                      <Link to={`/projects/${project.id}`}>
-                        <Button variant="outline" size="sm">
-                          <span className="hidden xs:inline">View Details</span>
-                          <span className="xs:hidden">View</span>
-                        </Button>
-                      </Link>
-                    </div>
-                  </div>
-                </div>
+                )}
               </motion.div>
-            ))}
-          </motion.div>
+            </AnimatePresence>
+          </div>
 
-          {/* No Results */}
-          {filteredProjects.length === 0 && (
-            <motion.div
-              className="text-center py-12 sm:py-16"
-              initial={{ opacity: 0 }}
-              animate={{ opacity: 1 }}
-              transition={{ duration: 0.6 }}
-            >
-              <div className="text-4xl sm:text-6xl mb-3 sm:mb-4">🔍</div>
-              <h3 className="text-lg sm:text-xl font-semibold text-neutral-900 dark:text-white mb-2">
-                No projects found
-              </h3>
-              <p className="text-sm sm:text-base text-neutral-600 dark:text-neutral-400 mb-4 sm:mb-6 px-4 sm:px-0">
-                Try adjusting your search criteria or filters.
-              </p>
-              <Button
-                variant="outline"
-                onClick={() => {
-                  setSearchTerm('')
-                  setSelectedCategory('All')
-                  setSelectedStatus('All')
-                }}
-              >
-                Clear Filters
-              </Button>
-            </motion.div>
-          )}
-
-          {/* Project Timeline */}
-          <motion.div
-            className="mt-12 sm:mt-16"
-            initial={{ opacity: 0, y: 20 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.6, delay: 0.8 }}
-          >
-            <ProjectTimeline projects={projects} />
-          </motion.div>
-        </div>
+        </motion.div>
       </div>
     </>
   )

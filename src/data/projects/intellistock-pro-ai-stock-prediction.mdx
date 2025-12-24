@@ -47,9 +47,25 @@ liveUrl: ""
 
 ## 🎯 Project Overview
 
-**IntelliStock Pro - AI Powered Stock Prediction Analytics** is a comprehensive full-stack machine learning platform that revolutionizes stock market analysis and prediction for Indian NSE stocks. The platform combines **6 advanced AI models** in an ensemble approach to deliver highly accurate stock price predictions with confidence scoring and risk assessment.
+**The Challenge:** Retail investors often lack the institutional-grade tools required to make data-driven decisions in volatile markets. Traditional technical analysis is time-consuming, and accurate price prediction requires processing millions of data points across multiple timeframes.
 
-Built with a modern tech stack featuring **React TypeScript frontend** and **FastAPI Python backend**, the platform processes **3 years of historical NSE data** (2022-2024) covering **50+ Indian blue-chip stocks** with both daily and minute-level OHLCV data for robust predictions.
+**The Solution:** **IntelliStock Pro** is a comprehensive full-stack machine learning platform that revolutionizes stock market analysis. It combines **6 advanced AI models** in an ensemble approach to deliver highly accurate stock price predictions with confidence scoring.
+
+Built with a modern tech stack featuring **React TypeScript frontend** and **FastAPI Python backend**, the platform processes **3 years of historical NSE data** (2022-2024) covering **50+ Indian blue-chip stocks**.
+
+## System Architecture
+
+```mermaid
+graph LR
+    A[NSE Market Data] -->|Data Pipeline| B(Feature Engineering)
+    B -->|38+ Indicators| C{Ensemble Model}
+    C -->|LSTM| D[Prediction Layer]
+    C -->|XGBoost| D
+    C -->|Prophet| D
+    D -->|Confidence Score| E[FastAPI Backend]
+    E <-->|High Frequency| F[React Dashboard]
+    F -->|Visuals| G[TradingView Charts]
+```
 
 ## 📸 Platform Screenshots
 

@@ -1,0 +1,105 @@
+---
+id: "financial-research-assistant-rag"
+title: "Financial Research Assistant (RAG)"
+summary: "Production-ready RAG system for querying financial documents (PDFs) with GPU acceleration. Features sub-second retrieval, 4-bit quantization, and comprehensive source attribution."
+category: "Deep Learning"
+coverImage: "/images/projects/financial-rag/cover.png"
+date: "2025-12-15"
+techStack:
+  - "Python"
+  - "FastAPI"
+  - "Streamlit"
+  - "LangChain"
+  - "PyTorch"
+  - "FAISS"
+  - "HuggingFace"
+  - "CUDA"
+  - "Docker"
+featured: true
+status: "Completed"
+metrics:
+  - label: "Retrieval Speed"
+    value: "< 100ms"
+  - label: "GPU VRAM"
+    value: "< 6GB"
+  - label: "Quantization"
+    value: "4-bit"
+  - label: "Accuracy"
+    value: "High Context"
+githubUrl: "https://github.com/HimanshuSalunke/Financial-Research-Assistant-RAG-"
+liveUrl: ""
+publishedAt: "2025-12-15"
+order: 0
+completionDate: "2025-11-20"
+images: []
+link: "https://github.com/HimanshuSalunke/Financial-Research-Assistant-RAG-"
+outputLink:
+tag: "AI / Machine Learning"
+---
+
+
+
+## 🎯 Project Overview
+
+Financial analysts spend countless hours manually searching through dense 10-K reports and financial statements to find specific metrics. This manual process is slow, error-prone, and unscalable.
+**The Goal:** Build an intelligent assistant that can instantly answer natural language questions about financial documents with citation-backed accuracy, running entirely on consumer-grade hardware to ensure data privacy.
+
+## System Architecture
+
+```mermaid
+graph TD
+    A[PDF Financial Docs] -->|PyPDF Loader| B(Text Chunks)
+    B -->|Recursive Splitter| C[Chunk Processing]
+    C -->|all-MiniLM-L6-v2| D[Vector Embeddings]
+    D -->|FAISS| E[(Vector Database)]
+    E <-->|Similarity Search| F[RAG Retrieval Chain]
+    G[User Query] -->|Embedding| F
+    F -->|Context + Query| H[Quantized LLM]
+    H -->|Generated Answer| I[Final Response]
+```
+
+## Key Achievements
+
+- **Built production-ready RAG pipeline** for financial document analysis using LangChain and FAISS, enabling users to query complex 10-K reports with high accuracy.
+
+- **Optimized for consumer GPUs** (RTX 4050) using 4-bit quantization and efficient vector storage, reducing VRAM usage to under 6GB while maintaining model performance.
+
+- **Developed dual-interface application** with high-performance FastAPI backend for API consumers and intuitive Streamlit frontend for interactive research.
+
+## Technical Stack
+- **Backend**: FastAPI with async support for high-throughput request handling
+- **Frontend**: Streamlit for rapid prototyping and interactive visualization
+- **Infrastructure**: CUDA-accelerated PyTorch environment
+
+## Technical Implementation
+
+### RAG Engine Core
+```python
+class RAGEngine:
+    def _initialize(self):
+        # Load embeddings on GPU
+        device = "cuda" if torch.cuda.is_available() else "cpu"
+        embeddings = SentenceTransformerEmbeddings(
+            model_name="sentence-transformers/all-MiniLM-L6-v2",
+            device=device
+        )
+        
+        # Load Vector Store
+        self.vector_store = FAISS.load_local(
+            str(settings.vector_store_path),
+            embeddings
+        )
+        
+        # Initialize Quantized LLM
+        # Logic to load model with 4-bit quantization...
+```
+
+### Performance Optimization
+- **Caching**: Implemented intelligent caching for embeddings and model weights
+- **Async Processing**: Leveraged Python's `asyncio` for non-blocking API endpoints
+- **Memory Management**: Automatic device mapping and aggressive garbage collection
+
+## Challenges & Learnings
+- **GPU Memory Constraints**: Overcoming VRAM limitations by implementing 4-bit quantization and careful batch sizing.
+- **Hallucination Reduction**: Tuned retrieval parameters (k=4) and prompt templates to strictly ground answers in retrieved context.
+- **Document Parsing**: Handling complex PDF layouts and tables commonly found in financial reports.

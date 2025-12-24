@@ -43,6 +43,24 @@ outputLink:
 tag: "Data Engineering"
 ---
 
+
+## 🎯 Project Overview
+
+Processing daily trending video data from 10 different countries generates massive datasets that are difficult to query efficiently. Traditional ETL approaches often result in slow query times and skyrocketing cloud storage costs.
+**The Goal:** Architect a cost-effective, scalable data engineering pipeline that automates the ingestion of 400MB+ daily data while optimizing query performance and reducing AWS costs by 70%.
+
+## Architecture Diagram
+
+```mermaid
+graph TD
+    API[YouTube Data API] -->|Python Script| Raw[S3 Raw Bucket]
+    Raw -->|Trigger| Lambda[AWS Lambda]
+    Lambda -->|Transform| Glue[AWS Glue ETL]
+    Glue -->|Partitioned Parquet| Processed[S3 Processed Bucket]
+    Processed -->|Catalog| Athena[Amazon Athena]
+    Athena -->|Visualize| QS[Amazon QuickSight]
+```
+
 ## Key Achievements
 
 - **Processed 400MB+ of YouTube data** across 10 countries as measured by data volume by building scalable ETL pipeline with Apache Airflow and AWS services for real-time analytics.

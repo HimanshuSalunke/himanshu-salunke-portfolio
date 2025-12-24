@@ -39,6 +39,24 @@ outputLink:
 tag: "Data Analysis"
 ---
 
+
+## 🎯 Project Overview
+
+Policymakers often equate GDP with national success, but does money truly buy happiness? Quantifying "well-being" is notoriously difficult due to cultural differences and subjective reporting.
+**The Goal:** Synthesize complex sociological data from 150+ countries to statistically prove what actually drives human kinds happiness—and reveal if social support matters more than economic wealth.
+
+## Analysis Workflow
+
+```mermaid
+graph LR
+    Dataset[World Happiness Data] -->|Clean| Pre[Preprocessing]
+    Pre -->|Normalize| Norm[Standardization]
+    Norm -->|Regression| Model[Linear Model]
+    Norm -->|Correlation| Heatmap[Factor Analysis]
+    Model -->|Significance| Factors{Key Drivers}
+    Factors -->|Visualize| Map[Global Geo-Map]
+```
+
 ## Key Achievements
 
 - **Analyzed 150+ countries** across all continents as measured by geographic coverage by conducting comprehensive happiness index analysis with advanced statistical techniques and correlation analysis.

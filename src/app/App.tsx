@@ -2,8 +2,8 @@ import React from 'react'
 import { BrowserRouter as Router, Routes, Route } from 'react-router-dom'
 import { HelmetProvider } from 'react-helmet-async'
 import { ThemeProvider } from '../context/ThemeContext'
-import { Header } from '../components/header/Header'
-import { Footer } from '../components/footer/Footer'
+import { CinematicHeader } from '../components/header/redesign/CinematicHeader'
+import { CinematicFooter } from '../components/footer/redesign/CinematicFooter'
 import { ProgressTracker, EasterEgg } from '../components/gamification/ProgressTracker'
 import { PageTransition } from '../components/animations/PageTransition'
 import { ScrollToTop } from '../components/ui/ScrollToTop'
@@ -59,7 +59,7 @@ const AppContent: React.FC = () => {
         <ProgressTracker />
 
 
-        <Header />
+        <CinematicHeader />
 
         <main id="main-content" className="pt-16">
           <RouteErrorBoundary>
@@ -82,10 +82,10 @@ const AppContent: React.FC = () => {
           </RouteErrorBoundary>
         </main>
 
-        <Footer />
+        <CinematicFooter />
 
         {/* Back to Top Button */}
-        <BackToTop />
+
 
 
         {/* Easter Egg */}

@@ -14,7 +14,7 @@ export const MDXContentRenderer: React.FC<MDXContentRendererProps> = ({ content 
     .replace(/^- (.*)$/gm, '- $1') // Ensure all bullet points are properly formatted
 
   return (
-    <div className="prose prose-lg max-w-none dark:prose-invert">
+    <div className="prose prose-lg max-w-none dark:prose-invert mdx-content">
       <Markdown
         options={{
           forceBlock: true,
@@ -94,20 +94,7 @@ export const MDXContentRenderer: React.FC<MDXContentRendererProps> = ({ content 
             pre: {
               component: 'pre',
               props: {
-                className: 'bg-neutral-900 dark:bg-neutral-800 rounded-lg p-4 overflow-x-auto text-sm my-6'
-              }
-            },
-            code: {
-              component: 'code',
-              props: {
-                className: 'text-neutral-100 dark:text-neutral-200 font-mono'
-              }
-            },
-            // Inline code
-            inlineCode: {
-              component: 'code',
-              props: {
-                className: 'bg-neutral-100 dark:bg-neutral-800 px-2 py-1 rounded text-sm font-mono text-neutral-800 dark:text-neutral-200'
+                className: 'bg-neutral-900 dark:bg-neutral-800 text-neutral-50 rounded-lg p-4 overflow-x-auto text-sm my-6'
               }
             },
             // Links

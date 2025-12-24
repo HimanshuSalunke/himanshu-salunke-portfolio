@@ -4,7 +4,7 @@ export const SITE_CONFIG = {
   author: "Himanshu",
   twitterHandle: "@Wiser_0221",
   description: "Portfolio showcasing modern data science projects and AI/ML solutions",
-  url: process.env.NODE_ENV === 'production' 
+  url: process.env.NODE_ENV === 'production'
     ? 'https://himanshu-salunke.vercel.app' // Update with actual domain
     : 'http://localhost:3000',
   themeColor: "#3b82f6",

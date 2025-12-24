@@ -39,6 +39,24 @@ outputLink:
 tag: "Data Analysis"
 ---
 
+
+## 🎯 Project Overview
+
+In botany and biology, classifying species based on subtle morphological differences is a classic problem. Manual classification is tedious and prone to human error.
+**The Goal:** Demonstrate how rigorous **Exploratory Data Analysis (EDA)** alone—without complex black-box algorithms—can achieve near-perfect classification accuracy by discovering the "Golden Features" that distinguish species.
+
+## EDA Pipeline
+
+```mermaid
+graph TD
+    Raw[Iris Dataset] -->|Describe| Stats[Descriptive Stats]
+    Raw -->|Visualize| Pair[Pair Plots]
+    Pair -->|Identify| Patterns{Cluster Discovery}
+    Patterns -->|Validate| Corr[Correlation Heatmap]
+    Corr -->|Select| Features[Golden Features]
+    Features -->|Classify| Rules[Decision Boundaries]
+```
+
 ## Key Achievements
 
 - **Conducted comprehensive statistical analysis** of 150 iris samples as measured by data coverage by implementing advanced visualization techniques and statistical modeling for pattern recognition.

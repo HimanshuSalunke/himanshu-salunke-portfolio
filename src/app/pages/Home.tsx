@@ -1,10 +1,9 @@
 import React from 'react'
 import { Helmet } from 'react-helmet-async'
-import { motion } from 'framer-motion'
-import { Hero } from '../../components/home/Hero'
-import { CurrentFocus } from '../../components/home/CurrentFocus'
-import { NavigationCards } from '../../components/home/NavigationCards'
-import { StatsSection } from '../../components/home/StatsSection'
+import { CinematicHero } from '../../components/home/redesign/CinematicHero'
+import { ImpactMetrics } from '../../components/home/redesign/ImpactMetrics'
+import { CinematicFocus } from '../../components/home/redesign/CinematicFocus'
+import { ExplorationGrid } from '../../components/home/redesign/ExplorationGrid'
 
 const Home: React.FC = () => {
   return (
@@ -18,7 +17,7 @@ const Home: React.FC = () => {
         <meta name="twitter:card" content="summary_large_image" />
         <meta name="twitter:title" content="Himanshu's Portfolio - Aspiring Data Scientist" />
         <meta name="twitter:description" content="Portfolio of Himanshu, an Aspiring Data Scientist specializing in React, TypeScript, Python, and cutting-edge AI technologies." />
-        
+
         {/* JSON-LD Structured Data */}
         <script type="application/ld+json">
           {JSON.stringify({
@@ -46,56 +45,18 @@ const Home: React.FC = () => {
         </script>
       </Helmet>
 
-      <div className="min-h-screen">
-        {/* Hero Section */}
-        <Hero />
-        
-        {/* Current Focus Section */}
-        <section className="py-16 bg-white dark:bg-neutral-900">
-          <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-            <motion.div
-              initial={{ opacity: 0, y: 20 }}
-              whileInView={{ opacity: 1, y: 0 }}
-              transition={{ duration: 0.6 }}
-              viewport={{ once: true }}
-            >
-              <h2 className="text-2xl sm:text-3xl font-bold text-center text-neutral-900 dark:text-white mb-8 sm:mb-12">
-                What I'm Working On
-              </h2>
-            </motion.div>
-            <CurrentFocus />
-          </div>
-        </section>
-        
-        {/* Stats Section */}
-        <section className="py-16 bg-neutral-100 dark:bg-neutral-800">
-          <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-            <StatsSection />
-          </div>
-        </section>
-        
-        {/* Navigation Cards Section */}
-        <section className="py-16 bg-white dark:bg-neutral-900">
-          <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-            <motion.div
-              initial={{ opacity: 0, y: 20 }}
-              whileInView={{ opacity: 1, y: 0 }}
-              transition={{ duration: 0.6 }}
-              viewport={{ once: true }}
-              className="text-center mb-12"
-            >
-              <h2 className="text-2xl sm:text-3xl font-bold text-neutral-900 dark:text-white mb-3 sm:mb-4">
-                Explore My World
-              </h2>
-              <p className="text-base sm:text-lg text-neutral-600 dark:text-neutral-400 max-w-2xl mx-auto">
-                Choose your path and discover what interests you most about my work and journey.
-              </p>
-            </motion.div>
-            
-            {/* Navigation Cards */}
-            <NavigationCards />
-          </div>
-        </section>
+      <div className="min-h-screen bg-neutral-50 dark:bg-neutral-950">
+        {/* 1. Cinematic Hero Section */}
+        <CinematicHero />
+
+        {/* 2. Impact Metrics (Integrated Stats) */}
+        <ImpactMetrics />
+
+        {/* 3. Current Focus (Active Learning) */}
+        <CinematicFocus />
+
+        {/* 4. Exploration Grid (Bento Navigation) */}
+        <ExplorationGrid />
       </div>
     </>
   )

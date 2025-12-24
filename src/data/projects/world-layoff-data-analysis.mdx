@@ -43,6 +43,24 @@ outputLink:
 tag: "Data Analysis"
 ---
 
+
+## 🎯 Project Overview
+
+During the 2023-24 economic downturn, mass layoffs appeared chaotic and unpredictable. Understanding the underlying drivers—whether they were seasonal, funding-dependent, or industry-specific—required analyzing valid datasets across thousands of companies.
+**The Goal:** Apply rigorous data science techniques to a dataset of 3,000+ companies to uncover statistically significant patterns and predict risk factors for future workforce reductions.
+
+## Analysis Pipeline
+
+```mermaid
+graph LR
+    Raw[Raw CSV Data] -->|Pandas| Clean[Data Cleaning]
+    Clean -->|Null/Dupes| Pre[Preprocessing]
+    Pre -->|IQR Method| Outlier[Outlier Detection]
+    Outlier -->|Stats| Corr{Correlation Matrix}
+    Corr -->|Trends| Plotly[Interactive Dashboard]
+    Corr -->|Significance| Report[Insights Report]
+```
+
 ## Key Achievements
 
 - **Analyzed 3,282 companies** across 50+ industries as measured by dataset scale by conducting comprehensive statistical analysis with advanced outlier detection and correlation analysis techniques.
