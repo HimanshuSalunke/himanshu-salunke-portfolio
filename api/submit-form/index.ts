@@ -103,64 +103,7 @@ function validateFormData(data: ContactFormData): { isValid: boolean; errors: st
   return { isValid: errors.length === 0, errors }
 }
 
-async function sendEmailNotification(data: ContactFormData): Promise<boolean> {
-  const resendApiKey = process.env.RESEND_API_KEY
 
-  if (!resendApiKey) {
-    console.warn('RESEND_API_KEY not configured')
-    return false
-  }
-
-  try {
-    const response = await fetch('https://api.resend.com/emails', {
-      method: 'POST',
-      headers: {
-        'Authorization': `Bearer ${resendApiKey}`,
-        'Content-Type': 'application/json',
-      },
-      body: JSON.stringify({
-        from: 'Portfolio Contact Form <noreply@himanshu-salunke.vercel.app>',
-        to: ['your-email@example.com'], // Replace with your email
-        subject: `New Contact Form Submission: ${data.subject}`,
-        html: `
-          <div style="font-family: Arial, sans-serif; max-width: 600px; margin: 0 auto;">
-            <h2 style="color: #333; border-bottom: 2px solid #3b82f6; padding-bottom: 10px;">
-              New Contact Form Submission
-            </h2>
-            
-            <div style="background: #f8fafc; padding: 20px; border-radius: 8px; margin: 20px 0;">
-              <h3 style="color: #1e40af; margin-top: 0;">Contact Details</h3>
-              <p><strong>Name:</strong> ${data.name}</p>
-              <p><strong>Email:</strong> ${data.email}</p>
-              <p><strong>Subject:</strong> ${data.subject}</p>
-            </div>
-            
-            <div style="background: #ffffff; padding: 20px; border: 1px solid #e5e7eb; border-radius: 8px;">
-              <h3 style="color: #1e40af; margin-top: 0;">Message</h3>
-              <p style="white-space: pre-wrap; line-height: 1.6;">${data.message}</p>
-            </div>
-            
-            <div style="margin-top: 20px; padding: 15px; background: #f0f9ff; border-radius: 8px; border-left: 4px solid #3b82f6;">
-              <p style="margin: 0; color: #1e40af; font-size: 14px;">
-                <strong>Submitted:</strong> ${new Date().toLocaleString()}
-              </p>
-            </div>
-          </div>
-        `,
-      }),
-    })
-
-    if (!response.ok) {
-      console.error('Resend API failed:', response.status, response.statusText)
-      return false
-    }
-
-    return true
-  } catch (error) {
-    console.error('Error sending email via Resend:', error)
-    return false
-  }
-}
 
 async function sendToSlack(data: ContactFormData): Promise<boolean> {
   const webhookUrl = process.env.SLACK_WEBHOOK_URL
@@ -281,21 +224,12 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
       })
     }
 
-    // Send notifications (both Slack and Email)
-    const [slackSuccess, emailSuccess] = await Promise.allSettled([
-      sendToSlack(formData),
-      sendEmailNotification(formData)
-    ])
-
-    const slackDelivered = slackSuccess.status === 'fulfilled' && slackSuccess.value
-    const emailDelivered = emailSuccess.status === 'fulfilled' && emailSuccess.value
+    // Send notification to Slack
+    const slackSuccess = await sendToSlack(formData)
 
     // Log results
-    if (!slackDelivered) {
+    if (!slackSuccess) {
       console.warn('Failed to send to Slack, but form submission was valid')
-    }
-    if (!emailDelivered) {
-      console.warn('Failed to send email notification, but form submission was valid')
     }
 
     // Log successful submission (without sensitive data)
@@ -306,8 +240,7 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
       success: true,
       message: 'Thank you for your message! I\'ll get back to you soon.',
       notifications: {
-        slack: slackDelivered,
-        email: emailDelivered
+        slack: slackSuccess
       }
     })
 

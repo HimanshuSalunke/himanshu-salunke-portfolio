@@ -156,6 +156,7 @@ export const GlassContactForm: React.FC = () => {
                         <label className="text-sm font-medium text-neutral-700 dark:text-neutral-400 ml-1">Name</label>
                         <input
                             {...register('name')}
+                            autoComplete="name"
                             placeholder="John Doe"
                             className="w-full bg-neutral-50 dark:bg-white/5 border border-neutral-200 dark:border-white/10 rounded-xl px-4 py-3 text-neutral-900 dark:text-white placeholder-neutral-400 dark:placeholder-neutral-600 focus:outline-none focus:ring-2 focus:ring-blue-500/50 focus:bg-white dark:focus:bg-white/10 transition-all"
                         />
@@ -166,6 +167,7 @@ export const GlassContactForm: React.FC = () => {
                         <label className="text-sm font-medium text-neutral-700 dark:text-neutral-400 ml-1">Email</label>
                         <input
                             {...register('email')}
+                            autoComplete="email"
                             placeholder="john@example.com"
                             className="w-full bg-neutral-50 dark:bg-white/5 border border-neutral-200 dark:border-white/10 rounded-xl px-4 py-3 text-neutral-900 dark:text-white placeholder-neutral-400 dark:placeholder-neutral-600 focus:outline-none focus:ring-2 focus:ring-blue-500/50 focus:bg-white dark:focus:bg-white/10 transition-all"
                         />
