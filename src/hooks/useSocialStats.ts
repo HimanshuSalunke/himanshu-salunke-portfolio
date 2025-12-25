@@ -14,7 +14,7 @@ interface GitHubStats {
 interface LinkedInStats {
   connections: number
   articles: number
-  followers: number
+  followers: string | number
   isLoading: boolean
   error: string | null
 }
@@ -76,7 +76,7 @@ const fetchLinkedInStats = async (username: string): Promise<LinkedInStats> => {
     return {
       connections: 500, // Estimated connections
       articles: 40, // Based on your content
-      followers: 24000, // Your actual 24k+ followers
+      followers: '25k+', // Your actual 25k+ followers
       isLoading: false,
       error: null
     }

@@ -32,13 +32,14 @@ const LoadingSpinner: React.FC = () => <RouteLoadingFallback />
 // Separated Routes component to use useLocation hook inside Router context
 const AppRoutes: React.FC = () => {
   const location = useLocation()
-  const { isAnalyticsEnabled, enableAnalytics, disableAnalytics } = useAnalytics()
+  const { isAnalyticsEnabled, enableAnalytics, disableAnalytics, trackPageView } = useAnalytics()
   const isSupported = false
   const isUpdated = false
   const updateServiceWorker = () => { }
 
-  // Scroll reset effect
+  // Scroll reset and Analytics tracking
   React.useEffect(() => {
+    // Reset scroll
     window.scrollTo(0, 0)
     const timeoutId = setTimeout(() => window.scrollTo(0, 0), 50)
     return () => clearTimeout(timeoutId)

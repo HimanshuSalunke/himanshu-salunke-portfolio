@@ -38,12 +38,12 @@ const getSocialPlatforms = (socialStats: SocialStats): SocialPlatform[] => [
         color: 'from-blue-600 to-blue-700',
         description: 'Professional networking & ML articles 📝',
         stats: [
-            { label: 'Followers', value: '24k+' },
+            { label: 'Followers', value: '25k+' },
             { label: 'Articles', value: socialStats.linkedin.isLoading ? '...' : `${socialStats.linkedin.articles || 0}+` },
         ]
     }
 ]
-
+    
 export const ConnectHub: React.FC = () => {
     const socialStats = useSocialStats()
     const socialPlatforms = useMemo(() => getSocialPlatforms(socialStats), [socialStats])
@@ -53,7 +53,7 @@ export const ConnectHub: React.FC = () => {
             <div className="max-w-4xl mx-auto">
                 <div className="text-center mb-12">
                     <h2 className="text-3xl font-bold text-neutral-900 dark:text-white mb-3">Connect Nodes</h2>
-                    <p className="text-neutral-500 dark:text-neutral-400">Join my network across the digital frontier.</p>
+                    <p className="text-neutral-600 dark:text-gray-400">Join my network across the digital frontier.</p>
                 </div>
 
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
@@ -67,10 +67,10 @@ export const ConnectHub: React.FC = () => {
                             whileInView={{ opacity: 1, scale: 1 }}
                             whileHover={{ scale: 1.02 }}
                             transition={{ delay: index * 0.1 }}
-                            className="group relative block p-8 rounded-3xl bg-white dark:bg-neutral-900 border border-neutral-200 dark:border-white/10 shadow-lg overflow-hidden"
+                            className="group relative block p-8 rounded-3xl bg-white dark:bg-white/5 backdrop-blur-md border border-neutral-200 dark:border-white/10 hover:border-blue-500/30 shadow-xl overflow-hidden transition-all duration-300"
                         >
                             {/* Background Gradient */}
-                            <div className={`absolute inset-0 bg-gradient-to-br ${platform.color} opacity-0 group-hover:opacity-5 transition-opacity duration-500`} />
+                            <div className={`absolute inset-0 bg-gradient-to-br ${platform.color} opacity-0 group-hover:opacity-10 transition-opacity duration-500`} />
 
                             <div className="relative z-10 flex items-start justify-between mb-8">
                                 <div className={`w-14 h-14 rounded-2xl bg-gradient-to-br ${platform.color} flex items-center justify-center text-white shadow-lg`}>
@@ -78,11 +78,11 @@ export const ConnectHub: React.FC = () => {
                                 </div>
                                 <div className="text-right">
                                     <h3 className="text-xl font-bold text-neutral-900 dark:text-white">{platform.name}</h3>
-                                    <p className="font-mono text-sm text-neutral-500">@{platform.username}</p>
+                                    <p className="font-mono text-sm text-neutral-500 dark:text-gray-500">@{platform.username}</p>
                                 </div>
                             </div>
 
-                            <p className="text-neutral-600 dark:text-neutral-400 mb-8 leading-relaxed">
+                            <p className="text-neutral-600 dark:text-gray-400 mb-8 leading-relaxed font-light">
                                 {platform.description}
                             </p>
 
@@ -90,7 +90,7 @@ export const ConnectHub: React.FC = () => {
                                 {platform.stats?.map((stat) => (
                                     <div key={stat.label}>
                                         <div className="text-lg font-bold text-neutral-900 dark:text-white">{stat.value}</div>
-                                        <div className="text-[10px] uppercase tracking-wider text-neutral-500">{stat.label}</div>
+                                        <div className="text-[10px] uppercase tracking-wider text-neutral-500 dark:text-gray-500">{stat.label}</div>
                                     </div>
                                 ))}
                             </div>
