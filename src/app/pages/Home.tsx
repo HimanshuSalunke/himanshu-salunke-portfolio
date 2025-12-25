@@ -15,7 +15,7 @@ const Home: React.FC = () => {
         <meta property="og:description" content="Building intelligent solutions with React, Python, and Machine Learning. Explore my projects, research, and technical writing." />
         <meta property="og:type" content="website" />
         <meta property="og:url" content="https://himanshu-salunke.vercel.app" />
-        <meta property="og:image" content="https://himanshu-salunke.vercel.app/og-image.png" />
+        <meta property="og:image" content="https://himanshu-salunke.vercel.app/api/og" />
         <meta property="og:image:width" content="1200" />
         <meta property="og:image:height" content="630" />
 

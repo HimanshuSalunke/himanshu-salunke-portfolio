@@ -2,10 +2,11 @@ User-agent: *
 Allow: /
 
 # Sitemap
-Sitemap: https://himanshu.dev/sitemap.xml
+Sitemap: https://himanshu-salunke.vercel.app/sitemap.xml
 
 # Disallow admin and private areas
 Disallow: /admin/
+Allow: /api/og/*
 Disallow: /api/
 Disallow: /_next/
 Disallow: /private/
@@ -13,6 +14,9 @@ Disallow: /private/
 # Allow all other content
 Allow: /about
 Allow: /work
-Allow: /contact
-Allow: /article/
 Allow: /work/
+Allow: /projects/
+Allow: /articles
+Allow: /contact
+Allow: /developer
+Allow: /services
