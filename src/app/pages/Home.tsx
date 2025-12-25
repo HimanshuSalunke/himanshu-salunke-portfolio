@@ -9,14 +9,20 @@ const Home: React.FC = () => {
   return (
     <>
       <Helmet>
-        <title>Himanshu's Portfolio - Aspiring Data Scientist</title>
-        <meta name="description" content="Portfolio of Himanshu, an Aspiring Data Scientist specializing in React, TypeScript, Python, and cutting-edge AI technologies. Explore my projects, articles, and get in touch." />
-        <meta property="og:title" content="Himanshu's Portfolio - Aspiring Data Scientist" />
-        <meta property="og:description" content="Portfolio of Himanshu, an Aspiring Data Scientist specializing in React, TypeScript, Python, and cutting-edge AI technologies." />
+        <title>Himanshu Salunke | Data Scientist & AI Engineer</title>
+        <meta name="description" content="Building intelligent solutions with React, Python, and Machine Learning. Explore my projects, research, and technical writing." />
+        <meta property="og:title" content="Himanshu Salunke | Data Scientist & AI Engineer" />
+        <meta property="og:description" content="Building intelligent solutions with React, Python, and Machine Learning. Explore my projects, research, and technical writing." />
         <meta property="og:type" content="website" />
+        <meta property="og:url" content="https://himanshu-salunke.vercel.app" />
+        <meta property="og:image" content="https://himanshu-salunke.vercel.app/api/og?title=Himanshu%20Salunke&subtitle=Data%20Scientist%20%26%20AI%20Engineer&type=website" />
+        <meta property="og:image:width" content="1200" />
+        <meta property="og:image:height" content="630" />
+
         <meta name="twitter:card" content="summary_large_image" />
-        <meta name="twitter:title" content="Himanshu's Portfolio - Aspiring Data Scientist" />
-        <meta name="twitter:description" content="Portfolio of Himanshu, an Aspiring Data Scientist specializing in React, TypeScript, Python, and cutting-edge AI technologies." />
+        <meta name="twitter:title" content="Himanshu Salunke | Data Scientist & AI Engineer" />
+        <meta name="twitter:description" content="Building intelligent solutions with React, Python, and Machine Learning. Explore my projects, research, and technical writing." />
+        <meta name="twitter:image" content="https://himanshu-salunke.vercel.app/api/og?title=Himanshu%20Salunke&subtitle=Data%20Scientist%20%26%20AI%20Engineer&type=website" />
 
         {/* JSON-LD Structured Data */}
         <script type="application/ld+json">
