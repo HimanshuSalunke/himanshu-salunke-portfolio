@@ -43,7 +43,7 @@ const getSocialPlatforms = (socialStats: SocialStats): SocialPlatform[] => [
         ]
     }
 ]
-    
+
 export const ConnectHub: React.FC = () => {
     const socialStats = useSocialStats()
     const socialPlatforms = useMemo(() => getSocialPlatforms(socialStats), [socialStats])
