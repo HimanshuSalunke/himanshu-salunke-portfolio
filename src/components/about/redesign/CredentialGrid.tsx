@@ -103,7 +103,7 @@ export const CredentialGrid: React.FC = () => {
                                         <h4 className="text-neutral-900 dark:text-white font-medium text-sm leading-tight group-hover:text-blue-600 dark:group-hover:text-blue-400 transition-colors">{cred.title}</h4>
                                         <p className="text-neutral-500 text-xs mt-1">{cred.issuer} • {cred.date}</p>
                                     </div>
-                                    <ExternalLink className="w-4 h-4 text-neutral-400 dark:text-neutral-600 ml-auto group-hover:text-neutral-900 dark:group-hover:text-white transition-colors opacity-0 group-hover:opacity-100" />
+                                    <ExternalLink className="w-4 h-4 text-neutral-400 dark:text-neutral-600 ml-auto transition-colors opacity-100 lg:opacity-0 lg:group-hover:opacity-100 group-hover:text-neutral-900 dark:group-hover:text-white" />
                                 </a>
                             ))}
                         </div>

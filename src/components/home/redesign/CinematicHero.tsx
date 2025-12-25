@@ -48,8 +48,7 @@ export const CinematicHero: React.FC = () => {
             <div className="absolute inset-0 grid-pattern opacity-[0.03] dark:opacity-[0.07]" />
             <div className="absolute inset-0 bg-gradient-to-t from-neutral-50 via-transparent to-transparent dark:from-neutral-950" />
 
-            {/* Spotlight Effect */}
-            <div className="absolute top-0 left-1/2 -translate-x-1/2 w-[1000px] h-[600px] bg-blue-500/10 dark:bg-blue-500/10 blur-[120px] rounded-full pointer-events-none" />
+
 
             {/* Content Container */}
             <div className="relative z-10 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
@@ -68,14 +67,14 @@ export const CinematicHero: React.FC = () => {
                     >
                         <div className="absolute inset-0 bg-blue-500 blur-2xl opacity-20 dark:opacity-40 rounded-full scale-110" />
                         <motion.div
-                            className="relative p-1 rounded-full bg-gradient-to-br from-neutral-200 to-white dark:from-neutral-800 dark:to-neutral-900 shadow-2xl"
+                            className="relative rounded-full shadow-2xl"
                             whileHover={{ scale: 1.05 }}
                             transition={{ duration: 0.3 }}
                         >
                             <ImageWithShimmer
                                 src="/images/avatar.jpg"
                                 alt="Himanshu Salunke - Aspiring Data Scientist"
-                                className="w-24 h-24 sm:w-32 sm:h-32 md:w-40 md:h-40 object-cover rounded-full border-4 border-white dark:border-neutral-900"
+                                className="w-24 h-24 sm:w-32 sm:h-32 md:w-40 md:h-40 object-cover rounded-full"
                                 priority
                             />
                         </motion.div>

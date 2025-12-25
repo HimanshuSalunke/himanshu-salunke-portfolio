@@ -15,21 +15,15 @@ export const CinematicAbout: React.FC = () => {
 
             {/* --- Hero: The Protagonist --- */}
             <section className="relative min-h-[90vh] flex flex-col justify-center items-center px-4 overflow-hidden pt-12">
-                <div className="absolute inset-0 grid sm:grid-cols-4 -space-x-px opacity-20 dark:opacity-[0.05] pointer-events-none">
-                    <div className="border-r border-neutral-300 dark:border-white h-full" />
-                    <div className="border-r border-neutral-300 dark:border-white h-full" />
-                    <div className="border-r border-neutral-300 dark:border-white h-full" />
-                    <div className="border-r border-neutral-300 dark:border-white h-full" />
-                </div>
 
-                {/* Spotlight */}
-                <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[500px] h-[500px] bg-blue-500/10 dark:bg-blue-500/20 blur-[120px] rounded-full pointer-events-none" />
+
+
 
                 <motion.div
                     initial={{ opacity: 0, scale: 0.9 }}
                     animate={{ opacity: 1, scale: 1 }}
                     transition={{ duration: 0.8 }}
-                    className="relative z-10 w-40 h-40 sm:w-56 sm:h-56 rounded-full p-2 border border-neutral-200 dark:border-white/10 bg-white/50 dark:bg-neutral-900/50 backdrop-blur-md mb-8 shadow-2xl dark:shadow-none"
+                    className="relative z-10 w-40 h-40 sm:w-56 sm:h-56 rounded-full mb-8 shadow-2xl dark:shadow-none"
                 >
                     <ImageWithShimmer
                         src="/images/avatar.jpg"

@@ -45,7 +45,7 @@ const GridItem: React.FC<GridItemProps> = ({ to, title, subtitle, icon, classNam
     return (
         <Link to={to} className={`group relative overflow-hidden rounded-3xl bg-white dark:bg-neutral-900 border border-neutral-200 dark:border-neutral-800 shadow-sm hover:shadow-xl transition-all duration-500 ${className}`}>
             <div className={`absolute inset-0 opacity-0 group-hover:opacity-10 transition-opacity duration-500 ${styles.bg}`} />
-            <div className="absolute top-0 right-0 p-6 opacity-0 group-hover:opacity-100 transition-all duration-500 -translate-y-2 group-hover:translate-y-0">
+            <div className="absolute top-0 right-0 p-6 opacity-100 lg:opacity-0 lg:group-hover:opacity-100 transition-all duration-500 -translate-y-2 group-hover:translate-y-0">
                 <ArrowRight className={`w-6 h-6 ${styles.arrow}`} />
             </div>
 
@@ -100,7 +100,7 @@ export const ExplorationGrid: React.FC = () => {
                                 Discover my portfolio of 8+ innovative AI/ML projects, data science solutions, and full-stack apps.
                             </p>
 
-                            <div className="absolute top-8 right-8 w-12 h-12 rounded-full border border-white/20 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-all duration-500">
+                            <div className="absolute top-8 right-8 w-12 h-12 rounded-full border border-white/20 flex items-center justify-center opacity-100 lg:opacity-0 lg:group-hover:opacity-100 transition-all duration-500">
                                 <ArrowRight className="w-6 h-6 text-white" />
                             </div>
                         </div>

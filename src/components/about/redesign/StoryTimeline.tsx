@@ -78,7 +78,7 @@ const timelineData: TimelineItem[] = [
         icon: <nav className="text-xl">🎓</nav>,
         stats: [
             { label: 'CGPA', value: '7.39' },
-            { label: 'Duration', value: '2.5 Years' }
+            { label: 'Duration', value: '3 Years' }
         ],
         tags: ['Computer Vision', 'NLP', 'Research']
     },
