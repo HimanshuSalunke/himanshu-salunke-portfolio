@@ -26,80 +26,76 @@ export default async function handler(req: Request) {
             flexDirection: 'column',
             alignItems: 'center',
             justifyContent: 'center',
-            backgroundColor: '#0a0a0a', // neutral-950
-            backgroundImage: 'radial-gradient(circle at 25px 25px, rgba(255, 255, 255, 0.05) 2%, transparent 0%), radial-gradient(circle at 75px 75px, rgba(255, 255, 255, 0.05) 2%, transparent 0%)',
-            backgroundSize: '100px 100px',
-            fontFamily: '"Inter", sans-serif',
+            backgroundColor: '#0a0a0a',
+            backgroundImage: 'linear-gradient(to bottom right, #0a0a0a, #111111)',
+            fontFamily: 'sans-serif',
             position: 'relative',
-            overflow: 'hidden',
           }}
         >
-          {/* Glowing Orbs */}
-          < div style={{ position: 'absolute', top: '-10%', right: '-10%', width: '600px', height: '600px', backgroundColor: 'rgba(37, 99, 235, 0.15)', borderRadius: '50%', filter: 'blur(100px)' }
-          } />
-          < div style={{ position: 'absolute', bottom: '-10%', left: '-10%', width: '500px', height: '500px', backgroundColor: 'rgba(79, 70, 229, 0.15)', borderRadius: '50%', filter: 'blur(100px)' }} />
+          {/* Simple Background Pattern */}
+          <div style={{
+            position: 'absolute',
+            top: 0,
+            left: 0,
+            right: 0,
+            bottom: 0,
+            backgroundImage: 'radial-gradient(circle at 25px 25px, rgba(255, 255, 255, 0.05) 2%, transparent 0%)',
+            backgroundSize: '50px 50px',
+          }} />
 
           {/* User Status Badge */}
           <div
-            style={
-              {
-                display: 'flex',
-                alignItems: 'center',
-                gap: '8px',
-                padding: '8px 20px',
-                borderRadius: '50px',
-                backgroundColor: 'rgba(59, 130, 246, 0.1)',
-                border: '1px solid rgba(59, 130, 246, 0.2)',
-                marginBottom: '32px',
-              }
-            }
+            style={{
+              display: 'flex',
+              alignItems: 'center',
+              gap: '10px',
+              padding: '10px 24px',
+              borderRadius: '50px',
+              backgroundColor: 'rgba(37, 99, 235, 0.1)', // blue-600/10
+              border: '1px solid rgba(37, 99, 235, 0.3)',
+              marginBottom: '40px',
+              zIndex: 10,
+            }}
           >
-            <div style={{ width: '8px', height: '8px', borderRadius: '50%', backgroundColor: '#60a5fa' }} />
-            < span style={{ color: '#60a5fa', fontSize: '16px', fontWeight: 600, textTransform: 'uppercase', letterSpacing: '1px' }}>
+            <div style={{ width: '10px', height: '10px', borderRadius: '50%', backgroundColor: '#3b82f6' }} />
+            <span style={{ color: '#60a5fa', fontSize: '20px', fontWeight: 600, textTransform: 'uppercase', letterSpacing: '2px' }}>
               Open to Opportunities
             </span>
           </div>
 
           {/* Main Title */}
           <h1
-            style={
-              {
-                fontSize: '84px',
-                fontWeight: 900,
-                lineHeight: 1.1,
-                margin: '0 0 24px 0',
-                textAlign: 'center',
-                letterSpacing: '-2px',
-                color: 'white',
-                display: 'flex',
-                flexDirection: 'column',
-                alignItems: 'center',
-              }
-            }
+            style={{
+              fontSize: '80px',
+              fontWeight: 900,
+              lineHeight: 1.1,
+              margin: '0 0 20px 0',
+              textAlign: 'center',
+              letterSpacing: '-2px',
+              color: 'white',
+              zIndex: 10,
+            }}
           >
             {title}
           </h1>
 
-          {/* Subtitle with Gradient */}
+          {/* Subtitle */}
           <p
-            style={
-              {
-                fontSize: '32px',
-                fontWeight: 600,
-                margin: 0,
-                textAlign: 'center',
-                background: 'linear-gradient(90deg, #60a5fa, #818cf8)',
-                backgroundClip: 'text',
-                color: 'transparent',
-                letterSpacing: '0.5px',
-              }
-            }
+            style={{
+              fontSize: '36px',
+              fontWeight: 600,
+              margin: 0,
+              textAlign: 'center',
+              color: '#94a3b8', // neutral-400
+              letterSpacing: '1px',
+              zIndex: 10,
+            }}
           >
             {subtitle}
           </p>
 
-          {/* Decorative Divider */}
-          <div style={{ width: '100px', height: '4px', background: 'linear-gradient(90deg, #3b82f6, #6366f1)', marginTop: '40px', borderRadius: '2px' }} />
+          {/* Decorative Bar */}
+          <div style={{ width: '120px', height: '6px', backgroundColor: '#3b82f6', marginTop: '50px', borderRadius: '3px', zIndex: 10 }} />
 
         </div>
       ),
