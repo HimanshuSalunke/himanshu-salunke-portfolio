@@ -9,12 +9,9 @@ export default async function handler(req: Request) {
   try {
     const { searchParams } = new URL(req.url)
 
-    // Dynamic params with defaults for the "Website OG"
+    // Dynamic params with defaults
     const title = searchParams.get('title') || 'Himanshu Salunke'
-    const subtitle = searchParams.get('subtitle') || 'Data Scientist & Developer'
-
-    // Font loading (standard fetch in edge) - Using system fonts for speed/reliability in this snippet
-    // or we can load a font if needed, but for now let's use standard sans-serif with styling
+    const role = searchParams.get('role') || 'Data Scientist & AI Engineer'
 
     return new ImageResponse(
       (
@@ -26,77 +23,124 @@ export default async function handler(req: Request) {
             flexDirection: 'column',
             alignItems: 'center',
             justifyContent: 'center',
-            backgroundColor: '#0a0a0a',
-            backgroundImage: 'linear-gradient(to bottom right, #0a0a0a, #111111)',
+            backgroundColor: '#030712', // gray-950
+            backgroundImage: `
+              radial-gradient(circle at 25px 25px, rgba(59, 130, 246, 0.15) 2%, transparent 0%), 
+              radial-gradient(circle at 75px 75px, rgba(139, 92, 246, 0.15) 2%, transparent 0%)
+            `,
+            backgroundSize: '100px 100px',
             fontFamily: 'sans-serif',
             position: 'relative',
+            overflow: 'hidden',
           }}
         >
-          {/* Simple Background Pattern */}
-          <div style={{
-            position: 'absolute',
-            top: 0,
-            left: 0,
-            right: 0,
-            bottom: 0,
-            backgroundImage: 'radial-gradient(circle at 25px 25px, rgba(255, 255, 255, 0.05) 2%, transparent 0%)',
-            backgroundSize: '50px 50px',
-          }} />
+          {/* Ambient Glows */}
+          <div
+            style={{
+              position: 'absolute',
+              top: '-20%',
+              left: '-10%',
+              width: '40%',
+              height: '40%',
+              backgroundImage: 'radial-gradient(circle, rgba(59, 130, 246, 0.2), transparent 70%)',
+              filter: 'blur(60px)',
+            }}
+          />
+          <div
+            style={{
+              position: 'absolute',
+              bottom: '-20%',
+              right: '-10%',
+              width: '40%',
+              height: '40%',
+              backgroundImage: 'radial-gradient(circle, rgba(139, 92, 246, 0.2), transparent 70%)',
+              filter: 'blur(60px)',
+            }}
+          />
 
-          {/* User Status Badge */}
+          {/* Content Container */}
           <div
             style={{
               display: 'flex',
+              flexDirection: 'column',
               alignItems: 'center',
-              gap: '10px',
-              padding: '10px 24px',
-              borderRadius: '50px',
-              backgroundColor: 'rgba(37, 99, 235, 0.1)', // blue-600/10
-              border: '1px solid rgba(37, 99, 235, 0.3)',
-              marginBottom: '40px',
+              justifyContent: 'center',
+              padding: '60px',
+              border: '1px solid rgba(255, 255, 255, 0.1)',
+              borderRadius: '24px',
+              backgroundColor: 'rgba(17, 24, 39, 0.5)', // gray-900/50
+              boxShadow: '0 25px 50px -12px rgba(0, 0, 0, 0.5)',
               zIndex: 10,
             }}
           >
-            <div style={{ width: '10px', height: '10px', borderRadius: '50%', backgroundColor: '#3b82f6' }} />
-            <span style={{ color: '#60a5fa', fontSize: '20px', fontWeight: 600, textTransform: 'uppercase', letterSpacing: '2px' }}>
-              Open to Opportunities
-            </span>
+            {/* Avaatar/Icon Placeholder (optional) */}
+            <div
+              style={{
+                width: '80px',
+                height: '80px',
+                marginBottom: '24px',
+                borderRadius: '20px',
+                backgroundImage: 'linear-gradient(135deg, #3b82f6, #8b5cf6)',
+                display: 'flex',
+                alignItems: 'center',
+                justifyContent: 'center',
+                fontSize: '40px',
+                color: 'white',
+                fontWeight: 'bold',
+                boxShadow: '0 10px 15px -3px rgba(59, 130, 246, 0.3)',
+              }}
+            >
+              HS
+            </div>
+
+            {/* Main Title */}
+            <h1
+              style={{
+                fontSize: '72px',
+                fontWeight: 800,
+                textAlign: 'center',
+                margin: '0 0 16px 0',
+                background: 'linear-gradient(to bottom right, #ffffff, #94a3b8)',
+                backgroundClip: 'text',
+                color: 'transparent',
+                letterSpacing: '-2px',
+                lineHeight: 1.1,
+              }}
+            >
+              {title}
+            </h1>
+
+            {/* Role / Subtitle */}
+            <p
+              style={{
+                fontSize: '32px',
+                margin: 0,
+                textAlign: 'center',
+                color: '#94a3b8', // slate-400
+                fontWeight: 500,
+                letterSpacing: '0.5px',
+              }}
+            >
+              {role}
+            </p>
           </div>
 
-          {/* Main Title */}
-          <h1
+          {/* Footer Decoration */}
+          <div
             style={{
-              fontSize: '80px',
-              fontWeight: 900,
-              lineHeight: 1.1,
-              margin: '0 0 20px 0',
-              textAlign: 'center',
-              letterSpacing: '-2px',
-              color: 'white',
-              zIndex: 10,
+              position: 'absolute',
+              bottom: '40px',
+              display: 'flex',
+              alignItems: 'center',
+              gap: '12px',
+              color: '#475569', // slate-600
+              fontSize: '20px',
+              fontWeight: 500,
             }}
           >
-            {title}
-          </h1>
-
-          {/* Subtitle */}
-          <p
-            style={{
-              fontSize: '36px',
-              fontWeight: 600,
-              margin: 0,
-              textAlign: 'center',
-              color: '#94a3b8', // neutral-400
-              letterSpacing: '1px',
-              zIndex: 10,
-            }}
-          >
-            {subtitle}
-          </p>
-
-          {/* Decorative Bar */}
-          <div style={{ width: '120px', height: '6px', backgroundColor: '#3b82f6', marginTop: '50px', borderRadius: '3px', zIndex: 10 }} />
-
+            <div style={{ width: '8px', height: '8px', borderRadius: '50%', backgroundColor: '#22c55e' }} />
+            <span>Available for new projects</span>
+          </div>
         </div>
       ),
       {
@@ -105,6 +149,7 @@ export default async function handler(req: Request) {
       }
     )
   } catch (e: any) {
+    console.error(e)
     return new Response(`Failed to generate the image`, {
       status: 500,
     })
