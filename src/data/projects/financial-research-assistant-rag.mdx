@@ -1,105 +1,115 @@
 ---
 id: "financial-research-assistant-rag"
 title: "Financial Research Assistant (RAG)"
-summary: "Production-ready RAG system for querying financial documents (PDFs) with GPU acceleration. Features sub-second retrieval, 4-bit quantization, and comprehensive source attribution."
+summary: "Production-ready local RAG system powered by Microsoft Phi-3 Mini and BGE embeddings. Features GPU-accelerated GGUF inference, sub-second retrieval, and citation-backed financial analysis."
 category: "Deep Learning"
 coverImage: "/images/projects/financial-rag/cover.png"
-date: "2025-12-15"
+date: "2025-12-28"
 techStack:
   - "Python"
   - "FastAPI"
   - "Streamlit"
+  - "Microsoft Phi-3"
+  - "LlamaCpp"
   - "LangChain"
-  - "PyTorch"
   - "FAISS"
-  - "HuggingFace"
   - "CUDA"
-  - "Docker"
 featured: true
 status: "Completed"
 metrics:
   - label: "Retrieval Speed"
     value: "< 100ms"
   - label: "GPU VRAM"
-    value: "< 6GB"
+    value: "< 4GB"
   - label: "Quantization"
-    value: "4-bit"
-  - label: "Accuracy"
-    value: "High Context"
+    value: "4-bit (GGUF)"
+  - label: "Model"
+    value: "Phi-3 Mini 3.8B"
 githubUrl: "https://github.com/HimanshuSalunke/Financial-Research-Assistant-RAG-"
 liveUrl: ""
-publishedAt: "2025-12-15"
+publishedAt: "2025-12-28"
 order: 0
-completionDate: "2025-11-20"
+completionDate: "2025-12-27"
 images: []
 link: "https://github.com/HimanshuSalunke/Financial-Research-Assistant-RAG-"
 outputLink:
-tag: "AI / Machine Learning"
+tag: "Generative AI"
 ---
 
 
 
 ## 🎯 Project Overview
 
-Financial analysts spend countless hours manually searching through dense 10-K reports and financial statements to find specific metrics. This manual process is slow, error-prone, and unscalable.
-**The Goal:** Build an intelligent assistant that can instantly answer natural language questions about financial documents with citation-backed accuracy, running entirely on consumer-grade hardware to ensure data privacy.
+Financial analysts spend countless hours manually searching through dense 10-K reports and financial statements. This upgraded **Financial Research Assistant** solves this by leveraging state-of-the-art **Small Language Models (SLMs)** to provide instant, accurate answers running entirely on local hardware.
+
+**The Upgrade:** Moved from generic embeddings to **BAAI/bge-small-en-v1.5** (MTEB leaderboard top-performer) and from standard LLMs to **Microsoft Phi-3 Mini 4K Instruct**, running via **llama.cpp** for optimized GPU inference.
 
 ## System Architecture
 
 ```mermaid
 graph TD
-    A[PDF Financial Docs] -->|PyPDF Loader| B(Text Chunks)
+    A[PDF Financial Docs] -->|PyPDF Loader| B(Text Chunks 1200 chars)
     B -->|Recursive Splitter| C[Chunk Processing]
-    C -->|all-MiniLM-L6-v2| D[Vector Embeddings]
+    C -->|BAAI/bge-small-en-v1.5| D[Vector Embeddings]
     D -->|FAISS| E[(Vector Database)]
     E <-->|Similarity Search| F[RAG Retrieval Chain]
-    G[User Query] -->|Embedding| F
-    F -->|Context + Query| H[Quantized LLM]
-    H -->|Generated Answer| I[Final Response]
+    G[User Query] -->|BGE Embedding| F
+    F -->|Context + Query| H[Phi-3 Mini 4K (GGUF)]
+    H -->|LlamaCpp via CUDA| I[Final Response]
 ```
 
 ## Key Achievements
 
-- **Built production-ready RAG pipeline** for financial document analysis using LangChain and FAISS, enabling users to query complex 10-K reports with high accuracy.
+- **State-of-the-Art Local Inference**: Implemented **Microsoft Phi-3 Mini** (3.8B parameters) using 4-bit GGUF quantization, achieving GPT-3.5 level performance on reasoning tasks while running locally on an RTX 4050.
 
-- **Optimized for consumer GPUs** (RTX 4050) using 4-bit quantization and efficient vector storage, reducing VRAM usage to under 6GB while maintaining model performance.
+- **High-Precision Retrieval**: Upgraded to **BAAI/bge-small-en-v1.5** embeddings, significantly significantly improving semantic search accuracy compared to standard BERT models.
 
-- **Developed dual-interface application** with high-performance FastAPI backend for API consumers and intuitive Streamlit frontend for interactive research.
+- **Full GPU Acceleration**: Integrated `llama-cpp-python` with CUDA support to offload 100% of model layers to the GPU, enabling blazing fast token generation.
 
 ## Technical Stack
-- **Backend**: FastAPI with async support for high-throughput request handling
-- **Frontend**: Streamlit for rapid prototyping and interactive visualization
-- **Infrastructure**: CUDA-accelerated PyTorch environment
+- **AI Core**: Microsoft Phi-3 Mini, LlamaCpp, HuggingFace Transformers
+- **Backend**: FastAPI with Pydantic validation
+- **Frontend**: Streamlit for interactive chat and document visualization
+- **Vector Store**: FAISS (Facebook AI Similarity Search)
 
 ## Technical Implementation
 
-### RAG Engine Core
+### RAG Engine Initialization
 ```python
 class RAGEngine:
     def _initialize(self):
-        # Load embeddings on GPU
+        # 1. Load SOTA Embeddings (BGE) on GPU
         device = "cuda" if torch.cuda.is_available() else "cpu"
         embeddings = SentenceTransformerEmbeddings(
-            model_name="sentence-transformers/all-MiniLM-L6-v2",
+            model_name="BAAI/bge-small-en-v1.5",
             device=device
         )
         
-        # Load Vector Store
-        self.vector_store = FAISS.load_local(
-            str(settings.vector_store_path),
-            embeddings
+        # 2. Initialize Phi-3 via LlamaCpp (GGUF)
+        self.llm = LlamaCpp(
+            model_path="models/Phi-3-mini-4k-instruct-q4.gguf",
+            n_gpu_layers=-1, # Offload ALL layers to GPU
+            n_ctx=4096,      # Full 4K context window
+            f16_kv=True,     # FP16 KV cache for speed
+            temperature=0.1  # Low temp for factual answers
         )
-        
-        # Initialize Quantized LLM
-        # Logic to load model with 4-bit quantization...
 ```
 
-### Performance Optimization
-- **Caching**: Implemented intelligent caching for embeddings and model weights
-- **Async Processing**: Leveraged Python's `asyncio` for non-blocking API endpoints
-- **Memory Management**: Automatic device mapping and aggressive garbage collection
+### Advanced Prompt Engineering
+Used strict system Prompting to reduce hallucinations:
+```python
+prompt_template = """<|system|>
+You are a financial research assistant. Answer the question specifically using ONLY the provided context.
+If the answer is not in the context, say "I cannot find the answer in the documents."
+Context:
+{context}
+<|end|>
+<|user|>
+{question}
+<|end|>
+<|assistant|>"""
+```
 
 ## Challenges & Learnings
-- **GPU Memory Constraints**: Overcoming VRAM limitations by implementing 4-bit quantization and careful batch sizing.
-- **Hallucination Reduction**: Tuned retrieval parameters (k=4) and prompt templates to strictly ground answers in retrieved context.
-- **Document Parsing**: Handling complex PDF layouts and tables commonly found in financial reports.
+- **Quantization Trade-offs**: Balacing model size vs. perplexity. Selected **Q4_K_M** quantization for Phi-3 as the sweet spot for 6GB VRAM GPUs.
+- **Context Window Management**: Phi-3 supports 4K tokens, which is crucial for analyzing long financial narratives. Implemented smart chunking (1200 chars) to maximize context utilization.
