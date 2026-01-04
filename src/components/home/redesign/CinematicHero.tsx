@@ -97,7 +97,7 @@ export const CinematicHero: React.FC = () => {
 
                     {/* Role with Typewriter */}
                     <div className="text-lg sm:text-xl md:text-2xl lg:text-3xl font-medium text-neutral-600 dark:text-neutral-300 mb-3 max-w-3xl mx-auto">
-                        <span className="block sm:inline mb-2 sm:mb-0">Specializing in </span>
+                        <span className="block sm:inline mb-2 sm:mb-0">Specialized in </span>
                         <TypewriterText text="Python, Machine Learning, Deep Learning, Gen AI" speed={100} />
                     </div>
 
