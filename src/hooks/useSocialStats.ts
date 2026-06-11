@@ -33,7 +33,9 @@ const fetchGitHubStats = async (username: string): Promise<GitHubStats> => {
     console.log('🔍 Fetching GitHub stats for:', username)
 
     // Use our consolidated social-stats API
-    const response = await fetch(`${API_BASE_URL}/api/social-stats/github?username=${encodeURIComponent(username)}`)
+    const response = await fetch(
+      `${API_BASE_URL}/api/social-stats/github?username=${encodeURIComponent(username)}`
+    )
 
     if (!response.ok) {
       throw new Error(`Failed to fetch GitHub data: ${response.status}`)
@@ -50,7 +52,7 @@ const fetchGitHubStats = async (username: string): Promise<GitHubStats> => {
       followers: data.followers || 0,
       following: data.following || 0,
       isLoading: false,
-      error: data.error || null
+      error: data.error || null,
     }
   } catch (error) {
     console.error('GitHub fetch error:', error)
@@ -63,7 +65,7 @@ const fetchGitHubStats = async (username: string): Promise<GitHubStats> => {
       followers: 0,
       following: 0,
       isLoading: false,
-      error: error instanceof Error ? error.message : 'Unknown error'
+      error: error instanceof Error ? error.message : 'Unknown error',
     }
   }
 }
@@ -71,14 +73,15 @@ const fetchGitHubStats = async (username: string): Promise<GitHubStats> => {
 // LinkedIn - Limited API access, using your actual data
 const fetchLinkedInStats = async (username: string): Promise<LinkedInStats> => {
   try {
+    void username
     // LinkedIn API requires special permissions and is very restrictive
     // Using your actual LinkedIn data
     return {
       connections: 500, // Estimated connections
       articles: 40, // Based on your content
-      followers: '25k+', // Your actual 25k+ followers
+      followers: '28K+', // Your actual 28K+ followers
       isLoading: false,
-      error: null
+      error: null,
     }
   } catch (error) {
     return {
@@ -86,7 +89,7 @@ const fetchLinkedInStats = async (username: string): Promise<LinkedInStats> => {
       articles: 0,
       followers: 0,
       isLoading: false,
-      error: error instanceof Error ? error.message : 'Unknown error'
+      error: error instanceof Error ? error.message : 'Unknown error',
     }
   }
 }
@@ -101,15 +104,15 @@ export const useSocialStats = () => {
       followers: 0,
       following: 0,
       isLoading: true,
-      error: null
+      error: null,
     },
     linkedin: {
       connections: 0,
       articles: 0,
       followers: 0,
       isLoading: true,
-      error: null
-    }
+      error: null,
+    },
   })
 
   useEffect(() => {
@@ -122,7 +125,7 @@ export const useSocialStats = () => {
 
       setStats({
         github: githubStats,
-        linkedin: linkedinStats
+        linkedin: linkedinStats,
       })
     }
 
@@ -131,6 +134,3 @@ export const useSocialStats = () => {
 
   return stats
 }
-
-
-
