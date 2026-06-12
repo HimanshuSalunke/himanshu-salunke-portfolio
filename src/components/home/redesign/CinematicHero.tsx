@@ -124,7 +124,7 @@ export const CinematicHero: React.FC = () => {
             {/* 3. Specialization: Typewriter Effect */}
             <div className="text-sm sm:text-base md:text-lg lg:text-xl font-medium text-neutral-600 dark:text-neutral-300 w-full">
               <span className="block sm:inline mb-1 sm:mb-0">Specialized in </span>
-              <TypewriterText text="Python, Machine Learning, Deep Learning, Gen AI, RAG" speed={100} />
+              <TypewriterText text="Python, Machine Learning, Deep Learning, Gen AI, RAG, LLM" speed={100} />
             </div>
 
           </div>
