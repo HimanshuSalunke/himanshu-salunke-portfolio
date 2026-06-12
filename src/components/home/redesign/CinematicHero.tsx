@@ -91,16 +91,16 @@ export const CinematicHero: React.FC = () => {
           </motion.div>
 
           {/* Name - Big & Bold */}
-          <h1 className="text-3xl sm:text-4xl md:text-5xl lg:text-6xl font-bold tracking-tight text-neutral-900 dark:text-white mb-4">
+          <h1 className="text-2xl sm:text-3xl md:text-4xl lg:text-5xl font-bold tracking-tight text-neutral-900 dark:text-white mb-4">
             Himanshu <span className="text-transparent bg-clip-text bg-gradient-to-r from-blue-600 to-indigo-600 dark:from-blue-400 dark:to-indigo-400">Salunke</span>
           </h1>
 
           {/* Subtitles Group */}
-          <div className="flex flex-col gap-3 sm:gap-4 mb-8 max-w-3xl mx-auto items-center text-center w-full">
-            
+          <div className="flex flex-col gap-2 sm:gap-3 mb-8 max-w-3xl mx-auto items-center text-center w-full">
+
             {/* 1. Position: Breathing Effect */}
-            <div className="text-base sm:text-lg md:text-xl lg:text-2xl w-full">
-              <motion.span 
+            <div className="text-sm sm:text-base md:text-lg lg:text-xl w-full">
+              <motion.span
                 className="inline-block font-bold text-blue-600 dark:text-blue-400"
                 animate={{ opacity: [0.5, 1, 0.5] }}
                 transition={{ duration: 3, repeat: Infinity, ease: "easeInOut" }}
@@ -110,9 +110,9 @@ export const CinematicHero: React.FC = () => {
             </div>
 
             {/* 2. Company: Glow/Brightness Effect */}
-            <div className="text-base sm:text-lg md:text-xl lg:text-2xl font-medium text-neutral-600 dark:text-neutral-300 w-full">
+            <div className="text-sm sm:text-base md:text-lg lg:text-xl font-medium text-neutral-600 dark:text-neutral-300 w-full">
               <span className="block sm:inline mb-1 sm:mb-0">Working at </span>
-              <motion.span 
+              <motion.span
                 className="inline-block font-bold text-blue-600 dark:text-blue-400"
                 animate={{ filter: ["brightness(1)", "brightness(1.4)", "brightness(1)"] }}
                 transition={{ duration: 4, repeat: Infinity, ease: "easeInOut" }}
@@ -122,11 +122,11 @@ export const CinematicHero: React.FC = () => {
             </div>
 
             {/* 3. Specialization: Typewriter Effect */}
-            <div className="text-base sm:text-lg md:text-xl lg:text-2xl font-medium text-neutral-600 dark:text-neutral-300 w-full">
+            <div className="text-sm sm:text-base md:text-lg lg:text-xl font-medium text-neutral-600 dark:text-neutral-300 w-full">
               <span className="block sm:inline mb-1 sm:mb-0">Specialized in </span>
               <TypewriterText text="Python, Machine Learning, Deep Learning, Gen AI, RAG" speed={100} />
             </div>
-            
+
           </div>
 
           {/* Description */}
