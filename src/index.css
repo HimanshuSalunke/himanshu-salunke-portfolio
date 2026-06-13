@@ -134,6 +134,8 @@
 
 html {
   scroll-behavior: smooth;
+  /* Calibrated for 100% browser zoom (develop and test at Ctrl+0, never 90%). */
+  font-size: 90%;
   -webkit-text-size-adjust: 100%;
   text-size-adjust: 100%;
   scrollbar-gutter: stable;
@@ -269,8 +271,12 @@ body {
   }
 
   100% {
-    transform: translateX(100%);
+    transform: translateX(400%);
   }
+}
+
+.animate-shimmer {
+  animation: shimmer 2.4s ease-in-out infinite;
 }
 
 

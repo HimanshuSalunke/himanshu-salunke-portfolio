@@ -104,14 +104,18 @@ export const CinematicHeader: React.FC = () => {
         )}
 
         <nav className="relative mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
-          <div className="flex items-center justify-between gap-4">
+          <div className="grid grid-cols-[minmax(0,1fr)_auto_minmax(0,1fr)] items-center gap-3">
             {/* Logo */}
-            <Link to="/" className="group relative flex shrink-0 items-center gap-2.5" aria-label="Home">
+            <Link
+              to="/"
+              className="group relative flex shrink-0 items-center gap-2.5 justify-self-start"
+              aria-label="Home"
+            >
               <div className="relative h-10 w-10 shrink-0 transition-transform duration-300 group-hover:scale-105">
                 {!prefersReducedMotion ? (
                   <div
                     aria-hidden="true"
-                    className="absolute inset-0 animate-[spin_5s_linear_infinite] rounded-xl opacity-90"
+                    className="absolute inset-0 animate-[spin_5s_linear_infinite] rounded-lg opacity-90"
                     style={{
                       background:
                         'conic-gradient(from 0deg, transparent 0deg, #3b82f6 70deg, #9333ea 150deg, #22d3ee 230deg, transparent 310deg)',
@@ -120,29 +124,29 @@ export const CinematicHeader: React.FC = () => {
                 ) : (
                   <div
                     aria-hidden="true"
-                    className="absolute inset-0 rounded-xl bg-gradient-to-br from-blue-500 via-purple-500 to-cyan-400"
+                    className="absolute inset-0 rounded-lg bg-gradient-to-br from-blue-500 via-purple-500 to-cyan-400"
                   />
                 )}
-                <div className="absolute inset-[2px] z-10 flex items-center justify-center rounded-[10px] bg-white shadow-sm shadow-purple-500/10 dark:bg-[#030014]">
-                  <span className="bg-gradient-to-br from-blue-500 via-purple-500 to-cyan-400 bg-clip-text text-lg font-black text-transparent">
+                <div className="absolute inset-0.5 z-10 flex items-center justify-center rounded-[0.5625rem] bg-white shadow-sm shadow-purple-500/10 dark:bg-[#030014]">
+                  <span className="bg-gradient-to-br from-blue-500 via-purple-500 to-cyan-400 bg-clip-text text-base font-black text-transparent">
                     H
                   </span>
                 </div>
               </div>
               <div className="hidden min-w-0 sm:block">
                 <span
-                  className={`block text-lg font-bold tracking-tight transition-colors ${logoTextClass} group-hover:text-purple-600 dark:group-hover:text-purple-300`}
+                  className={`block text-base font-bold tracking-tight transition-colors ${logoTextClass} group-hover:text-purple-600 dark:group-hover:text-purple-300`}
                 >
                   Himanshu
                 </span>
-                <span className="block font-mono text-[10px] uppercase tracking-[0.18em] text-neutral-500 dark:text-neutral-500">
+                <span className="block font-mono text-[0.625rem] uppercase tracking-[0.18em] text-neutral-500 dark:text-neutral-500">
                   Portfolio
                 </span>
               </div>
             </Link>
 
-            {/* Desktop nav */}
-            <div className="hidden items-center gap-0.5 md:flex">
+            {/* Desktop nav - true center column */}
+            <div className="hidden items-center justify-center gap-0.5 justify-self-center md:flex">
               {navigation.map((item) => {
                 const active = isNavActive(location.pathname, item)
                 const hasSubmenu = Boolean(item.submenu?.length)
@@ -204,7 +208,7 @@ export const CinematicHeader: React.FC = () => {
             </div>
 
             {/* Actions */}
-            <div className="flex items-center gap-1.5 sm:gap-2">
+            <div className="flex items-center justify-end gap-1.5 justify-self-end sm:gap-2">
               <div className="hidden sm:block">
                 <GlobalSearch variant="cinematic" />
               </div>
@@ -212,7 +216,7 @@ export const CinematicHeader: React.FC = () => {
               <motion.a
                 href="/Himanshu_Salunke_Resume.pdf"
                 download="Himanshu_Salunke_Resume.pdf"
-                className="hidden h-9 items-center gap-2 rounded-full border border-purple-500/25 bg-white/60 px-3.5 text-sm font-medium text-neutral-700 backdrop-blur-sm transition-all hover:border-purple-500/45 hover:bg-gradient-to-r hover:from-blue-600/10 hover:to-purple-600/10 hover:text-purple-700 dark:bg-neutral-950/50 dark:text-neutral-200 dark:hover:text-purple-300 lg:flex"
+                className="hidden h-9 items-center gap-1.5 rounded-full border border-purple-500/25 bg-white/60 px-3.5 text-sm font-medium text-neutral-700 backdrop-blur-sm transition-all hover:border-purple-500/45 hover:bg-gradient-to-r hover:from-blue-600/10 hover:to-purple-600/10 hover:text-purple-700 dark:bg-neutral-950/50 dark:text-neutral-200 dark:hover:text-purple-300 lg:flex"
                 whileHover={prefersReducedMotion ? undefined : { scale: 1.02 }}
                 whileTap={prefersReducedMotion ? undefined : { scale: 0.98 }}
               >
@@ -227,7 +231,7 @@ export const CinematicHeader: React.FC = () => {
                 whileTap={prefersReducedMotion ? undefined : { scale: 0.92 }}
                 aria-label={theme === 'light' ? 'Switch to dark mode' : 'Switch to light mode'}
               >
-                {theme === 'light' ? <Moon className="h-4 w-4" /> : <Sun className="h-4 w-4" />}
+                {theme === 'light' ? <Moon className="h-3.5 w-3.5" /> : <Sun className="h-3.5 w-3.5" />}
               </motion.button>
 
               <motion.button
@@ -237,7 +241,7 @@ export const CinematicHeader: React.FC = () => {
                 aria-label={isMenuOpen ? 'Close menu' : 'Open menu'}
                 aria-expanded={isMenuOpen}
               >
-                {isMenuOpen ? <X className="h-5 w-5" /> : <Menu className="h-5 w-5" />}
+                {isMenuOpen ? <X className="h-4 w-4" /> : <Menu className="h-4 w-4" />}
               </motion.button>
             </div>
           </div>
@@ -266,10 +270,10 @@ export const CinematicHeader: React.FC = () => {
               animate={{ x: 0 }}
               exit={{ x: '100%' }}
               transition={{ duration: 0.3, ease: [0.16, 1, 0.3, 1] }}
-              className="absolute bottom-0 right-0 top-0 flex w-[min(100%,320px)] flex-col border-l border-purple-500/20 bg-white/95 shadow-2xl shadow-purple-500/10 backdrop-blur-xl dark:bg-[#030014]/98"
+              className="absolute bottom-0 right-0 top-0 flex w-[min(100%,20rem)] flex-col border-l border-purple-500/20 bg-white/95 shadow-2xl shadow-purple-500/10 backdrop-blur-xl dark:bg-[#030014]/98"
             >
-              <div className="flex items-center justify-between border-b border-neutral-200/80 px-5 py-4 dark:border-purple-500/15">
-                <span className="font-mono text-[10px] uppercase tracking-[0.2em] text-neutral-500">Navigation</span>
+              <div className="flex items-center justify-between border-b border-neutral-200/80 px-4 py-3 dark:border-purple-500/15">
+                <span className="font-mono text-[0.5625rem] uppercase tracking-[0.2em] text-neutral-500">Navigation</span>
                 <button
                   type="button"
                   onClick={() => setIsMenuOpen(false)}
@@ -298,7 +302,7 @@ export const CinematicHeader: React.FC = () => {
                         <Link
                           to={item.href}
                           onClick={() => setIsMenuOpen(false)}
-                          className={`block rounded-xl px-4 py-3.5 text-lg font-semibold transition-colors ${
+                          className={`block rounded-xl px-4 py-3 text-base font-semibold transition-colors ${
                             active
                               ? 'bg-gradient-to-r from-blue-600/10 to-purple-600/10 text-purple-700 dark:text-purple-300'
                               : 'text-neutral-900 hover:bg-neutral-100 dark:text-white dark:hover:bg-white/5'
@@ -313,7 +317,7 @@ export const CinematicHeader: React.FC = () => {
                               key={sub.name}
                               to={sub.href}
                               onClick={() => setIsMenuOpen(false)}
-                              className={`block rounded-xl py-2.5 pl-8 pr-4 text-base transition-colors ${
+                              className={`block rounded-xl py-2 pl-7 pr-4 text-sm transition-colors ${
                                 subActive
                                   ? 'font-medium text-purple-600 dark:text-purple-400'
                                   : 'text-neutral-500 hover:text-neutral-900 dark:text-neutral-400 dark:hover:text-white'
@@ -333,7 +337,7 @@ export const CinematicHeader: React.FC = () => {
                 <a
                   href="/Himanshu_Salunke_Resume.pdf"
                   download="Himanshu_Salunke_Resume.pdf"
-                  className="flex w-full items-center justify-center gap-2 rounded-full bg-gradient-to-r from-blue-600 to-purple-600 py-3.5 text-sm font-semibold text-white shadow-lg shadow-purple-500/20"
+                  className="flex w-full items-center justify-center gap-2 rounded-full bg-gradient-to-r from-blue-600 to-purple-600 py-3 text-sm font-semibold text-white shadow-lg shadow-purple-500/20"
                 >
                   <Download className="h-4 w-4" />
                   Download Resume

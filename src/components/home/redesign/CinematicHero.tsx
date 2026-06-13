@@ -96,12 +96,12 @@ const NeuralMeshBackground: React.FC = () => (
 )
 
 const EDGE_ICONS = [
-  { Icon: SiTensorflow, color: 'text-orange-500', left: '4%', top: '18%', size: 36 },
-  { Icon: FaBrain, color: 'text-purple-500', left: '7%', top: '62%', size: 32 },
-  { Icon: FaNetworkWired, color: 'text-blue-500', left: '2%', top: '42%', size: 28 },
-  { Icon: SiPytorch, color: 'text-red-500', left: '92%', top: '22%', size: 36 },
-  { Icon: SiHuggingface, color: 'text-yellow-500', left: '88%', top: '55%', size: 32 },
-  { Icon: Brain, color: 'text-cyan-500', left: '94%', top: '78%', size: 28 },
+  { Icon: SiTensorflow, color: 'text-orange-500', left: '4%', top: '18%', size: 32 },
+  { Icon: FaBrain, color: 'text-purple-500', left: '7%', top: '62%', size: 29 },
+  { Icon: FaNetworkWired, color: 'text-blue-500', left: '2%', top: '42%', size: 25 },
+  { Icon: SiPytorch, color: 'text-red-500', left: '92%', top: '22%', size: 32 },
+  { Icon: SiHuggingface, color: 'text-yellow-500', left: '88%', top: '55%', size: 29 },
+  { Icon: Brain, color: 'text-cyan-500', left: '94%', top: '78%', size: 25 },
 ] as const
 
 const HeroEdgeAccents: React.FC = () => (
@@ -153,10 +153,10 @@ const LayerCard: React.FC<LayerCardProps> = ({ layer, icon, accent, children, de
       animate={{ opacity: 1, y: 0 }}
       transition={{ duration: 0.45, delay }}
       className={`flex flex-col rounded-2xl border bg-white/90 dark:bg-neutral-950/80 ${accent} ${
-        compact ? 'min-h-0 p-3.5' : 'min-h-[100px] p-4 sm:min-h-[110px] sm:p-4'
+        compact ? 'min-h-0 p-3.5' : 'min-h-[90px] p-4 sm:min-h-[100px] sm:p-4'
       }`}
     >
-      <div className={`flex items-center gap-2 font-mono text-[9px] uppercase tracking-[0.18em] text-neutral-500 dark:text-neutral-400 ${compact ? 'mb-2' : 'mb-3'}`}>
+      <div className={`flex items-center gap-2 font-mono text-[0.5625rem] uppercase tracking-[0.18em] text-neutral-500 dark:text-neutral-400 ${compact ? 'mb-2' : 'mb-3'}`}>
         <span className="flex h-6 w-6 shrink-0 items-center justify-center rounded-lg bg-neutral-100 dark:bg-neutral-900">
           {icon}
         </span>
@@ -171,7 +171,7 @@ const LayerCard: React.FC<LayerCardProps> = ({ layer, icon, accent, children, de
 
 const AvatarNeuralCore: React.FC = () => {
   const prefersReducedMotion = useReducedMotion()
-  const ringRadius = 'translateY(-102px)'
+  const ringRadius = 'translateY(-92px)'
 
   return (
     <div className="relative mx-auto mb-5 flex h-48 w-48 items-center justify-center sm:mb-6 sm:h-52 sm:w-52 md:h-56 md:w-56">
@@ -222,7 +222,7 @@ export const CinematicHero: React.FC = () => {
       <div className="pointer-events-none absolute inset-0 bg-[linear-gradient(rgba(59,130,246,0.035)_1px,transparent_1px),linear-gradient(90deg,rgba(147,51,234,0.035)_1px,transparent_1px)] bg-[size:40px_40px] dark:bg-[linear-gradient(rgba(59,130,246,0.05)_1px,transparent_1px),linear-gradient(90deg,rgba(147,51,234,0.05)_1px,transparent_1px)]" />
       <div className="pointer-events-none absolute inset-x-0 top-0 h-[55%] bg-gradient-to-b from-blue-500/[0.06] to-transparent dark:from-blue-500/[0.08]" />
 
-      <div className="relative z-10 mx-auto flex min-h-[100svh] w-full max-w-5xl flex-col items-center justify-center px-4 pb-8 pt-14 text-center sm:px-6 sm:pb-10 sm:pt-16 lg:px-8">
+      <div className="relative z-10 mx-auto flex min-h-[100svh] w-full max-w-5xl flex-col items-center justify-center px-4 pb-8 pt-16 text-center sm:px-6 sm:pb-10 sm:pt-[4.5rem] lg:px-8">
         <motion.div
           initial={prefersReducedMotion ? false : { opacity: 0 }}
           animate={{ opacity: 1 }}
@@ -368,7 +368,7 @@ export const CinematicHero: React.FC = () => {
             transition={{ delay: 0.32 }}
             className="mb-5 w-full rounded-2xl border border-neutral-200/80 bg-white/90 p-4 dark:border-neutral-700/60 dark:bg-neutral-950/75 sm:mb-6 sm:p-5"
           >
-            <p className="mb-2 font-mono text-[9px] uppercase tracking-[0.22em] text-neutral-500 dark:text-neutral-400">
+            <p className="mb-2 font-mono text-[0.5625rem] uppercase tracking-[0.22em] text-neutral-500 dark:text-neutral-400">
               // Inference Output
             </p>
             <p className="text-sm leading-relaxed text-neutral-600 dark:text-neutral-300 sm:text-base">

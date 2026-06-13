@@ -6,7 +6,6 @@ import { Tag } from '../../components/ui/Tag'
 import { Button } from '../../components/ui/Button'
 import { ImageWithShimmer } from '../../components/ui/ImageWithShimmer'
 import { TableOfContents, MobileTableOfContents } from '../../components/ui/TableOfContents'
-import { ReadingProgress } from '../../components/ui/ReadingProgress'
 import { ProjectGallery } from '../../components/ui/ProjectGallery'
 
 import { MDXContentRenderer } from '../../components/mdx/MDXContentRenderer'
@@ -200,9 +199,6 @@ const Project: React.FC = () => {
           })}
         </script>
       </Helmet>
-
-      {/* Reading Progress */}
-      <ReadingProgress />
 
       <div className="min-h-screen">
 

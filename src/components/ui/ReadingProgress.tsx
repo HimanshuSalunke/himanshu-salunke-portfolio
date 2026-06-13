@@ -1,41 +1,16 @@
 import React, { useState, useEffect } from 'react'
 import { motion } from 'framer-motion'
+import { CinematicScrollProgress } from './CinematicScrollProgress'
 
 interface ReadingProgressProps {
   className?: string
 }
 
+/** @deprecated Use global ProgressTracker in App instead - kept for backward compatibility */
 export const ReadingProgress: React.FC<ReadingProgressProps> = ({ className = '' }) => {
-  const [progress, setProgress] = useState(0)
-
-  useEffect(() => {
-    const updateProgress = () => {
-      const scrollTop = window.scrollY
-      const docHeight = document.documentElement.scrollHeight - window.innerHeight
-      const scrollPercent = (scrollTop / docHeight) * 100
-      setProgress(Math.min(100, Math.max(0, scrollPercent)))
-    }
-
-    window.addEventListener('scroll', updateProgress)
-    updateProgress() // Initial call
-
-    return () => window.removeEventListener('scroll', updateProgress)
-  }, [])
-
-  return (
-    <div className={`fixed top-0 left-0 right-0 z-50 ${className}`}>
-      <motion.div
-        className="h-1 bg-primary-500 shadow-lg"
-        style={{ width: `${progress}%` }}
-        initial={{ width: 0 }}
-        animate={{ width: `${progress}%` }}
-        transition={{ duration: 0.1, ease: 'easeOut' }}
-      />
-    </div>
-  )
+  return <CinematicScrollProgress className={className} revealAfter={0} />
 }
 
-// Alternative circular progress indicator
 export const CircularReadingProgress: React.FC<ReadingProgressProps> = ({ className = '' }) => {
   const [progress, setProgress] = useState(0)
 
@@ -64,9 +39,8 @@ export const CircularReadingProgress: React.FC<ReadingProgressProps> = ({ classN
       animate={{ opacity: progress > 5 ? 1 : 0, scale: progress > 5 ? 1 : 0 }}
       transition={{ duration: 0.3 }}
     >
-      <div className="relative w-12 h-12">
-        <svg className="w-12 h-12 transform -rotate-90" viewBox="0 0 44 44">
-          {/* Background circle */}
+      <div className="relative h-12 w-12">
+        <svg className="h-12 w-12 -rotate-90 transform" viewBox="0 0 44 44">
           <circle
             cx="22"
             cy="22"
@@ -76,7 +50,6 @@ export const CircularReadingProgress: React.FC<ReadingProgressProps> = ({ classN
             fill="none"
             className="text-neutral-200 dark:text-neutral-700"
           />
-          {/* Progress circle */}
           <motion.circle
             cx="22"
             cy="22"
@@ -85,7 +58,7 @@ export const CircularReadingProgress: React.FC<ReadingProgressProps> = ({ classN
             strokeWidth="3"
             fill="none"
             strokeLinecap="round"
-            className="text-primary-500"
+            className="text-purple-500"
             style={{
               strokeDasharray: circumference,
               strokeDashoffset: strokeDashoffset,

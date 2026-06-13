@@ -1,0 +1,15 @@
+---
+description: Always develop and preview the site at 100% browser zoom
+alwaysApply: true
+---
+
+# Browser zoom standard
+
+The UI is calibrated for **100% browser zoom** (`Ctrl+0` on Windows, `Cmd+0` on Mac).
+
+- Always develop, review, and screenshot at **100% zoom** - never 90% or 110%
+- Chrome saves zoom **per site** - reset both `localhost` and production URLs to 100%
+- Before deploy, verify with `npm run build && npm run preview` at 100% zoom
+- Root typography uses `html { font-size: 90%; }` so layout matches the prior 90%-zoom dev baseline at the correct 100% browser zoom
+
+Localhost and Vercel must look identical when both tabs are at 100% zoom and the same window width.

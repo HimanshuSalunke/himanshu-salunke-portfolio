@@ -261,7 +261,7 @@ export const GlobalSearch: React.FC<GlobalSearchProps> = ({ variant = 'default',
       whileHover={prefersReducedMotion ? undefined : { x: 2 }}
     >
       <div
-        className={`flex h-9 w-9 shrink-0 items-center justify-center rounded-xl bg-gradient-to-br ${getTypeColor(result.type)} text-white shadow-md shadow-purple-500/10`}
+        className={`flex h-8 w-8 shrink-0 items-center justify-center rounded-xl bg-gradient-to-br ${getTypeColor(result.type)} text-white shadow-md shadow-purple-500/10`}
       >
         {getTypeIcon(result.type)}
       </div>
@@ -269,14 +269,14 @@ export const GlobalSearch: React.FC<GlobalSearchProps> = ({ variant = 'default',
         <div className="mb-0.5 flex items-center gap-2">
           <h3 className="truncate text-sm font-semibold text-neutral-900 dark:text-white">{result.title}</h3>
           <span
-            className={`shrink-0 rounded-full border px-2 py-0.5 font-mono text-[9px] uppercase tracking-wider ${getTypeBadgeClass(result.type)}`}
+            className={`shrink-0 rounded-full border px-1.5 py-0.5 font-mono text-[0.5625rem] uppercase tracking-wider ${getTypeBadgeClass(result.type)}`}
           >
             {result.type}
           </span>
         </div>
         <p className="truncate text-xs text-neutral-600 dark:text-neutral-400">{result.description}</p>
         {result.category && (
-          <p className="mt-1 font-mono text-[10px] text-purple-600 dark:text-purple-400">{result.category}</p>
+          <p className="mt-1 font-mono text-[0.5625rem] text-purple-600 dark:text-purple-400">{result.category}</p>
         )}
       </div>
       <ArrowRight className="h-4 w-4 shrink-0 text-neutral-400 transition-transform group-hover:translate-x-0.5 group-hover:text-purple-500" />
@@ -300,7 +300,7 @@ export const GlobalSearch: React.FC<GlobalSearchProps> = ({ variant = 'default',
     if (results.length > 0) {
       return (
         <div className="space-y-4 p-2 sm:p-3">
-          <p className="px-2 font-mono text-[10px] uppercase tracking-[0.18em] text-neutral-500">
+          <p className="px-2 font-mono text-[0.5625rem] uppercase tracking-[0.18em] text-neutral-500">
             {results.length} result{results.length === 1 ? '' : 's'} found
           </p>
           {(['project', 'article', 'page'] as const).map((type) => {
@@ -308,7 +308,7 @@ export const GlobalSearch: React.FC<GlobalSearchProps> = ({ variant = 'default',
             if (items.length === 0) return null
             return (
               <div key={type}>
-                <p className="mb-1.5 px-2 font-mono text-[9px] uppercase tracking-[0.2em] text-neutral-500">
+                <p className="mb-1.5 px-2 font-mono text-[0.5625rem] uppercase tracking-[0.2em] text-neutral-500">
                   {type === 'project' ? 'Projects' : type === 'article' ? 'Articles' : 'Pages'}
                 </p>
                 <div className="space-y-1">{items.map((result, index) => renderCinematicResult(result, index))}</div>
@@ -322,8 +322,8 @@ export const GlobalSearch: React.FC<GlobalSearchProps> = ({ variant = 'default',
     if (searchTerm.length > 0) {
       return (
         <div className="flex flex-col items-center px-6 py-10 text-center">
-          <div className="mb-4 flex h-14 w-14 items-center justify-center rounded-2xl border border-purple-500/20 bg-purple-500/5">
-            <Search className="h-6 w-6 text-purple-500" />
+          <div className="mb-3 flex h-12 w-12 items-center justify-center rounded-2xl border border-purple-500/20 bg-purple-500/5">
+            <Search className="h-5 w-5 text-purple-500" />
           </div>
           <h3 className="text-sm font-semibold text-neutral-900 dark:text-white">No matches found</h3>
           <p className="mt-1 max-w-xs text-xs text-neutral-600 dark:text-neutral-400">
@@ -336,8 +336,8 @@ export const GlobalSearch: React.FC<GlobalSearchProps> = ({ variant = 'default',
     return (
       <div className="space-y-4 p-3 sm:p-4">
         <div className="flex items-start gap-3 rounded-xl border border-purple-500/15 bg-gradient-to-r from-blue-500/5 via-purple-500/5 to-cyan-500/5 p-3">
-          <div className="flex h-9 w-9 shrink-0 items-center justify-center rounded-xl bg-gradient-to-br from-blue-500 via-purple-500 to-cyan-400 text-white">
-            <Sparkles className="h-4 w-4" />
+          <div className="flex h-8 w-8 shrink-0 items-center justify-center rounded-xl bg-gradient-to-br from-blue-500 via-purple-500 to-cyan-400 text-white">
+            <Sparkles className="h-3.5 w-3.5" />
           </div>
           <div>
             <p className="text-sm font-medium text-neutral-900 dark:text-white">Search the portfolio</p>
@@ -348,7 +348,7 @@ export const GlobalSearch: React.FC<GlobalSearchProps> = ({ variant = 'default',
         </div>
 
         <div>
-          <p className="mb-2 px-1 font-mono text-[9px] uppercase tracking-[0.2em] text-neutral-500">Quick links</p>
+          <p className="mb-2 px-1 font-mono text-[0.5625rem] uppercase tracking-[0.2em] text-neutral-500">Quick links</p>
           <div className="grid grid-cols-2 gap-2">
             {quickLinks.map((link) => (
               <button
@@ -365,7 +365,7 @@ export const GlobalSearch: React.FC<GlobalSearchProps> = ({ variant = 'default',
         </div>
 
         <div>
-          <p className="mb-2 px-1 font-mono text-[9px] uppercase tracking-[0.2em] text-neutral-500">Browse by type</p>
+          <p className="mb-2 px-1 font-mono text-[0.5625rem] uppercase tracking-[0.2em] text-neutral-500">Browse by type</p>
           <div className="flex flex-wrap gap-2">
             {[
               { label: 'Projects', icon: Rocket, query: 'project' },
@@ -389,7 +389,7 @@ export const GlobalSearch: React.FC<GlobalSearchProps> = ({ variant = 'default',
   }
 
   const triggerClass = isCinematic
-    ? `flex h-9 items-center gap-2 rounded-full border border-purple-500/25 bg-white/60 px-3 text-sm text-neutral-500 backdrop-blur-sm transition-all hover:border-purple-500/45 hover:text-purple-700 dark:bg-neutral-950/50 dark:text-neutral-400 dark:hover:text-purple-300 lg:px-3.5 ${expand ? 'w-full justify-between px-4' : ''}`
+    ? `flex h-9 items-center gap-1.5 rounded-full border border-purple-500/25 bg-white/60 px-2.5 text-sm text-neutral-500 backdrop-blur-sm transition-all hover:border-purple-500/45 hover:text-purple-700 dark:bg-neutral-950/50 dark:text-neutral-400 dark:hover:text-purple-300 lg:px-3.5 ${expand ? 'w-full justify-between px-3.5' : ''}`
     : 'group relative rounded-2xl bg-gradient-to-r from-neutral-100 to-neutral-200 p-3 shadow-lg transition-all duration-300 hover:from-primary-100 hover:to-secondary-100 hover:shadow-xl dark:from-neutral-700 dark:to-neutral-600 dark:hover:from-primary-900/20 dark:hover:to-secondary-900/20'
 
   return (
@@ -411,7 +411,7 @@ export const GlobalSearch: React.FC<GlobalSearchProps> = ({ variant = 'default',
         {isCinematic && (
           <>
             <span className={`font-medium ${expand ? 'inline' : 'hidden md:inline'}`}>Search</span>
-            <kbd className={`rounded-md border border-purple-500/20 bg-purple-500/5 px-1.5 py-0.5 font-mono text-[10px] text-neutral-500 dark:text-neutral-400 ${expand ? 'inline' : 'hidden lg:inline'}`}>
+            <kbd className={`rounded-md border border-purple-500/20 bg-purple-500/5 px-1.5 py-0.5 font-mono text-[0.5625rem] text-neutral-500 dark:text-neutral-400 ${expand ? 'inline' : 'hidden lg:inline'}`}>
               ⌘K
             </kbd>
           </>
@@ -461,7 +461,7 @@ export const GlobalSearch: React.FC<GlobalSearchProps> = ({ variant = 'default',
                 {isCinematic && (
                   <>
                     <div className="pointer-events-none absolute inset-x-0 top-0 h-24 bg-gradient-to-b from-blue-500/10 via-purple-500/5 to-transparent" />
-                    <div className="pointer-events-none absolute inset-0 bg-[linear-gradient(rgba(147,51,234,0.04)_1px,transparent_1px),linear-gradient(90deg,rgba(59,130,246,0.04)_1px,transparent_1px)] bg-[size:28px_28px] opacity-40" />
+                    <div className="pointer-events-none absolute inset-0 bg-[linear-gradient(rgba(147,51,234,0.04)_1px,transparent_1px),linear-gradient(90deg,rgba(59,130,246,0.04)_1px,transparent_1px)] bg-[size:1.625rem_1.625rem] opacity-40" />
                   </>
                 )}
 
@@ -469,10 +469,10 @@ export const GlobalSearch: React.FC<GlobalSearchProps> = ({ variant = 'default',
                   className={`relative border-b p-3 sm:p-4 ${isCinematic ? 'border-purple-500/15 dark:border-purple-500/20' : 'border-neutral-200/30 dark:border-neutral-700/30'}`}
                 >
                   {isCinematic ? (
-                    <div className="mb-3 flex items-center justify-between gap-3">
+                    <div className="mb-2.5 flex items-center justify-between gap-3">
                       <div className="flex items-center gap-2">
-                        <span className="flex h-2 w-2 rounded-full bg-cyan-500 shadow-[0_0_8px_rgba(34,211,238,0.6)]" />
-                        <p className="font-mono text-[10px] uppercase tracking-[0.2em] text-neutral-500 dark:text-neutral-400">
+                        <span className="flex h-1.5 w-1.5 rounded-full bg-cyan-500 shadow-[0_0_6px_rgba(34,211,238,0.6)]" />
+                        <p className="font-mono text-[0.5625rem] uppercase tracking-[0.2em] text-neutral-500 dark:text-neutral-400">
                           // Quick Search
                         </p>
                       </div>
@@ -498,7 +498,7 @@ export const GlobalSearch: React.FC<GlobalSearchProps> = ({ variant = 'default',
                       placeholder="Search projects, articles, pages..."
                       className={
                         isCinematic
-                          ? 'w-full touch-manipulation rounded-xl border border-purple-500/25 bg-white/90 py-3 pl-10 pr-10 text-base text-neutral-900 shadow-inner shadow-purple-500/5 placeholder-neutral-500 transition-all focus:border-purple-500/50 focus:outline-none focus:ring-2 focus:ring-purple-500/20 dark:bg-neutral-950/80 dark:text-white dark:placeholder-neutral-500 sm:pl-11 sm:pr-11'
+                          ? 'w-full touch-manipulation rounded-xl border border-purple-500/25 bg-white/90 py-2.5 pl-9 pr-9 text-sm text-neutral-900 shadow-inner shadow-purple-500/5 placeholder-neutral-500 transition-all focus:border-purple-500/50 focus:outline-none focus:ring-2 focus:ring-purple-500/20 dark:bg-neutral-950/80 dark:text-white dark:placeholder-neutral-500 sm:pl-10 sm:pr-10'
                           : 'w-full touch-manipulation rounded-xl border-2 border-neutral-200/50 bg-gradient-to-r from-neutral-50 to-neutral-100 py-3 pl-10 pr-10 text-base text-neutral-900 shadow-lg transition-all duration-300 placeholder-neutral-500 focus:border-primary-500 focus:shadow-xl focus:ring-2 focus:ring-primary-500/20 dark:border-neutral-600/50 dark:from-neutral-700 dark:to-neutral-800 dark:text-white dark:placeholder-neutral-400 dark:focus:border-primary-400 sm:pl-12 sm:pr-12'
                       }
                       autoFocus
@@ -518,7 +518,7 @@ export const GlobalSearch: React.FC<GlobalSearchProps> = ({ variant = 'default',
                   </div>
                 </div>
 
-                <div className={isCinematic ? 'relative max-h-[min(52vh,420px)] overflow-y-auto' : 'max-h-48 overflow-y-auto sm:max-h-64'}>
+                <div className={isCinematic ? 'relative max-h-[min(50vh,26rem)] overflow-y-auto' : 'max-h-44 overflow-y-auto sm:max-h-56'}>
                   {isCinematic ? (
                     renderCinematicBody()
                   ) : isLoading ? (
@@ -580,18 +580,18 @@ export const GlobalSearch: React.FC<GlobalSearchProps> = ({ variant = 'default',
                 >
                   <div className="flex flex-wrap items-center justify-between gap-2 text-xs text-neutral-500 dark:text-neutral-400">
                     <span className="flex items-center gap-1.5">
-                      <kbd className="rounded-md border border-purple-500/20 bg-white/80 px-1.5 py-0.5 font-mono text-[10px] dark:bg-neutral-900/80">
+                      <kbd className="rounded-md border border-purple-500/20 bg-white/80 px-1.5 py-0.5 font-mono text-[0.5625rem] dark:bg-neutral-900/80">
                         ⌘K
                       </kbd>
                       <span>open</span>
                       <span className="text-neutral-400">·</span>
-                      <kbd className="rounded-md border border-purple-500/20 bg-white/80 px-1.5 py-0.5 font-mono text-[10px] dark:bg-neutral-900/80">
+                      <kbd className="rounded-md border border-purple-500/20 bg-white/80 px-1.5 py-0.5 font-mono text-[0.5625rem] dark:bg-neutral-900/80">
                         ESC
                       </kbd>
                       <span>close</span>
                     </span>
                     {isCinematic && (
-                      <span className="font-mono text-[10px] uppercase tracking-[0.14em] text-purple-600 dark:text-purple-400">
+                      <span className="font-mono text-[0.5625rem] uppercase tracking-[0.14em] text-purple-600 dark:text-purple-400">
                         Portfolio index
                       </span>
                     )}
