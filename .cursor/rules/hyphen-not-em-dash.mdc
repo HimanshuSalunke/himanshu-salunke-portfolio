@@ -1,0 +1,17 @@
+---
+description: Use hyphens only; never em dashes or en dashes in user-facing text
+alwaysApply: true
+---
+
+# Hyphen punctuation
+
+In all user-facing text (UI copy, alt text, comments meant for readability, meta descriptions, commit messages when user-facing):
+
+- Use hyphen `-` only
+- Never use em dash `—` or en dash `–`
+
+Examples:
+- Good: `AI/ML Engineer - Software Developer`
+- Bad: `AI/ML Engineer — Software Developer`
+
+Loading placeholders: use `-` not `—`.

@@ -51,7 +51,7 @@ const Home: React.FC = () => {
         </script>
       </Helmet>
 
-      <div className="min-h-screen bg-neutral-50 dark:bg-neutral-950">
+      <div className="min-h-screen bg-neutral-50 dark:bg-[#030014]">
         {/* 1. Cinematic Hero Section */}
         <CinematicHero />
 

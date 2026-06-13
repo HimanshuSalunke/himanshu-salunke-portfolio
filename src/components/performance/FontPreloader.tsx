@@ -20,25 +20,7 @@ export const FontPreloader: React.FC<FontPreloaderProps> = ({
   ]
 }) => {
   useEffect(() => {
-    // Use Google Fonts instead of local fonts
-    const preloadGoogleFonts = () => {
-      const fontLinks = [
-        'https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap',
-        'https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500&display=swap'
-      ]
-
-      fontLinks.forEach(href => {
-        const link = document.createElement('link')
-        link.rel = 'stylesheet'
-        link.href = href
-        link.crossOrigin = 'anonymous'
-        document.head.appendChild(link)
-      })
-
-      console.log('Google Fonts loaded successfully')
-    }
-
-    preloadGoogleFonts()
+    // Fonts are loaded once from index.html to avoid duplicate requests and layout shift
   }, [fonts])
 
   return null
