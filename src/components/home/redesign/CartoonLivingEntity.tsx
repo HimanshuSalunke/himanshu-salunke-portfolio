@@ -481,13 +481,13 @@ const neuraMarkdownOptions = {
 
 const bubbleStyles: Record<BubbleVariant, string> = {
   default:
-    'border-purple-400/50 bg-white/[0.94] text-neutral-950 shadow-lg shadow-purple-950/15 backdrop-blur-xl dark:border-purple-300/40 dark:bg-[#10001f]/94 dark:text-white dark:shadow-black/40',
+    'border-purple-400/60 bg-white text-neutral-950 shadow-lg shadow-purple-950/15 dark:border-purple-400/45 dark:bg-[#1c0f33] dark:text-neutral-50 dark:shadow-black/50',
   warning:
-    'border-amber-500/50 bg-amber-50/[0.95] text-amber-950 shadow-lg shadow-amber-950/10 backdrop-blur-xl dark:border-amber-300/40 dark:bg-amber-950/92 dark:text-amber-50 dark:shadow-black/40',
+    'border-amber-500/60 bg-amber-50 text-amber-950 shadow-lg shadow-amber-950/10 dark:border-amber-400/45 dark:bg-[#3a2410] dark:text-amber-50 dark:shadow-black/50',
   live:
-    'border-cyan-500/50 bg-cyan-50/[0.94] text-neutral-950 shadow-lg shadow-cyan-950/10 backdrop-blur-xl dark:border-cyan-300/35 dark:bg-cyan-950/90 dark:text-cyan-50 dark:shadow-black/40',
+    'border-cyan-500/60 bg-cyan-50 text-neutral-950 shadow-lg shadow-cyan-950/10 dark:border-cyan-400/40 dark:bg-[#0c2a33] dark:text-cyan-50 dark:shadow-black/50',
   user:
-    'border-blue-400/50 bg-blue-50/[0.94] text-neutral-950 shadow-lg shadow-blue-950/10 backdrop-blur-xl dark:border-blue-300/35 dark:bg-blue-950/92 dark:text-blue-50 dark:shadow-black/40',
+    'border-blue-400/60 bg-blue-50 text-neutral-950 shadow-lg shadow-blue-950/10 dark:border-blue-400/40 dark:bg-[#122038] dark:text-blue-50 dark:shadow-black/50',
 }
 
 const NeuraMessageBubble: React.FC<NeuraMessageBubbleProps> = ({
@@ -520,19 +520,27 @@ const NeuraMessageBubble: React.FC<NeuraMessageBubbleProps> = ({
         <p
           className={`mb-1 text-[0.65rem] font-semibold uppercase tracking-wide ${
             variant === 'user'
-              ? 'text-blue-800 dark:text-blue-100'
-              : 'text-purple-800 dark:text-purple-100'
+              ? 'text-blue-700 dark:text-blue-200'
+              : 'text-purple-700 dark:text-purple-200'
           }`}
         >
           {sender}
         </p>
       )}
-      <div className="relative z-[1] break-words [overflow-wrap:anywhere]">{body}</div>
+      <div className="relative z-[1] break-words text-inherit [overflow-wrap:anywhere] [&_*]:text-inherit">
+        {body}
+      </div>
       {tail !== 'none' && (
         <span
-          className={`absolute -bottom-1.5 h-2.5 w-2.5 rotate-45 border-b border-r border-inherit bg-inherit ${
-            tail === 'right' ? 'right-5' : 'left-5'
-          }`}
+          className={`absolute -bottom-1.5 h-2.5 w-2.5 rotate-45 border-b border-r ${
+            variant === 'default'
+              ? 'border-purple-400/60 bg-white dark:border-purple-400/45 dark:bg-[#1c0f33]'
+              : variant === 'user'
+                ? 'border-blue-400/60 bg-blue-50 dark:border-blue-400/40 dark:bg-[#122038]'
+                : variant === 'live'
+                  ? 'border-cyan-500/60 bg-cyan-50 dark:border-cyan-400/40 dark:bg-[#0c2a33]'
+                  : 'border-amber-500/60 bg-amber-50 dark:border-amber-400/45 dark:bg-[#3a2410]'
+          } ${tail === 'right' ? 'right-5' : 'left-5'}`}
           aria-hidden
         />
       )}
