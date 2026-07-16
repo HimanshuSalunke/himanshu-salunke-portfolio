@@ -22,9 +22,6 @@ export const ImageWithShimmer: React.FC<ImageWithShimmerProps> = ({
   height,
   priority = false,
   placeholder,
-  sizes = '100vw',
-  quality = 80,
-  format = 'auto'
 }) => {
   const [isLoaded, setIsLoaded] = useState(false)
   const [isInView, setIsInView] = useState(priority)

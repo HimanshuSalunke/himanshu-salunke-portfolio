@@ -1,5 +1,15 @@
 import { useState, useEffect } from 'react'
 
+type VaTracker = {
+  track?: (eventName: string, properties?: Record<string, unknown>) => void
+}
+
+function getVaTracker(): VaTracker | undefined {
+  if (typeof window === 'undefined') return undefined
+  // Vercel Analytics types `window.va` as a queue; runtime also exposes `.track`.
+  return window.va as unknown as VaTracker | undefined
+}
+
 export const useAnalytics = () => {
   const [isAnalyticsEnabled, setIsAnalyticsEnabled] = useState(false)
   const [hasConsent, setHasConsent] = useState<boolean | null>(null)
@@ -28,21 +38,15 @@ export const useAnalytics = () => {
     localStorage.setItem('analytics-consent', 'declined')
   }
 
-  const trackEvent = (eventName: string, properties?: Record<string, any>) => {
-    if (isAnalyticsEnabled && typeof window !== 'undefined') {
-      // Vercel Analytics tracking
-      if (window.va) {
-        window.va.track(eventName, properties)
-      }
+  const trackEvent = (eventName: string, properties?: Record<string, unknown>) => {
+    if (isAnalyticsEnabled) {
+      getVaTracker()?.track?.(eventName, properties)
     }
   }
 
   const trackPageView = (url: string) => {
-    if (isAnalyticsEnabled && typeof window !== 'undefined') {
-      // Vercel Analytics page view tracking
-      if (window.va) {
-        window.va.track('page_view', { url })
-      }
+    if (isAnalyticsEnabled) {
+      getVaTracker()?.track?.('page_view', { url })
     }
   }
 
@@ -53,14 +57,5 @@ export const useAnalytics = () => {
     disableAnalytics,
     trackEvent,
     trackPageView,
-  }
-}
-
-// Extend Window interface for Vercel Analytics
-declare global {
-  interface Window {
-    va?: {
-      track: (eventName: string, properties?: Record<string, any>) => void
-    }
   }
 }

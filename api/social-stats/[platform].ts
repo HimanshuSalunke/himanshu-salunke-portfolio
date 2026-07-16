@@ -1,5 +1,22 @@
 import type { VercelRequest, VercelResponse } from '@vercel/node'
-  
+
+interface GitHubRepo {
+  stargazers_count: number
+  forks_count: number
+  watchers_count: number
+}
+
+interface GitHubStatsResult {
+  stars: number
+  forks: number
+  watchers: number
+  repositories: number
+  followers: number
+  following: number
+  isLoading: boolean
+  error: null
+}
+
 export default async function handler(req: VercelRequest, res: VercelResponse) {
   // Set CORS headers
   res.setHeader('Access-Control-Allow-Origin', '*')
@@ -23,7 +40,7 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
       return res.status(400).json({ error: 'Platform and username are required' })
     }
 
-    let result: any = {}
+    let result: GitHubStatsResult | Record<string, never> = {}
 
     switch (platform.toLowerCase()) {
       case 'github':
@@ -70,9 +87,10 @@ async function fetchGitHubStats(username: string) {
   const userData = await userResponse.json()
   const reposData = await reposResponse.json()
 
-  const totalStars = reposData.reduce((acc: number, repo: any) => acc + repo.stargazers_count, 0)
-  const totalForks = reposData.reduce((acc: number, repo: any) => acc + repo.forks_count, 0)
-  const totalWatchers = reposData.reduce((acc: number, repo: any) => acc + repo.watchers_count, 0)
+  const repos = reposData as GitHubRepo[]
+  const totalStars = repos.reduce((acc, repo) => acc + repo.stargazers_count, 0)
+  const totalForks = repos.reduce((acc, repo) => acc + repo.forks_count, 0)
+  const totalWatchers = repos.reduce((acc, repo) => acc + repo.watchers_count, 0)
 
   return {
     stars: totalStars,

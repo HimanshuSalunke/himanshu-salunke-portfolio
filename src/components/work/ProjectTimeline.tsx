@@ -1,5 +1,6 @@
 import React from 'react'
 import { motion } from 'framer-motion'
+import { type Project } from '../../utils/clientMdx'
 
 interface ProjectMilestone {
   date: string
@@ -12,7 +13,7 @@ interface ProjectMilestone {
 }
 
 interface ProjectTimelineProps {
-  projects: any[]
+  projects: Project[]
 }
 
 const ProjectTimeline: React.FC<ProjectTimelineProps> = ({ projects }) => {
@@ -20,7 +21,7 @@ const ProjectTimeline: React.FC<ProjectTimelineProps> = ({ projects }) => {
   const milestones: ProjectMilestone[] = projects
     .sort((a, b) => new Date(b.date).getTime() - new Date(a.date).getTime())
     .slice(0, 6)
-    .map((project, index) => ({
+    .map((project) => ({
       date: project.date,
       title: project.title,
       description: project.summary,
@@ -62,19 +63,6 @@ const ProjectTimeline: React.FC<ProjectTimelineProps> = ({ projects }) => {
       'DevOps': 'from-red-500 to-red-600'
     }
     return colors[category] || 'from-neutral-500 to-neutral-600'
-  }
-
-  function getStatusColor(status: string): string {
-    switch (status) {
-      case 'completed':
-        return 'bg-green-500'
-      case 'in-progress':
-        return 'bg-yellow-500'
-      case 'planned':
-        return 'bg-blue-500'
-      default:
-        return 'bg-neutral-500'
-    }
   }
 
   function formatDate(dateString: string): string {

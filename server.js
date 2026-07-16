@@ -7,6 +7,7 @@ import matter from 'gray-matter';
 import multer from 'multer';
 import { put } from '@vercel/blob';
 import { PrismaClient } from '@prisma/client';
+import { buildLiveKnowledge, buildNeuraSystemPrompt } from './src/lib/neura/buildLiveKnowledge.js';
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
@@ -40,6 +41,7 @@ console.log('🔧 Server Environment Check:');
 console.log('   - DATABASE_URL:', process.env.DATABASE_URL ? '✅ Set' : '❌ Missing');
 console.log('   - BLOB_TOKEN:', process.env.BLOB_READ_WRITE_TOKEN ? '✅ Set' : '❌ Missing');
 console.log('   - SLACK_WEBHOOK:', process.env.SLACK_WEBHOOK_URL ? '✅ Set' : '❌ Missing');
+console.log('   - REQUESTY_API_KEY:', process.env.REQUESTY_API_KEY ? '✅ Set' : '❌ Missing');
 
 // Configure multer for file uploads (memory storage)
 const upload = multer({
@@ -543,6 +545,162 @@ app.get('/api/current-focus', (req, res) => {
       goals: [],
       lastUpdated: new Date().toISOString()
     });
+  }
+});
+
+// Neura AI chat (Requesty)
+const NEURA_MAX_MESSAGE_LENGTH = 500;
+const NEURA_MAX_HISTORY = 8;
+const NEURA_MODEL = process.env.REQUESTY_MODEL || 'openai/gpt-4.1-nano';
+
+function normalizeNeuraHistory(input) {
+  if (!Array.isArray(input)) return [];
+
+  return input
+    .filter((item) => {
+      if (!item || typeof item !== 'object') return false;
+      return (
+        (item.role === 'user' || item.role === 'assistant') &&
+        typeof item.content === 'string' &&
+        item.content.trim().length > 0
+      );
+    })
+    .slice(-NEURA_MAX_HISTORY)
+    .map((item) => ({
+      role: item.role,
+      content: item.content.trim().slice(0, NEURA_MAX_MESSAGE_LENGTH),
+    }));
+}
+
+function writeNeuraSse(res, payload) {
+  const data = typeof payload === 'string' ? payload : JSON.stringify(payload);
+  res.write(`data: ${data}\n\n`);
+}
+
+app.post('/api/neura/chat', async (req, res) => {
+  try {
+    const apiKey = process.env.REQUESTY_API_KEY;
+    if (!apiKey) {
+      console.error('Neura chat: REQUESTY_API_KEY is not configured');
+      return res.status(500).json({ error: 'Neura AI is not configured yet.' });
+    }
+
+    const message = typeof req.body?.message === 'string' ? req.body.message.trim() : '';
+    const history = normalizeNeuraHistory(req.body?.history);
+    const wantStream = req.body?.stream !== false;
+
+    if (!message) {
+      return res.status(400).json({ error: 'Message is required.' });
+    }
+
+    if (message.length > NEURA_MAX_MESSAGE_LENGTH) {
+      return res.status(400).json({
+        error: `Message is too long. Keep it under ${NEURA_MAX_MESSAGE_LENGTH} characters.`,
+      });
+    }
+
+    const knowledge = buildLiveKnowledge(__dirname);
+
+    const messages = [
+      { role: 'system', content: buildNeuraSystemPrompt(knowledge) },
+      ...history,
+      { role: 'user', content: message },
+    ];
+
+    const response = await fetch('https://router.requesty.ai/v1/chat/completions', {
+      method: 'POST',
+      headers: {
+        Authorization: `Bearer ${apiKey}`,
+        'Content-Type': 'application/json',
+        'HTTP-Referer': process.env.VITE_SITE_URL || 'https://himanshu-salunke.vercel.app',
+        'X-Title': 'Neura Portfolio Assistant',
+      },
+      body: JSON.stringify({
+        model: NEURA_MODEL,
+        messages,
+        temperature: 0.35,
+        max_tokens: 400,
+        stream: wantStream,
+      }),
+    });
+
+    if (!response.ok) {
+      const errorText = await response.text();
+      console.error('Requesty error:', response.status, errorText);
+      return res.status(502).json({ error: 'Neura could not reach the AI service right now.' });
+    }
+
+    if (!wantStream) {
+      const data = await response.json();
+      const reply = data?.choices?.[0]?.message?.content?.trim();
+      if (!reply) {
+        return res.status(502).json({ error: 'Neura returned an empty answer.' });
+      }
+      return res.status(200).json({
+        reply,
+        model: NEURA_MODEL,
+      });
+    }
+
+    if (!response.body) {
+      return res.status(502).json({ error: 'Neura returned an empty stream.' });
+    }
+
+    res.setHeader('Content-Type', 'text/event-stream; charset=utf-8');
+    res.setHeader('Cache-Control', 'no-cache, no-transform');
+    res.setHeader('Connection', 'keep-alive');
+    res.flushHeaders?.();
+
+    const reader = response.body.getReader();
+    const decoder = new TextDecoder();
+    let buffer = '';
+    let fullReply = '';
+
+    while (true) {
+      const { done, value } = await reader.read();
+      if (done) break;
+
+      buffer += decoder.decode(value, { stream: true });
+      const lines = buffer.split('\n');
+      buffer = lines.pop() || '';
+
+      for (const rawLine of lines) {
+        const line = rawLine.trim();
+        if (!line.startsWith('data:')) continue;
+        const payload = line.slice(5).trim();
+        if (!payload || payload === '[DONE]') continue;
+
+        try {
+          const chunk = JSON.parse(payload);
+          const content = chunk?.choices?.[0]?.delta?.content;
+          if (content) {
+            fullReply += content;
+            writeNeuraSse(res, { content });
+          }
+        } catch {
+          // ignore malformed upstream chunks
+        }
+      }
+    }
+
+    if (!fullReply.trim()) {
+      writeNeuraSse(res, { error: 'Neura returned an empty answer.' });
+    } else {
+      writeNeuraSse(res, { done: true, model: NEURA_MODEL });
+    }
+    writeNeuraSse(res, '[DONE]');
+    return res.end();
+  } catch (error) {
+    console.error('Neura chat API error:', error);
+    if (!res.headersSent) {
+      return res.status(500).json({
+        error: error instanceof Error ? error.message : 'Unexpected Neura error',
+      });
+    }
+    writeNeuraSse(res, {
+      error: error instanceof Error ? error.message : 'Unexpected Neura error',
+    });
+    return res.end();
   }
 });
 

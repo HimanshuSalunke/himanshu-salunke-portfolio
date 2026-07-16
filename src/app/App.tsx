@@ -6,6 +6,7 @@ import { ThemeProvider } from '../context/ThemeContext'
 import { CinematicHeader } from '../components/header/redesign/CinematicHeader'
 import { CinematicFooter } from '../components/footer/redesign/CinematicFooter'
 import { ProgressTracker, EasterEgg } from '../components/gamification/ProgressTracker'
+import { CartoonLivingEntity } from '../components/home/redesign/CartoonLivingEntity'
 import { ScrollToTop } from '../components/ui/ScrollToTop'
 import { FontPreloader, FontDisplayOptimizer, CriticalResourcePreloader } from '../components/performance/FontPreloader'
 import { RouteErrorBoundary, RouteLoadingFallback } from '../components/performance/RouteErrorBoundary'
@@ -32,7 +33,7 @@ const LoadingSpinner: React.FC = () => <RouteLoadingFallback />
 // Separated Routes component to use useLocation hook inside Router context
 const AppRoutes: React.FC = () => {
   const location = useLocation()
-  const { isAnalyticsEnabled, enableAnalytics, disableAnalytics, trackPageView } = useAnalytics()
+  const { isAnalyticsEnabled, enableAnalytics, disableAnalytics } = useAnalytics()
   const isSupported = false
   const isUpdated = false
   const updateServiceWorker = () => { }
@@ -57,7 +58,7 @@ const AppRoutes: React.FC = () => {
 
         <CinematicHeader />
 
-        <main id="main-content" className="pt-16">
+        <main id="main-content" className="pt-[var(--header-offset)]">
           <RouteErrorBoundary>
             <AnimatePresence mode="wait">
               <motion.div
@@ -88,6 +89,7 @@ const AppRoutes: React.FC = () => {
         </main>
 
         <CinematicFooter />
+        <CartoonLivingEntity />
         <EasterEgg />
         <ToastProvider />
         <ToastStyles />

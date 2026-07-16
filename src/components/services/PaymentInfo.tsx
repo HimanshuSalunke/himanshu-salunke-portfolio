@@ -1,5 +1,9 @@
 import React from 'react'
 import { motion } from 'framer-motion'
+import liveContent from '../../data/site/live-content.json'
+
+const bookingNotes = liveContent.services.booking.payment.notes
+const payment = liveContent.services.booking.payment
 
 export const PaymentInfo: React.FC = () => {
   return (
@@ -16,7 +20,6 @@ export const PaymentInfo: React.FC = () => {
           </div>
 
           <div className="grid md:grid-cols-2 gap-8 mb-8">
-            {/* Block A */}
             <div className="border border-blue-200 dark:border-blue-900/30 bg-blue-50 dark:bg-blue-900/5 p-6 rounded-lg pointer-events-none">
               <div className="flex justify-between items-start mb-4">
                 <span className="text-4xl font-bold text-blue-600 dark:text-blue-500">50%</span>
@@ -24,11 +27,10 @@ export const PaymentInfo: React.FC = () => {
               </div>
               <h4 className="text-neutral-900 dark:text-white font-bold mb-2">Initialization Resource</h4>
               <p className="text-xs text-neutral-600 dark:text-neutral-400 leading-relaxed">
-                Required to allocate computational resources and begin the architecture phase.
+                {payment.advance}
               </p>
             </div>
 
-            {/* Block B */}
             <div className="border border-green-200 dark:border-green-900/30 bg-green-50 dark:bg-green-900/5 p-6 rounded-lg pointer-events-none">
               <div className="flex justify-between items-start mb-4">
                 <span className="text-4xl font-bold text-green-600 dark:text-green-500">50%</span>
@@ -36,7 +38,7 @@ export const PaymentInfo: React.FC = () => {
               </div>
               <h4 className="text-neutral-900 dark:text-white font-bold mb-2">Completion Resource</h4>
               <p className="text-xs text-neutral-600 dark:text-neutral-400 leading-relaxed">
-                Transferred upon successful system deployment and handover of all assets.
+                {payment.completion}
               </p>
             </div>
           </div>
@@ -46,23 +48,16 @@ export const PaymentInfo: React.FC = () => {
             <ul className="space-y-2 text-sm text-neutral-600 dark:text-neutral-400">
               <li className="flex items-start gap-2">
                 <span className="text-blue-500 mt-1">•</span>
-                <span><strong>Hosting & API Costs:</strong> You are responsible for all cloud (AWS/GCP) and API (OpenAI/Midjourney) billing. I will help you set up the accounts.</span>
+                <span><strong>Payment Methods:</strong> {payment.methods.join(' and ')}. 50% advance is required to book a slot.</span>
               </li>
-              <li className="flex items-start gap-2">
-                <span className="text-blue-500 mt-1">•</span>
-                <span><strong>Code Ownership:</strong> You receive 100% intellectual property rights and full source code upon final payment.</span>
-              </li>
-              <li className="flex items-start gap-2">
-                <span className="text-blue-500 mt-1">•</span>
-                <span><strong>Payment Methods:</strong> I accept UPI and Bank Transfer. 50% advance is required to book a slot.</span>
-              </li>
-              <li className="flex items-start gap-2">
-                <span className="text-blue-500 mt-1">•</span>
-                <span><strong>Support:</strong> All projects include 14 days of post-delivery support for bug fixes and minor tweaks.</span>
-              </li>
+              {bookingNotes.map((note) => (
+                <li key={note} className="flex items-start gap-2">
+                  <span className="text-blue-500 mt-1">•</span>
+                  <span>{note}</span>
+                </li>
+              ))}
             </ul>
           </div>
-
         </motion.div>
       </div>
     </section>

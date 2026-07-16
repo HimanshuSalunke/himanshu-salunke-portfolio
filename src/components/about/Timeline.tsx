@@ -98,7 +98,6 @@ const timelineData: TimelineItem[] = [
 
 const DetailDropdown: React.FC<{ detailedDescription: string; itemId: string }> = ({
   detailedDescription,
-  itemId
 }) => {
   const [isOpen, setIsOpen] = useState(false)
 

@@ -1,5 +1,4 @@
 import { useState, useEffect } from 'react'
-import { fetchAllProjects } from '../utils/projectAPI'
 
 interface ProfileStats {
   yearsExperience: number
@@ -50,12 +49,12 @@ export const useProfileStats = (): ProfileStats => {
       try {
         // Calculate years of experience based on actual work experience from timeline
         // Check if there are any work experience entries in the timeline data
-        const workExperienceEntries = [] // No work experience entries currently
+        const workExperienceEntries: { startDate: string }[] = [] // No work experience entries currently
         let yearsExperience = 0
 
         if (workExperienceEntries.length > 0) {
           // If there are work experience entries, calculate from the earliest one
-          const earliestWorkDate = new Date(Math.min(...workExperienceEntries.map((entry: any) => new Date(entry.startDate).getTime())))
+          const earliestWorkDate = new Date(Math.min(...workExperienceEntries.map((entry) => new Date(entry.startDate).getTime())))
           yearsExperience = calculateYearsExperience(earliestWorkDate)
         } else {
           // No work experience entries, so 0 years

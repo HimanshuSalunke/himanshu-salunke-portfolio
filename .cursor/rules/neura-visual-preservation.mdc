@@ -1,0 +1,14 @@
+---
+description: Preserve Neura mascot visual design when adding 3D or animation changes
+globs: src/components/home/redesign/CartoonLivingEntity.tsx,src/components/home/redesign/Neura3D*.tsx
+alwaysApply: false
+---
+
+# Neura Visual Preservation
+
+When working on the Neura cartoon mascot:
+
+- Do NOT change size, color, shape, style, position, speech, poses, or timing unless the user explicitly asks.
+- Do NOT modify `NeuraFigure`, `CartoonArm`, `computeBodyPose`, welcome script, TTS, or layout CSS in `CartoonLivingEntity.tsx`.
+- 3D work belongs in `Neura3D*.tsx` only. Hook it up with minimal render-layer wiring in `CartoonLivingEntity.tsx`.
+- Match existing SVG dimensions, hex colors, gradients, and proportions exactly in the 3D model.

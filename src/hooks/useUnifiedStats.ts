@@ -1,7 +1,6 @@
 import { useState, useEffect } from 'react'
 import { useProfileStats } from './useProfileStats'
 import { useSocialStats } from './useSocialStats'
-import { useArticleStatistics } from './useArticleStatistics'
 import { articles } from '../data/articles'
 
 interface UnifiedStats {
@@ -28,7 +27,7 @@ export const useUnifiedStats = (): UnifiedStats => {
   const [stats, setStats] = useState<UnifiedStats>({
     projectsCompleted: 0,
     yearsExperience: 0,
-    technologiesMastered: 40, // Static count from your tech stack
+    technologiesMastered: 45, // Static count from your tech stack
     githubStars: 0,
     githubRepositories: 0,
     githubFollowers: 0,
@@ -46,13 +45,16 @@ export const useUnifiedStats = (): UnifiedStats => {
       // Profile Stats
       projectsCompleted: profileStats.projectsCompleted,
       yearsExperience: profileStats.yearsExperience,
-      technologiesMastered: 40, // From your tech stack count
+      technologiesMastered: 45, // From your tech stack count
       
       // Social Stats
       githubStars: socialStats.github.stars || 0,
       githubRepositories: socialStats.github.repositories || 0,
       githubFollowers: socialStats.github.followers || 0,
-      linkedinFollowers: socialStats.linkedin.followers || 0,
+      linkedinFollowers:
+        typeof socialStats.linkedin.followers === 'number'
+          ? socialStats.linkedin.followers
+          : 0,
       
       // Article Stats
       totalArticles: articles.length,

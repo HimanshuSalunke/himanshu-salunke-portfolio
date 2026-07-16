@@ -3,8 +3,12 @@ import { readdirSync, readFileSync } from 'fs'
 import { join } from 'path'
 import matter from 'gray-matter'
 
-
-
+interface ProjectRecord {
+  featured?: boolean
+  date?: string
+  slug?: string
+  [key: string]: unknown
+}
 
 export default async function handler(req: VercelRequest, res: VercelResponse) {
   // Original projects API functionality
@@ -74,8 +78,8 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
     // Handle featured projects filter
     if (featured === 'true') {
       const featuredProjects = projects
-        .filter((project: any) => project.featured === true)
-        .sort((a: any, b: any) => {
+        .filter((project: ProjectRecord) => project.featured === true)
+        .sort((a: ProjectRecord, b: ProjectRecord) => {
           const dateA = new Date(a.date || '2024-01-01')
           const dateB = new Date(b.date || '2024-01-01')
           return dateB.getTime() - dateA.getTime()
@@ -86,7 +90,7 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
     }
 
     // Return all projects sorted by date
-    const sortedProjects = projects.sort((a: any, b: any) => {
+    const sortedProjects = projects.sort((a: ProjectRecord, b: ProjectRecord) => {
       const dateA = new Date(a.date || '2024-01-01')
       const dateB = new Date(b.date || '2024-01-01')
       return dateB.getTime() - dateA.getTime()

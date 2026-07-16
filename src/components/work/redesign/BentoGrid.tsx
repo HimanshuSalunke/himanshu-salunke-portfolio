@@ -21,7 +21,7 @@ const BentoGrid: React.FC<BentoGridProps> = ({ projects }) => {
                     // const isFeatured = index === 0 || (project.featured && index < 3)
                     // const isSuperFeatured = index === 0
 
-                    let spanClass = "col-span-1"
+                    const spanClass = "col-span-1"
                     // if (isSuperFeatured) spanClass = "md:col-span-2 md:row-span-2"
                     // else if (isFeatured) spanClass = "md:col-span-2"
 

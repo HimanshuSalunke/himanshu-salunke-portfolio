@@ -1,0 +1,11 @@
+---
+description: Never run git or GitHub operations unless the user explicitly asks
+alwaysApply: true
+---
+
+# No Git / GitHub Unless Asked
+
+- NEVER run git commands (status, diff, add, commit, push, pull, branch, etc.) unless the user explicitly requests it in their message.
+- NEVER run `gh` or other GitHub CLI commands unless the user explicitly requests it.
+- NEVER create commits, push to remote, or open pull requests proactively.
+- Do not mention or suggest git operations as a follow-up unless the user brings it up.

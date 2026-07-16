@@ -17,7 +17,7 @@ const About: React.FC = () => {
             "jobTitle": "Aspiring Data Scientist",
             "description": "Aspiring Data Scientist passionate about creating intelligent solutions",
             "url": "https://portfolio.example.com/about",
-            "knowsAbout": ["React", "TypeScript", "Python", "Machine Learning", "AI", "Web Development"]
+            "knowsAbout": ["React", "TypeScript", "Python", "Machine Learning", "AI", "Microsoft Fabric", "Apache Spark", "Web Development"]
           })}
         </script>
       </Helmet>

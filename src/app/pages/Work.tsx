@@ -1,12 +1,6 @@
 import React, { useState, useMemo, useEffect } from 'react'
 import { Helmet } from 'react-helmet-async'
 import { motion, AnimatePresence } from 'framer-motion'
-import { Link } from 'react-router-dom'
-import { Tag } from '../../components/ui/Tag'
-import { Button } from '../../components/ui/Button'
-import { SearchAndFilter } from '../../components/ui/SearchAndFilter'
-import { ImageWithShimmer } from '../../components/ui/ImageWithShimmer'
-import { formatDate } from '../../utils/formatDate'
 import { fetchAllProjects } from '../../utils/projectAPI'
 import { type Project } from '../../utils/clientMdx'
 import WorkHero from '../../components/work/redesign/WorkHero'
@@ -38,18 +32,10 @@ const Work: React.FC = () => {
 
   const [searchTerm, setSearchTerm] = useState('')
   const [selectedCategory, setSelectedCategory] = useState('All')
-  const [selectedStatus, setSelectedStatus] = useState('All')
-  const [sortBy, setSortBy] = useState<'date' | 'title' | 'featured' | 'readTime'>('date')
+  const [selectedStatus] = useState('All')
+  const [sortBy] = useState<'date' | 'title' | 'featured' | 'readTime'>('date')
 
   const categories = ['All', 'Machine Learning', 'Computer Vision', 'Deep Learning', 'Data Analysis', 'Data Engineering']
-  const statuses = ['All', 'Completed', 'In Progress', 'Planning']
-
-  const sortOptions = [
-    { value: 'date', label: 'Latest', icon: '🕒' },
-    { value: 'title', label: 'Title', icon: '🔤' },
-    { value: 'featured', label: 'Featured', icon: '⭐' },
-    { value: 'readTime', label: 'Read Time', icon: '⏱️' }
-  ]
 
   const filteredProjects = useMemo(() => {
     console.log('🔍 Work page state:', {

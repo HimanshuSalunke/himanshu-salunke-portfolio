@@ -1,32 +1,13 @@
 import React from 'react'
 import { motion } from 'framer-motion'
+import liveContent from '../../data/site/live-content.json'
 
-const steps = [
-  {
-    id: '01',
-    title: 'Requirement Injection',
-    desc: 'Analysis of project constraints, data sources, and desired outputs.',
-    status: 'INITIALIZING'
-  },
-  {
-    id: '02',
-    title: 'Architecture Design',
-    desc: 'Drafting the blueprint: Model selection, pipeline design, and tech stack.',
-    status: 'PLANNING'
-  },
-  {
-    id: '03',
-    title: 'Development Cycle',
-    desc: 'Iterative coding of the core logic, model training, and integration.',
-    status: 'PROCESSING'
-  },
-  {
-    id: '04',
-    title: 'System Deployment',
-    desc: 'Production rollout, load testing, and final handshake.',
-    status: 'COMPLETE'
-  }
-]
+const steps = liveContent.services.process.map((step, index) => ({
+  id: String(index + 1).padStart(2, '0'),
+  title: step.title,
+  desc: step.desc,
+  status: ['INITIALIZING', 'PLANNING', 'PROCESSING', 'COMPLETE'][index] || 'PROCESSING',
+}))
 
 export const HowItWorks: React.FC = () => {
   return (

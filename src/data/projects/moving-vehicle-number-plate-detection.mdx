@@ -1,12 +1,12 @@
 ---
 id: "moving-vehicle-number-plate-detection"
 title: "Moving Vehicle Number Plate Detection"
-summary: "Achieved 94.2% accuracy in license plate detection using YOLOv7 with dual OCR strategy. Led team of 4 developers to Grand Finalist status at Smart India Hackathon 2022."
+summary: "Achieved 94.2% accuracy in license plate detection using YOLO26 with dual OCR strategy. Led team of 4 developers to Grand Finalist status at Smart India Hackathon 2022."
 category: "Computer Vision"
 coverImage: "/images/projects/vehicle-detection/vehicle.jpg"
 date: "2024-01-15"
 techStack:
-  - "YOLOv7"
+  - "YOLO26"
   - "OpenCV"
   - "EasyOCR"
   - "Flask"
@@ -49,7 +49,7 @@ Traffic management and security systems require instant, accurate vehicle identi
 ```mermaid
 graph TD
     Input[Video Stream] -->|Resize & Norm| Pre[Preprocessing]
-    Pre -->|YOLOv7| Det[Vehicle Detection]
+    Pre -->|YOLO26| Det[Vehicle Detection]
     Det -->|Crop| Region[Plate Isolation]
     Region -->|Enhance| OCR_In[OCR Pre-processing]
     OCR_In -->|EasyOCR| Text1[Reading 1]
@@ -60,7 +60,7 @@ graph TD
 
 ## Key Achievements
 
-- **Achieved 94.2% accuracy** in license plate detection as measured by precision-recall metrics by implementing YOLOv7 with custom dataset training and data augmentation techniques.
+- **Achieved 94.2% accuracy** in license plate detection as measured by precision-recall metrics by implementing YOLO26 with custom dataset training and data augmentation techniques.
 
 - **Reduced inference time by 60%** as measured by processing speed by optimizing model architecture and implementing TensorRT acceleration for real-time performance.
 
@@ -69,7 +69,7 @@ graph TD
 ## Performance Optimizations
 
 ### Model Efficiency
-- **ONNX Optimization**: Converted YOLOv7 to ONNX format for 60% faster inference
+- **ONNX Optimization**: Converted YOLO26 to ONNX format for 60% faster inference
 - **Batch Processing**: Implemented parallel processing for real-time video streams
 - **Memory Management**: Optimized image preprocessing to reduce memory usage by 40%
 

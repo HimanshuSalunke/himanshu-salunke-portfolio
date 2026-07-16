@@ -7,8 +7,6 @@ const API_BASE_URL = '/api'
 // Generic fetch function with error handling
 async function apiFetch<T>(endpoint: string): Promise<T> {
   try {
-    // Add cache-busting query parameter to ensure fresh data
-    const cacheBuster = `?t=${Date.now()}`
     const url = `${API_BASE_URL}${endpoint}${endpoint.includes('?') ? '&' : '?'}t=${Date.now()}`
 
     const response = await fetch(url, {
@@ -58,7 +56,7 @@ export async function fetchRelatedProjects(slug: string, limit: number = 3): Pro
 }
 
 // Generate project metadata for SEO
-export function generateProjectMetadata(project: any) {
+export function generateProjectMetadata(project: Project) {
   return {
     title: `${project.title} - Portfolio`,
     description: project.summary,

@@ -1,6 +1,5 @@
 import React from 'react'
 import { motion } from 'framer-motion'
-import { Tag } from '../../ui/Tag'
 import { ImageWithShimmer } from '../../ui/ImageWithShimmer'
 import { formatRelativeTime } from '../../../utils/formatDate'
 import { FaExternalLinkAlt, FaClock, FaCalendarAlt } from 'react-icons/fa'

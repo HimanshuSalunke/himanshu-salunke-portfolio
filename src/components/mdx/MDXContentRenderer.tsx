@@ -1,6 +1,5 @@
 import React from 'react'
 import Markdown from 'markdown-to-jsx'
-import { MDXComponents } from './ProjectMDXComponents'
 
 interface MDXContentRendererProps {
   content: string
@@ -22,7 +21,7 @@ export const MDXContentRenderer: React.FC<MDXContentRendererProps> = ({ content 
           overrides: {
             // Headers with auto-generated IDs for TOC
             h1: {
-              component: ({ children, ...props }: any) => {
+              component: ({ children, ...props }: React.HTMLAttributes<HTMLHeadingElement>) => {
                 const id = children?.toString().toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/^-|-$/g, '')
                 return (
                   <h1 id={id} className="text-3xl font-bold text-neutral-900 dark:text-white mt-16 mb-8" {...props}>
@@ -32,7 +31,7 @@ export const MDXContentRenderer: React.FC<MDXContentRendererProps> = ({ content 
               }
             },
             h2: {
-              component: ({ children, ...props }: any) => {
+              component: ({ children, ...props }: React.HTMLAttributes<HTMLHeadingElement>) => {
                 const id = children?.toString().toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/^-|-$/g, '')
                 return (
                   <h2 id={id} className="text-2xl font-bold text-neutral-900 dark:text-white mt-4 mb-6" {...props}>
@@ -42,7 +41,7 @@ export const MDXContentRenderer: React.FC<MDXContentRendererProps> = ({ content 
               }
             },
             h3: {
-              component: ({ children, ...props }: any) => {
+              component: ({ children, ...props }: React.HTMLAttributes<HTMLHeadingElement>) => {
                 const id = children?.toString().toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/^-|-$/g, '')
                 return (
                   <h3 id={id} className="text-xl font-semibold text-neutral-900 dark:text-white mt-8 mb-4" {...props}>
@@ -52,7 +51,7 @@ export const MDXContentRenderer: React.FC<MDXContentRendererProps> = ({ content 
               }
             },
             h4: {
-              component: ({ children, ...props }: any) => {
+              component: ({ children, ...props }: React.HTMLAttributes<HTMLHeadingElement>) => {
                 const id = children?.toString().toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/^-|-$/g, '')
                 return (
                   <h4 id={id} className="text-lg font-semibold text-neutral-900 dark:text-white mt-6 mb-3" {...props}>
@@ -70,21 +69,21 @@ export const MDXContentRenderer: React.FC<MDXContentRendererProps> = ({ content 
             },
             // Lists
             ul: {
-              component: ({ children, ...props }: any) => (
+              component: ({ children, ...props }: React.HTMLAttributes<HTMLUListElement>) => (
                 <ul className="list-disc list-inside mb-6 space-y-2 text-neutral-700 dark:text-neutral-300" {...props}>
                   {children}
                 </ul>
               )
             },
             ol: {
-              component: ({ children, ...props }: any) => (
+              component: ({ children, ...props }: React.HTMLAttributes<HTMLOListElement>) => (
                 <ol className="list-decimal list-inside mb-6 space-y-2 text-neutral-700 dark:text-neutral-300" {...props}>
                   {children}
                 </ol>
               )
             },
             li: {
-              component: ({ children, ...props }: any) => (
+              component: ({ children, ...props }: React.HTMLAttributes<HTMLLIElement>) => (
                 <li className="mb-2" {...props}>
                   {children}
                 </li>

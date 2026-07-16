@@ -1,7 +1,7 @@
 import React from 'react'
 
 const technologies = [
-    'Python', 'PyTorch', 'OpenAI', 'TensorFlow', 'React', 'TypeScript', 'Node.js', 'Next.js', 'PostgreSQL', 'Docker', 'AWS', 'Hugging Face'
+    'Python', 'PyTorch', 'OpenAI', 'TensorFlow', 'React', 'TypeScript', 'Node.js', 'Next.js', 'PostgreSQL', 'Docker', 'AWS', 'Microsoft Fabric', 'Apache Spark', 'Hugging Face'
 ]
 
 export const TechMarquee: React.FC = () => {

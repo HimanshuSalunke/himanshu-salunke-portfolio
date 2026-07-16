@@ -2,14 +2,14 @@ import React from 'react'
 import { motion } from 'framer-motion'
 import { 
   SiReact, SiTypescript, SiVite, SiTailwindcss, SiVercel, 
-  SiNodedotjs, SiExpress, SiMdx, SiFramer, SiGit, SiGithub,
-  SiJavascript, SiHtml5, SiCss3, SiPostcss, SiEslint, SiPrettier,
+  SiNodedotjs, SiExpress, SiMdx, SiFramer,
+  SiPostcss, SiEslint, SiPrettier,
   SiVitest, SiSharp, SiSlack
 } from 'react-icons/si'
 import { 
-  FaServer, FaDatabase, FaCloud, FaCode, FaPalette, 
+  FaServer, FaDatabase, FaCode, FaPalette, 
   FaRocket, FaShieldAlt, FaMobile, FaDesktop, FaGlobe,
-  FaGitAlt, FaPlay, FaStore
+  FaGitAlt, FaPlay
 } from 'react-icons/fa'
 
 interface TechItem {

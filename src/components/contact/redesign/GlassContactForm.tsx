@@ -1,10 +1,9 @@
-import React, { useState, useEffect } from 'react'
-import { motion, AnimatePresence } from 'framer-motion'
+import React, { useState } from 'react'
+import { motion } from 'framer-motion'
 import { useForm } from 'react-hook-form'
 import { zodResolver } from '@hookform/resolvers/zod'
 import { z } from 'zod'
 import toast from 'react-hot-toast'
-import { Button } from '../../ui/Button'
 
 // Zod schema (Same as original for consistency)
 const SUBJECT_MIN_WORDS = 2
@@ -49,7 +48,7 @@ type ContactFormData = z.infer<typeof contactFormSchema>
 export const GlassContactForm: React.FC = () => {
     const [isSubmitting, setIsSubmitting] = useState(false)
     const [submitStatus, setSubmitStatus] = useState<'idle' | 'success' | 'error'>('idle')
-    const [errorMessage, setErrorMessage] = useState('')
+    const [, setErrorMessage] = useState('')
 
     const {
         register,
@@ -102,11 +101,12 @@ export const GlassContactForm: React.FC = () => {
             } else {
                 throw new Error('Failed to send message')
             }
-        } catch (error: any) {
+        } catch (error: unknown) {
             console.error('Contact error:', error)
             setSubmitStatus('error')
-            setErrorMessage(error.message || 'Network error')
-            toast.error(error.message || 'Failed to send message', { id: loadingToast })
+            const message = error instanceof Error ? error.message : 'Network error'
+            setErrorMessage(message)
+            toast.error(message || 'Failed to send message', { id: loadingToast })
         } finally {
             setIsSubmitting(false)
         }

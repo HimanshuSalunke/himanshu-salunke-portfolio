@@ -1,8 +1,5 @@
 import React from 'react'
 import { motion } from 'framer-motion'
-import { 
-  FaTrophy, FaMedal, FaAward
-} from 'react-icons/fa'
 
 // Custom Official Brand Icons with Complete Styling
 const DataCampIcon: React.FC<{ size?: number; className?: string }> = ({ size = 20, className = '' }) => (
@@ -26,13 +23,6 @@ const GoogleIcon: React.FC<{ size?: number; className?: string }> = ({ size = 20
     <path fill="#34A853" d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.98.66-2.23 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84C3.99 20.53 7.7 23 12 23z"/>
     <path fill="#FBBC05" d="M5.84 14.09c-.22-.66-.35-1.36-.35-2.09s.13-1.43.35-2.09V7.07H2.18C1.43 8.55 1 10.22 1 12s.43 3.45 1.18 4.93l2.85-2.22.81-.62z"/>
     <path fill="#EA4335" d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.07l3.66 2.84c.87-2.6 3.3-4.53 6.16-4.53z"/>
-  </svg>
-)
-
-const GoogleCloudIcon: React.FC<{ size?: number; className?: string }> = ({ size = 20, className = '' }) => (
-  <svg width={size} height={size} viewBox="0 0 24 24" className={className}>
-    <path fill="#4285F4" d="M12.5 4.5c-2.5 0-4.5 2-4.5 4.5s2 4.5 4.5 4.5h7.5c1.4 0 2.5-1.1 2.5-2.5s-1.1-2.5-2.5-2.5c-.3 0-.6.1-.8.2l-.7-.7c-.6-.6-1.4-.9-2.3-.9s-1.7.3-2.3.9l-.7.7c-.2-.1-.5-.2-.8-.2z"/>
-    <path fill="#34A853" d="M12.5 4.5c-2.5 0-4.5 2-4.5 4.5s2 4.5 4.5 4.5h7.5c1.4 0 2.5-1.1 2.5-2.5s-1.1-2.5-2.5-2.5c-.3 0-.6.1-.8.2l-.7-.7c-.6-.6-1.4-.9-2.3-.9s-1.7.3-2.3.9l-.7.7c-.2-.1-.5-.2-.8-.2z"/>
   </svg>
 )
 

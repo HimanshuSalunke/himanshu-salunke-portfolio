@@ -44,8 +44,6 @@ export const Header: React.FC = () => {
   const { theme, toggleTheme } = useTheme()
   const location = useLocation()
   const menuRef = useRef<HTMLDivElement>(null)
-  const dropdownRef = useRef<HTMLDivElement>(null)
-
 
   useEffect(() => {
     const handleScroll = () => {
@@ -73,17 +71,19 @@ export const Header: React.FC = () => {
       setIsMenuOpen(false)
     }
 
+    const menuElement = menuRef.current
+
     if (isMenuOpen) {
       document.addEventListener('mousedown', handleClickOutside)
-      if (menuRef.current) {
-        menuRef.current.addEventListener('mouseleave', handleMouseLeave)
+      if (menuElement) {
+        menuElement.addEventListener('mouseleave', handleMouseLeave)
       }
     }
 
     return () => {
       document.removeEventListener('mousedown', handleClickOutside)
-      if (menuRef.current) {
-        menuRef.current.removeEventListener('mouseleave', handleMouseLeave)
+      if (menuElement) {
+        menuElement.removeEventListener('mouseleave', handleMouseLeave)
       }
     }
   }, [isMenuOpen])

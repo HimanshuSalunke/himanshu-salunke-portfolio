@@ -1,4 +1,5 @@
-import React, { Component, ErrorInfo, ReactNode } from 'react'
+import React, { Component } from 'react'
+import type { ErrorInfo, ReactNode } from 'react'
 import { motion } from 'framer-motion'
 
 interface Props {
@@ -9,6 +10,12 @@ interface Props {
 interface State {
   hasError: boolean
   error?: Error
+}
+
+declare global {
+  interface Window {
+    gtag?: (command: 'event', eventName: string, params?: Record<string, unknown>) => void
+  }
 }
 
 export class RouteErrorBoundary extends Component<Props, State> {
@@ -25,8 +32,8 @@ export class RouteErrorBoundary extends Component<Props, State> {
     console.error('Route Error Boundary caught an error:', error, errorInfo)
     
     // Log error to analytics if available
-    if (typeof window !== 'undefined' && (window as any).gtag) {
-      (window as any).gtag('event', 'exception', {
+    if (typeof window !== 'undefined' && window.gtag) {
+      window.gtag('event', 'exception', {
         description: error.message,
         fatal: false
       })
@@ -136,8 +143,8 @@ export const RouteLoadingFallback: React.FC<{ routeName?: string }> = ({ routeNa
   )
 }
 
-// Preload route component
-export const preloadRoute = (importFn: () => Promise<any>) => {
+// eslint-disable-next-line react-refresh/only-export-components -- route preload utility
+export const preloadRoute = (importFn: () => Promise<{ default: React.ComponentType }>) => {
   return () => {
     const componentPromise = importFn()
     const component = React.lazy(() => componentPromise)

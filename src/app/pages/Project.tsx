@@ -1,15 +1,10 @@
 import React, { useState, useEffect, useMemo } from 'react'
 import { Helmet } from 'react-helmet-async'
 import { motion } from 'framer-motion'
-import { useParams, Link, useNavigate } from 'react-router-dom'
-import { Tag } from '../../components/ui/Tag'
+import { useParams, useNavigate } from 'react-router-dom'
 import { Button } from '../../components/ui/Button'
-import { ImageWithShimmer } from '../../components/ui/ImageWithShimmer'
-import { TableOfContents, MobileTableOfContents } from '../../components/ui/TableOfContents'
-import { ProjectGallery } from '../../components/ui/ProjectGallery'
 
 import { MDXContentRenderer } from '../../components/mdx/MDXContentRenderer'
-import { TechBadge } from '../../components/ui/TechBadge'
 import { ErrorBoundary } from '../../components/ErrorBoundary'
 import { type Project } from '../../utils/clientMdx'
 import { fetchProject, fetchRelatedProjects } from '../../utils/projectAPI'
@@ -32,7 +27,6 @@ const Project: React.FC = () => {
 
   const [error, setError] = useState<string | null>(null)
   const [relatedProjects, setRelatedProjects] = useState<Project[]>([])
-  const [relatedLoading, setRelatedLoading] = useState(false)
 
   // Memoized project loading function
   useEffect(() => {
@@ -69,11 +63,9 @@ const Project: React.FC = () => {
   // Load related projects when project loads
   useEffect(() => {
     if (project && project.slug) {
-      setRelatedLoading(true)
       fetchRelatedProjects(project.slug, 3)
         .then(setRelatedProjects)
         .catch(err => console.warn('Failed to load related projects:', err))
-        .finally(() => setRelatedLoading(false))
     }
   }, [project])
 

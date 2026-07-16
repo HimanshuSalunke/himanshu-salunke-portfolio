@@ -1,5 +1,4 @@
 import React from 'react'
-import { motion } from 'framer-motion'
 import { type Project } from '../../../utils/clientMdx'
 
 interface ProjectSidebarProps {

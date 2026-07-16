@@ -68,9 +68,9 @@ export const ServiceInquiryForm: React.FC = () => {
       toast.success('Inquiry submitted successfully!')
       reset()
       setSelectedFiles([])
-    } catch (e: any) {
+    } catch (e: unknown) {
       console.error(e)
-      toast.error(e.message || 'Failed to submit inquiry. Please try again.')
+      toast.error(e instanceof Error ? e.message : 'Failed to submit inquiry. Please try again.')
     } finally {
       setIsSubmitting(false)
     }

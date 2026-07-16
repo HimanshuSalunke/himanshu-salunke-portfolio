@@ -2,11 +2,8 @@ import React from 'react'
 import { motion } from 'framer-motion'
 import { Link } from 'react-router-dom'
 import { ImageWithShimmer } from '../ui/ImageWithShimmer'
-import { useUnifiedStats } from '../../hooks/useUnifiedStats'
 
 export const Profile: React.FC = () => {
-  const unifiedStats = useUnifiedStats()
-
   return (
     <motion.section
       className="mb-16"
@@ -69,7 +66,7 @@ export const Profile: React.FC = () => {
           <div className="max-w-3xl mx-auto space-y-4 px-4 sm:px-0">
             <p className="text-base sm:text-lg text-neutral-600 dark:text-neutral-300 leading-relaxed">
               I'm passionate about building intelligent solutions with Python, Machine Learning, and AI.
-              Currently preparing for GATE - 2026 while building innovative AI projects and learning new technologies.
+              Currently preparing for GATE - 2027 while building innovative AI projects and learning new technologies.
             </p>
 
             <p className="text-sm sm:text-base text-neutral-600 dark:text-neutral-300 leading-relaxed">
@@ -87,7 +84,7 @@ export const Profile: React.FC = () => {
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.6, delay: 0.5 }}
           >
-            {['Python', 'Machine Learning', 'React', 'AI', 'Data Science', 'JavaScript'].map((tech) => (
+            {['Python', 'Machine Learning', 'Microsoft Fabric', 'React', 'AI', 'Data Science', 'JavaScript'].map((tech) => (
               <motion.span
                 key={tech}
                 className="px-3 py-1 bg-neutral-100 dark:bg-neutral-700 text-neutral-700 dark:text-neutral-200 text-sm font-medium rounded-full border border-neutral-200 dark:border-neutral-600"

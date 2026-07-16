@@ -31,6 +31,12 @@ const isNavActive = (pathname: string, item: NavigationItem) => {
   return false
 }
 
+const actionButtonClass =
+  'flex h-9 w-9 shrink-0 touch-manipulation items-center justify-center rounded-full border border-neutral-300/90 bg-white text-neutral-900 shadow-md shadow-neutral-900/10 backdrop-blur-md transition-all hover:border-purple-500/55 hover:text-purple-800 dark:border-purple-500/45 dark:bg-[#0a0a18]/95 dark:text-neutral-100 dark:shadow-purple-500/15 dark:hover:border-purple-400/60 dark:hover:bg-[#12102a] dark:hover:text-purple-200 sm:h-9 sm:w-9'
+
+const resumeButtonClass =
+  'hidden h-9 touch-manipulation items-center justify-center gap-1.5 rounded-full border border-neutral-300/90 bg-white px-3 text-sm font-semibold text-neutral-900 shadow-md shadow-neutral-900/10 backdrop-blur-md transition-all hover:border-purple-500/55 hover:bg-purple-50 hover:text-purple-800 dark:border-purple-500/45 dark:bg-[#0a0a18]/95 dark:text-neutral-100 dark:shadow-purple-500/15 dark:hover:border-purple-400/60 dark:hover:text-purple-200 sm:flex xl:px-3.5'
+
 export const CinematicHeader: React.FC = () => {
   const [isMenuOpen, setIsMenuOpen] = useState(false)
   const [isScrolled, setIsScrolled] = useState(false)
@@ -38,6 +44,7 @@ export const CinematicHeader: React.FC = () => {
   const { theme, toggleTheme } = useTheme()
   const location = useLocation()
   const menuRef = useRef<HTMLDivElement>(null)
+  const drawerRef = useRef<HTMLDivElement>(null)
   const prefersReducedMotion = useReducedMotion()
 
   const isHomeTop = location.pathname === '/' && !isScrolled
@@ -63,38 +70,52 @@ export const CinematicHeader: React.FC = () => {
 
   useEffect(() => {
     const handleClickOutside = (event: MouseEvent) => {
-      if (menuRef.current && !menuRef.current.contains(event.target as Node)) {
+      const target = event.target as Node
+      const clickedHeader = menuRef.current?.contains(target)
+      const clickedDrawer = drawerRef.current?.contains(target)
+      if (!clickedHeader && !clickedDrawer) {
         setIsMenuOpen(false)
       }
     }
+
+    const handleEscape = (event: KeyboardEvent) => {
+      if (event.key === 'Escape') {
+        setIsMenuOpen(false)
+        setOpenDropdown(null)
+      }
+    }
+
     if (isMenuOpen) {
       document.addEventListener('mousedown', handleClickOutside)
+      document.addEventListener('keydown', handleEscape)
     }
-    return () => document.removeEventListener('mousedown', handleClickOutside)
+
+    return () => {
+      document.removeEventListener('mousedown', handleClickOutside)
+      document.removeEventListener('keydown', handleEscape)
+    }
   }, [isMenuOpen])
 
+  // Surface styles only - height stays fixed via --header-height (no py changes on scroll)
   const headerSurface = isScrolled
-    ? 'border-purple-500/15 bg-white/75 py-3 shadow-lg shadow-purple-500/5 backdrop-blur-xl dark:border-purple-500/20 dark:bg-[#030014]/85'
+    ? 'border-neutral-200/90 bg-white/98 shadow-md shadow-neutral-900/5 backdrop-blur-xl dark:border-purple-500/25 dark:bg-[#030014]/96 dark:shadow-purple-500/10'
     : isHomeTop
-      ? 'border-transparent bg-transparent py-5'
-      : 'border-transparent bg-white/40 py-5 backdrop-blur-md dark:bg-[#030014]/40'
-
-  const logoTextClass = isHomeTop
-    ? 'text-neutral-900 dark:text-white'
-    : 'text-neutral-900 dark:text-white'
+      ? 'border-neutral-200/50 bg-white/96 shadow-sm shadow-neutral-900/5 backdrop-blur-md dark:border-transparent dark:bg-[#030014]/88 dark:shadow-none dark:backdrop-blur-md lg:bg-white/90 lg:dark:bg-[#030014]/80'
+      : 'border-neutral-200/70 bg-white/97 shadow-sm shadow-neutral-900/5 backdrop-blur-md dark:border-purple-500/15 dark:bg-[#030014]/92 dark:shadow-none'
 
   const navIdleClass = isHomeTop
-    ? 'text-neutral-600 hover:text-neutral-900 hover:bg-neutral-900/5 dark:text-neutral-300 dark:hover:bg-white/10 dark:hover:text-white'
-    : 'text-neutral-600 hover:text-neutral-900 hover:bg-neutral-900/5 dark:text-neutral-400 dark:hover:bg-white/10 dark:hover:text-white'
+    ? 'text-neutral-600 hover:text-neutral-900 hover:bg-neutral-900/5 dark:text-neutral-200 dark:hover:bg-white/10 dark:hover:text-white'
+    : 'text-neutral-600 hover:text-neutral-900 hover:bg-neutral-900/5 dark:text-neutral-300 dark:hover:bg-white/10 dark:hover:text-white'
 
   return (
     <>
       <motion.header
         ref={menuRef}
-        className={`fixed left-0 right-0 top-0 z-50 border-b transition-all duration-500 ${headerSurface}`}
+        className={`fixed left-0 right-0 top-0 z-50 h-[var(--header-offset)] border-b transition-[background-color,border-color,box-shadow] duration-300 ${headerSurface}`}
+        style={{ paddingTop: 'env(safe-area-inset-top, 0px)' }}
         initial={prefersReducedMotion ? false : { y: -100 }}
         animate={{ y: 0 }}
-        transition={{ duration: 0.6, ease: [0.16, 1, 0.3, 1] }}
+        transition={{ duration: 0.5, ease: [0.16, 1, 0.3, 1] }}
       >
         {isScrolled && (
           <div
@@ -103,15 +124,18 @@ export const CinematicHeader: React.FC = () => {
           />
         )}
 
-        <nav className="relative mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
-          <div className="grid grid-cols-[minmax(0,1fr)_auto_minmax(0,1fr)] items-center gap-3">
+        <nav
+          className="relative mx-auto flex h-full max-w-7xl items-center px-3 sm:px-5 lg:px-8"
+          aria-label="Main navigation"
+        >
+          <div className="flex h-full w-full items-center justify-between gap-2 sm:gap-3">
             {/* Logo */}
             <Link
               to="/"
-              className="group relative flex shrink-0 items-center gap-2.5 justify-self-start"
+              className="group relative flex min-w-0 shrink-0 items-center gap-2 sm:gap-2.5"
               aria-label="Home"
             >
-              <div className="relative h-10 w-10 shrink-0 transition-transform duration-300 group-hover:scale-105">
+              <div className="relative h-8 w-8 shrink-0 transition-transform duration-300 group-hover:scale-105 sm:h-9 sm:w-9">
                 {!prefersReducedMotion ? (
                   <div
                     aria-hidden="true"
@@ -127,26 +151,24 @@ export const CinematicHeader: React.FC = () => {
                     className="absolute inset-0 rounded-lg bg-gradient-to-br from-blue-500 via-purple-500 to-cyan-400"
                   />
                 )}
-                <div className="absolute inset-0.5 z-10 flex items-center justify-center rounded-[0.5625rem] bg-white shadow-sm shadow-purple-500/10 dark:bg-[#030014]">
-                  <span className="bg-gradient-to-br from-blue-500 via-purple-500 to-cyan-400 bg-clip-text text-base font-black text-transparent">
+                <div className="absolute inset-0.5 z-10 flex items-center justify-center rounded-[0.5rem] bg-white shadow-sm shadow-purple-500/10 dark:bg-[#030014]">
+                  <span className="bg-gradient-to-br from-blue-500 via-purple-500 to-cyan-400 bg-clip-text text-sm font-black text-transparent">
                     H
                   </span>
                 </div>
               </div>
               <div className="hidden min-w-0 sm:block">
-                <span
-                  className={`block text-base font-bold tracking-tight transition-colors ${logoTextClass} group-hover:text-purple-600 dark:group-hover:text-purple-300`}
-                >
+                <span className="block truncate text-sm font-bold leading-tight tracking-tight text-neutral-950 transition-colors group-hover:text-purple-700 dark:text-white dark:group-hover:text-purple-300">
                   Himanshu
                 </span>
-                <span className="block font-mono text-[0.625rem] uppercase tracking-[0.18em] text-neutral-500 dark:text-neutral-500">
+                <span className="block font-mono text-[0.5625rem] uppercase leading-tight tracking-[0.18em] text-neutral-600 dark:text-neutral-400">
                   Portfolio
                 </span>
               </div>
             </Link>
 
-            {/* Desktop nav - true center column */}
-            <div className="hidden items-center justify-center gap-0.5 justify-self-center md:flex">
+            {/* Desktop nav */}
+            <div className="hidden flex-1 items-center justify-center gap-0.5 px-2 lg:flex xl:gap-1">
               {navigation.map((item) => {
                 const active = isNavActive(location.pathname, item)
                 const hasSubmenu = Boolean(item.submenu?.length)
@@ -160,7 +182,7 @@ export const CinematicHeader: React.FC = () => {
                   >
                     <Link
                       to={item.href}
-                      className={`relative flex items-center gap-1 rounded-full px-3.5 py-2 text-sm font-medium transition-all duration-300 lg:px-4 ${
+                      className={`relative flex items-center gap-1 rounded-full px-2.5 py-1.5 text-[0.8125rem] font-medium transition-all duration-300 xl:px-3.5 xl:text-sm ${
                         active
                           ? 'bg-gradient-to-r from-blue-600 to-purple-600 text-white shadow-md shadow-purple-500/25'
                           : navIdleClass
@@ -169,7 +191,7 @@ export const CinematicHeader: React.FC = () => {
                       {item.name}
                       {hasSubmenu && (
                         <ChevronDown
-                          className={`h-3.5 w-3.5 transition-transform ${openDropdown === item.name ? 'rotate-180' : ''}`}
+                          className={`h-3.5 w-3.5 shrink-0 transition-transform ${openDropdown === item.name ? 'rotate-180' : ''}`}
                         />
                       )}
                     </Link>
@@ -181,7 +203,7 @@ export const CinematicHeader: React.FC = () => {
                           animate={{ opacity: 1, y: 0, scale: 1 }}
                           exit={{ opacity: 0, y: 8, scale: 0.96 }}
                           transition={{ duration: 0.18 }}
-                          className="absolute left-0 top-full z-50 mt-2 w-52 overflow-hidden rounded-2xl border border-purple-500/20 bg-white/90 p-1.5 shadow-xl shadow-purple-500/10 backdrop-blur-xl dark:border-purple-500/25 dark:bg-[#030014]/95"
+                          className="absolute left-0 top-full z-50 mt-1.5 w-52 overflow-hidden rounded-2xl border border-neutral-200/90 bg-white p-1.5 shadow-xl shadow-neutral-900/10 dark:border-purple-500/25 dark:bg-[#030014]/95"
                         >
                           {item.submenu!.map((sub) => {
                             const subActive = location.pathname === sub.href
@@ -192,7 +214,7 @@ export const CinematicHeader: React.FC = () => {
                                 className={`block rounded-xl px-3.5 py-2.5 text-sm transition-colors ${
                                   subActive
                                     ? 'bg-purple-500/10 font-medium text-purple-700 dark:text-purple-300'
-                                    : 'text-neutral-600 hover:bg-neutral-100 hover:text-neutral-900 dark:text-neutral-400 dark:hover:bg-white/5 dark:hover:text-white'
+                                    : 'text-neutral-600 hover:bg-neutral-100 hover:text-neutral-900 dark:text-neutral-300 dark:hover:bg-white/8 dark:hover:text-white'
                                 }`}
                               >
                                 {sub.name}
@@ -208,38 +230,38 @@ export const CinematicHeader: React.FC = () => {
             </div>
 
             {/* Actions */}
-            <div className="flex items-center justify-end gap-1.5 justify-self-end sm:gap-2">
-              <div className="hidden sm:block">
-                <GlobalSearch variant="cinematic" />
-              </div>
+            <div className="flex shrink-0 items-center justify-end gap-1 sm:gap-1.5 lg:gap-2">
+              <GlobalSearch variant="cinematic" />
 
               <motion.a
                 href="/Himanshu_Salunke_Resume.pdf"
                 download="Himanshu_Salunke_Resume.pdf"
-                className="hidden h-9 items-center gap-1.5 rounded-full border border-purple-500/25 bg-white/60 px-3.5 text-sm font-medium text-neutral-700 backdrop-blur-sm transition-all hover:border-purple-500/45 hover:bg-gradient-to-r hover:from-blue-600/10 hover:to-purple-600/10 hover:text-purple-700 dark:bg-neutral-950/50 dark:text-neutral-200 dark:hover:text-purple-300 lg:flex"
+                title="Download Resume"
+                className={resumeButtonClass}
                 whileHover={prefersReducedMotion ? undefined : { scale: 1.02 }}
                 whileTap={prefersReducedMotion ? undefined : { scale: 0.98 }}
               >
-                <Download className="h-4 w-4" />
-                <span>Resume</span>
+                <Download className="h-4 w-4 shrink-0" />
+                <span className="hidden xl:inline">Resume</span>
               </motion.a>
 
               <motion.button
                 onClick={toggleTheme}
-                className="flex h-9 w-9 items-center justify-center rounded-full border border-purple-500/25 bg-white/60 text-neutral-500 backdrop-blur-sm transition-all hover:border-purple-500/45 hover:text-purple-700 dark:bg-neutral-950/50 dark:text-neutral-400 dark:hover:text-purple-300"
+                className={actionButtonClass}
                 whileHover={prefersReducedMotion ? undefined : { rotate: 15, scale: 1.04 }}
                 whileTap={prefersReducedMotion ? undefined : { scale: 0.92 }}
                 aria-label={theme === 'light' ? 'Switch to dark mode' : 'Switch to light mode'}
               >
-                {theme === 'light' ? <Moon className="h-3.5 w-3.5" /> : <Sun className="h-3.5 w-3.5" />}
+                {theme === 'light' ? <Moon className="h-4 w-4" /> : <Sun className="h-4 w-4" />}
               </motion.button>
 
               <motion.button
                 onClick={() => setIsMenuOpen((open) => !open)}
-                className="flex h-9 w-9 items-center justify-center rounded-full border border-purple-500/25 bg-white/60 text-neutral-600 backdrop-blur-sm transition-all hover:border-purple-500/45 dark:bg-neutral-950/50 dark:text-neutral-300 md:hidden"
+                className={`${actionButtonClass} lg:hidden`}
                 whileTap={prefersReducedMotion ? undefined : { scale: 0.92 }}
                 aria-label={isMenuOpen ? 'Close menu' : 'Open menu'}
                 aria-expanded={isMenuOpen}
+                aria-controls="mobile-navigation-drawer"
               >
                 {isMenuOpen ? <X className="h-4 w-4" /> : <Menu className="h-4 w-4" />}
               </motion.button>
@@ -248,7 +270,7 @@ export const CinematicHeader: React.FC = () => {
         </nav>
       </motion.header>
 
-      {/* Mobile menu */}
+      {/* Mobile / tablet drawer - above header so it never sits underneath */}
       <AnimatePresence>
         {isMenuOpen && (
           <motion.div
@@ -256,35 +278,46 @@ export const CinematicHeader: React.FC = () => {
             animate={{ opacity: 1 }}
             exit={{ opacity: 0 }}
             transition={{ duration: 0.25 }}
-            className="fixed inset-0 z-40 md:hidden"
+            className="fixed inset-0 z-[60] lg:hidden"
           >
             <button
               type="button"
-              className="absolute inset-0 bg-[#030014]/60 backdrop-blur-sm"
+              className="absolute inset-0 touch-manipulation bg-neutral-950/40 backdrop-blur-[2px] dark:bg-[#030014]/70"
               onClick={() => setIsMenuOpen(false)}
               aria-label="Close menu"
             />
 
             <motion.div
+              ref={drawerRef}
+              id="mobile-navigation-drawer"
+              role="dialog"
+              aria-modal="true"
+              aria-label="Site navigation"
               initial={prefersReducedMotion ? false : { x: '100%' }}
               animate={{ x: 0 }}
               exit={{ x: '100%' }}
               transition={{ duration: 0.3, ease: [0.16, 1, 0.3, 1] }}
-              className="absolute bottom-0 right-0 top-0 flex w-[min(100%,20rem)] flex-col border-l border-purple-500/20 bg-white/95 shadow-2xl shadow-purple-500/10 backdrop-blur-xl dark:bg-[#030014]/98"
+              className="absolute bottom-0 right-0 top-0 flex w-full max-w-xs flex-col border-l border-neutral-200 bg-white shadow-2xl shadow-neutral-900/15 dark:border-purple-500/30 dark:bg-[#030014] dark:shadow-purple-500/10 sm:max-w-sm"
+              style={{ paddingBottom: 'env(safe-area-inset-bottom, 0px)' }}
             >
-              <div className="flex items-center justify-between border-b border-neutral-200/80 px-4 py-3 dark:border-purple-500/15">
-                <span className="font-mono text-[0.5625rem] uppercase tracking-[0.2em] text-neutral-500">Navigation</span>
+              <div
+                className="flex items-center justify-between border-b border-neutral-200 px-4 py-3 dark:border-purple-500/25"
+                style={{ paddingTop: 'max(0.75rem, env(safe-area-inset-top, 0px))' }}
+              >
+                <span className="font-mono text-[0.5625rem] uppercase tracking-[0.2em] text-neutral-600 dark:text-neutral-400">
+                  Navigation
+                </span>
                 <button
                   type="button"
                   onClick={() => setIsMenuOpen(false)}
-                  className="rounded-lg p-2 text-neutral-500 hover:bg-neutral-100 dark:hover:bg-white/10"
+                  className="flex h-10 w-10 touch-manipulation items-center justify-center rounded-lg text-neutral-800 hover:bg-neutral-100 dark:text-neutral-200 dark:hover:bg-white/10 dark:hover:text-white"
                   aria-label="Close menu"
                 >
                   <X className="h-5 w-5" />
                 </button>
               </div>
 
-              <div className="flex-1 overflow-y-auto px-4 py-5">
+              <div className="flex-1 overflow-y-auto overscroll-contain px-4 py-4 sm:py-5">
                 <div className="mb-5">
                   <GlobalSearch variant="cinematic" expand />
                 </div>
@@ -302,10 +335,10 @@ export const CinematicHeader: React.FC = () => {
                         <Link
                           to={item.href}
                           onClick={() => setIsMenuOpen(false)}
-                          className={`block rounded-xl px-4 py-3 text-base font-semibold transition-colors ${
+                          className={`flex min-h-[44px] touch-manipulation items-center rounded-xl px-4 py-3 text-base font-semibold transition-colors ${
                             active
-                              ? 'bg-gradient-to-r from-blue-600/10 to-purple-600/10 text-purple-700 dark:text-purple-300'
-                              : 'text-neutral-900 hover:bg-neutral-100 dark:text-white dark:hover:bg-white/5'
+                              ? 'bg-gradient-to-r from-blue-600/12 to-purple-600/18 text-purple-950 dark:from-blue-500/15 dark:to-purple-500/20 dark:text-purple-100'
+                              : 'text-neutral-950 hover:bg-neutral-100 dark:text-neutral-100 dark:hover:bg-white/8'
                           }`}
                         >
                           {item.name}
@@ -317,10 +350,10 @@ export const CinematicHeader: React.FC = () => {
                               key={sub.name}
                               to={sub.href}
                               onClick={() => setIsMenuOpen(false)}
-                              className={`block rounded-xl py-2 pl-7 pr-4 text-sm transition-colors ${
+                              className={`flex min-h-[40px] touch-manipulation items-center rounded-xl py-2 pl-7 pr-4 text-sm transition-colors ${
                                 subActive
-                                  ? 'font-medium text-purple-600 dark:text-purple-400'
-                                  : 'text-neutral-500 hover:text-neutral-900 dark:text-neutral-400 dark:hover:text-white'
+                                  ? 'font-semibold text-purple-800 dark:text-purple-200'
+                                  : 'text-neutral-700 hover:bg-neutral-50 hover:text-neutral-950 dark:text-neutral-300 dark:hover:bg-white/5 dark:hover:text-white'
                               }`}
                             >
                               {sub.name}
@@ -333,11 +366,11 @@ export const CinematicHeader: React.FC = () => {
                 </div>
               </div>
 
-              <div className="space-y-3 border-t border-neutral-200/80 p-5 dark:border-purple-500/15">
+              <div className="space-y-3 border-t border-neutral-200 p-4 dark:border-purple-500/25 sm:p-5">
                 <a
                   href="/Himanshu_Salunke_Resume.pdf"
                   download="Himanshu_Salunke_Resume.pdf"
-                  className="flex w-full items-center justify-center gap-2 rounded-full bg-gradient-to-r from-blue-600 to-purple-600 py-3 text-sm font-semibold text-white shadow-lg shadow-purple-500/20"
+                  className="flex min-h-[44px] w-full touch-manipulation items-center justify-center gap-2 rounded-full bg-gradient-to-r from-blue-600 to-purple-600 py-3 text-sm font-semibold text-white shadow-lg shadow-purple-500/20"
                 >
                   <Download className="h-4 w-4" />
                   Download Resume

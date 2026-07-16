@@ -44,6 +44,8 @@ const Home: React.FC = () => {
               "Python",
               "Machine Learning",
               "Artificial Intelligence",
+              "Microsoft Fabric",
+              "Apache Spark",
               "Web Development",
               "Full-Stack Development"
             ]
@@ -51,7 +53,7 @@ const Home: React.FC = () => {
         </script>
       </Helmet>
 
-      <div className="min-h-screen bg-neutral-50 dark:bg-[#030014]">
+      <div className="min-h-screen overflow-x-hidden bg-neutral-50 dark:bg-[#030014]">
         {/* 1. Cinematic Hero Section */}
         <CinematicHero />
 

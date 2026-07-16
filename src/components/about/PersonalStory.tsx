@@ -30,7 +30,7 @@ const PersonalStory: React.FC = () => {
     {
       title: "The Future",
       icon: "🌟",
-      content: "Today, I'm preparing for GATE 2026 while building innovative projects and contributing to the tech community. My goal is to become a leading data scientist who creates solutions that make a positive impact on society.",
+      content: "Today, I'm preparing for GATE 2027 while building innovative projects and contributing to the tech community. My goal is to become a leading data scientist who creates solutions that make a positive impact on society.",
       highlight: "Making a difference"
     }
   ]

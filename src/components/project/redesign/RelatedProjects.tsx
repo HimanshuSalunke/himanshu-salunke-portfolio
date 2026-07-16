@@ -1,8 +1,6 @@
 import React from 'react'
-import { Link } from 'react-router-dom'
 import { motion } from 'framer-motion'
 import { ImageWithShimmer } from '../../ui/ImageWithShimmer'
-import { Tag } from '../../ui/Tag'
 import { type Project } from '../../../utils/clientMdx'
 
 interface RelatedProjectsProps {

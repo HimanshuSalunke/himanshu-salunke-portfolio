@@ -17,7 +17,7 @@ const Developer: React.FC = () => {
     <>
       <Helmet>
         <title>My Tech Stack - Himanshu Salunke</title>
-        <meta name="description" content="Explore my tech stack: AI/ML tools, Web Architecture, and Developer Stats." />
+        <meta name="description" content="Explore my tech stack: Microsoft Fabric, Apache Spark, AI/ML tools, Web Architecture, and Developer Stats." />
       </Helmet>
 
       <CinematicDeveloper />

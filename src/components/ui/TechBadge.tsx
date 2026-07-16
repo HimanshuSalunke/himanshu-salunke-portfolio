@@ -6,11 +6,11 @@ import {
   SiTensorflow, SiPytorch, SiOpencv, SiScikitlearn, SiKeras, SiPandas, SiNumpy,
   SiPostgresql, SiMysql, SiMongodb, SiRedis, SiSqlite, SiFirebase, SiSupabase, SiAmazondynamodb, SiElasticsearch,
   SiDocker, SiKubernetes, SiAmazon, SiGooglecloud, SiGit, SiGithub, SiGitlab, SiJenkins,
-  SiLinux, SiUbuntu, SiApple, SiJupyter, SiApacheairflow, SiHuggingface, SiOnnx
+  SiLinux, SiUbuntu, SiApple, SiJupyter, SiApacheairflow, SiApachespark, SiHuggingface, SiOnnx
 } from 'react-icons/si'
 import { 
   FaBrain, FaRobot, FaChartLine, FaEye, FaCogs, FaCloud, FaCode, FaServer, FaMobile, FaDesktop,
-  FaChartBar, FaChartPie, FaMicroscope, FaWarehouse, FaCogs as FaGears, FaLanguage, FaUsers
+  FaChartBar, FaChartPie, FaMicroscope, FaWarehouse, FaCogs as FaGears, FaLanguage, FaUsers, FaMicrosoft
 } from 'react-icons/fa'
 import { 
   MdDataUsage, MdTransform, MdEmojiEmotions
@@ -96,7 +96,7 @@ const TECH_ICONS: { [key: string]: { icon: React.ComponentType<{ size?: number }
   'Data Visualization': { icon: FaChartBar, color: 'bg-blue-500', size: 14 },
   
   // AI/ML Additional
-  'YOLOv7': { icon: FaEye, color: 'bg-red-600', size: 14 },
+  'YOLO26': { icon: FaEye, color: 'bg-red-600', size: 14 },
   'EasyOCR': { icon: FaEye, color: 'bg-green-600', size: 14 },
   'ONNX Runtime': { icon: SiOnnx, color: 'bg-purple-600', size: 16 },
   'BERT': { icon: FaBrain, color: 'bg-orange-600', size: 14 },
@@ -107,11 +107,17 @@ const TECH_ICONS: { [key: string]: { icon: React.ComponentType<{ size?: number }
   'Emotion Classification': { icon: MdEmojiEmotions, color: 'bg-pink-500', size: 16 },
   
   // Data Engineering
+  'Microsoft Fabric': { icon: FaMicrosoft, color: 'bg-sky-600', size: 14 },
+  'OneLake': { icon: FaCloud, color: 'bg-sky-500', size: 14 },
+  'Lakehouse': { icon: FaWarehouse, color: 'bg-cyan-600', size: 14 },
+  'Apache Spark': { icon: SiApachespark, color: 'bg-orange-500', size: 16 },
+  'Delta Lake': { icon: FaWarehouse, color: 'bg-cyan-500', size: 14 },
   'Apache Airflow': { icon: SiApacheairflow, color: 'bg-blue-500', size: 16 },
   'AWS S3': { icon: SiAmazon, color: 'bg-orange-500', size: 16 },
   'AWS Glue': { icon: SiAmazon, color: 'bg-orange-500', size: 16 },
   'Data Engineering': { icon: FaGears, color: 'bg-blue-600', size: 14 },
   'ETL Pipeline': { icon: MdTransform, color: 'bg-green-500', size: 16 },
+  'ETL Pipelines': { icon: MdTransform, color: 'bg-green-500', size: 16 },
   'Data Warehousing': { icon: FaWarehouse, color: 'bg-blue-500', size: 14 },
   'Dimensional Modeling': { icon: MdDataUsage, color: 'bg-purple-500', size: 16 },
   

@@ -1,12 +1,12 @@
 import { useEffect, useCallback, useRef, useState } from 'react'
 
 // Throttle function for scroll events
-export const throttle = <T extends (...args: any[]) => any>(
+export const throttle = <T extends (...args: unknown[]) => unknown>(
   func: T,
   limit: number
 ): ((...args: Parameters<T>) => void) => {
   let inThrottle: boolean
-  return function (this: any, ...args: Parameters<T>) {
+  return function (this: unknown, ...args: Parameters<T>) {
     if (!inThrottle) {
       func.apply(this, args)
       inThrottle = true
@@ -16,12 +16,12 @@ export const throttle = <T extends (...args: any[]) => any>(
 }
 
 // Debounce function for scroll events
-export const debounce = <T extends (...args: any[]) => any>(
+export const debounce = <T extends (...args: unknown[]) => unknown>(
   func: T,
   delay: number
 ): ((...args: Parameters<T>) => void) => {
   let timeoutId: NodeJS.Timeout
-  return function (this: any, ...args: Parameters<T>) {
+  return function (this: unknown, ...args: Parameters<T>) {
     clearTimeout(timeoutId)
     timeoutId = setTimeout(() => func.apply(this, args), delay)
   }
@@ -118,7 +118,7 @@ export const useScrollAnimation = (
     easing?: string
   } = {}
 ) => {
-  const { trigger = 0.5, duration = 0.6, easing = 'ease-out' } = animationConfig
+  const { trigger = 0.5 } = animationConfig
   const [isVisible, setIsVisible] = useState(false)
   const [scrollProgress, setScrollProgress] = useState(0)
 

@@ -3,6 +3,12 @@ import { readdirSync, readFileSync } from 'fs'
 import { join } from 'path'
 import matter from 'gray-matter'
 
+interface ProjectRecord {
+  featured?: boolean
+  date?: string
+  [key: string]: unknown
+}
+
 export default async function handler(req: VercelRequest, res: VercelResponse) {
   try {
     const projectsDir = join(process.cwd(), 'src/data/projects')
@@ -31,8 +37,8 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
 
     // Filter featured projects and sort by date
     const featuredProjects = projects
-      .filter((project: any) => project.featured === true)
-      .sort((a: any, b: any) => {
+      .filter((project: ProjectRecord) => project.featured === true)
+      .sort((a: ProjectRecord, b: ProjectRecord) => {
         const dateA = new Date(a.date || '2024-01-01')
         const dateB = new Date(b.date || '2024-01-01')
         return dateB.getTime() - dateA.getTime()

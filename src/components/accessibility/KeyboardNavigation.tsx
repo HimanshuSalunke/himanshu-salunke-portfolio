@@ -1,3 +1,4 @@
+/* eslint-disable react-refresh/only-export-components */
 import React, { useEffect, useRef } from 'react'
 
 export const useKeyboardNavigation = () => {
@@ -31,47 +32,47 @@ export const useKeyboardNavigation = () => {
   }
 }
 
-export const useArrowKeyNavigation = <T extends HTMLElement>(
-  items: any[],
-  onSelect?: (item: any, index: number) => void
+export const useArrowKeyNavigation = <TItem, T extends HTMLElement = HTMLElement>(
+  items: TItem[],
+  onSelect?: (item: TItem, index: number) => void
 ) => {
   const [focusedIndex, setFocusedIndex] = React.useState(-1)
   const containerRef = useRef<T>(null)
 
-  const handleKeyDown = (e: KeyboardEvent) => {
-    if (!containerRef.current?.contains(e.target as Node)) return
-
-    switch (e.key) {
-      case 'ArrowDown':
-        e.preventDefault()
-        setFocusedIndex(prev => (prev + 1) % items.length)
-        break
-      case 'ArrowUp':
-        e.preventDefault()
-        setFocusedIndex(prev => (prev - 1 + items.length) % items.length)
-        break
-      case 'Enter':
-      case ' ':
-        e.preventDefault()
-        if (focusedIndex >= 0 && onSelect) {
-          onSelect(items[focusedIndex], focusedIndex)
-        }
-        break
-      case 'Home':
-        e.preventDefault()
-        setFocusedIndex(0)
-        break
-      case 'End':
-        e.preventDefault()
-        setFocusedIndex(items.length - 1)
-        break
-      case 'Escape':
-        setFocusedIndex(-1)
-        break
-    }
-  }
-
   useEffect(() => {
+    const handleKeyDown = (e: KeyboardEvent) => {
+      if (!containerRef.current?.contains(e.target as Node)) return
+
+      switch (e.key) {
+        case 'ArrowDown':
+          e.preventDefault()
+          setFocusedIndex(prev => (prev + 1) % items.length)
+          break
+        case 'ArrowUp':
+          e.preventDefault()
+          setFocusedIndex(prev => (prev - 1 + items.length) % items.length)
+          break
+        case 'Enter':
+        case ' ':
+          e.preventDefault()
+          if (focusedIndex >= 0 && onSelect) {
+            onSelect(items[focusedIndex], focusedIndex)
+          }
+          break
+        case 'Home':
+          e.preventDefault()
+          setFocusedIndex(0)
+          break
+        case 'End':
+          e.preventDefault()
+          setFocusedIndex(items.length - 1)
+          break
+        case 'Escape':
+          setFocusedIndex(-1)
+          break
+      }
+    }
+
     document.addEventListener('keydown', handleKeyDown)
     return () => document.removeEventListener('keydown', handleKeyDown)
   }, [focusedIndex, items, onSelect])

@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react'
+import { useState, useEffect, useCallback } from 'react'
 
 interface ArticleLike {
   articleId: string
@@ -19,15 +19,20 @@ interface ArticleStatistics {
   getArticleViews: (articleId: string) => number
 }
 
+interface ArticleStatsInput {
+  id: string
+  likes: number
+  views: number
+}
+
 const LIKES_STORAGE_KEY = 'article-likes'
 const VIEWS_STORAGE_KEY = 'article-views'
 
-export const useArticleStatistics = (articles: any[]): ArticleStatistics => {
+export const useArticleStatistics = (articles: ArticleStatsInput[]): ArticleStatistics => {
   const [totalLikes, setTotalLikes] = useState(0)
   const [totalViews, setTotalViews] = useState(0)
 
-  // Function to recalculate statistics
-  const recalculateStatistics = () => {
+  const recalculateStatistics = useCallback(() => {
     // Calculate total likes from localStorage
     const storedLikes = localStorage.getItem(LIKES_STORAGE_KEY)
     let parsedLikes: ArticleLike[] = []
@@ -65,11 +70,11 @@ export const useArticleStatistics = (articles: any[]): ArticleStatistics => {
 
     setTotalLikes(likesTotal)
     setTotalViews(viewsTotal)
-  }
+  }, [articles])
 
   useEffect(() => {
     recalculateStatistics()
-  }, [articles])
+  }, [recalculateStatistics])
 
   // Listen for localStorage changes to recalculate statistics
   useEffect(() => {
@@ -86,7 +91,7 @@ export const useArticleStatistics = (articles: any[]): ArticleStatistics => {
       window.removeEventListener('storage', handleStorageChange)
       window.removeEventListener('articleDataChanged', handleStorageChange)
     }
-  }, [articles])
+  }, [recalculateStatistics])
 
   const getArticleLikes = (articleId: string): number => {
     const storedLikes = localStorage.getItem(LIKES_STORAGE_KEY)

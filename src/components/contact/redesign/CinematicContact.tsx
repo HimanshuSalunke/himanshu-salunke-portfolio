@@ -1,7 +1,7 @@
 import React from 'react'
 import { motion } from 'framer-motion'
 import { GlassContactForm } from './GlassContactForm'
-import { Mail, MapPin, Linkedin, Github, Clock, BookOpen, Globe, Twitter } from 'lucide-react'
+import { Mail, Linkedin, Github, Clock, BookOpen, Globe } from 'lucide-react'
 import { Link } from 'react-router-dom'
 
 // Reusing the social link data but with new UI

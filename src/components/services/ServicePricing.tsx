@@ -1,38 +1,32 @@
 import React from 'react'
 import { motion } from 'framer-motion'
+import liveContent from '../../data/site/live-content.json'
 
-const pricingTiers = [
-    {
-        level: '01',
-        name: 'Prototype / Research',
-        range: '₹5k - ₹15k',
-        desc: 'Proof of concept, college projects, and initial data exploration.',
-        features: ['Basic ML Models', 'Data Visualization', 'Clean Codebase', '1 Week Delivery'],
-        borderColor: 'border-blue-500/20',
-        hoverBorder: 'group-hover:border-blue-500',
-        textColor: 'text-blue-600 dark:text-blue-400'
-    },
-    {
-        level: '02',
-        name: 'Production / MVP',
-        range: '₹15k - ₹40k',
-        desc: 'Full-stack applications with integrated AI and robust backends.',
-        features: ['Deep Learning / NLP', 'React + FastAPI', 'Deployment Setup', '2-3 Weeks Delivery'],
-        borderColor: 'border-purple-500/20',
-        hoverBorder: 'group-hover:border-purple-500',
-        textColor: 'text-purple-600 dark:text-purple-400'
-    },
-    {
-        level: '03',
-        name: 'Enterprise / Scale',
-        range: '₹40k - ₹80k+',
-        desc: 'Complex architectures, RAG systems, and custom agents.',
-        features: ['LLM Integration', 'Scalable Pipelines', 'Advanced Agents', '4+ Weeks Delivery'],
-        borderColor: 'border-emerald-500/20',
-        hoverBorder: 'group-hover:border-emerald-500',
-        textColor: 'text-emerald-600 dark:text-emerald-400'
-    }
+const tierStyles = [
+  {
+    level: '01',
+    borderColor: 'border-blue-500/20',
+    hoverBorder: 'group-hover:border-blue-500',
+    textColor: 'text-blue-600 dark:text-blue-400',
+  },
+  {
+    level: '02',
+    borderColor: 'border-purple-500/20',
+    hoverBorder: 'group-hover:border-purple-500',
+    textColor: 'text-purple-600 dark:text-purple-400',
+  },
+  {
+    level: '03',
+    borderColor: 'border-emerald-500/20',
+    hoverBorder: 'group-hover:border-emerald-500',
+    textColor: 'text-emerald-600 dark:text-emerald-400',
+  },
 ]
+
+const pricingTiers = liveContent.services.pricing.map((tier, index) => ({
+  ...tier,
+  ...tierStyles[index],
+}))
 
 export const ServicePricing: React.FC = () => {
     return (
@@ -81,11 +75,9 @@ export const ServicePricing: React.FC = () => {
                                     </div>
                                 ))}
                             </div>
-
                         </motion.div>
                     ))}
                 </div>
-
             </div>
         </section>
     )

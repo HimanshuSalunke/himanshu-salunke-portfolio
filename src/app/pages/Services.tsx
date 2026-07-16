@@ -1,6 +1,5 @@
 import React from 'react'
 import { Helmet } from 'react-helmet-async'
-import { motion } from 'framer-motion'
 import { ServicesHero } from '../../components/services/ServicesHero'
 import { WhatICanBuild } from '../../components/services/WhatICanBuild'
 import { HowItWorks } from '../../components/services/HowItWorks'

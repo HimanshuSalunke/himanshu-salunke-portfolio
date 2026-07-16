@@ -2,7 +2,13 @@ import type { VercelRequest, VercelResponse } from '@vercel/node'
 import { put } from '@vercel/blob'
 import formidable from 'formidable'
 import { db } from '../../src/lib/db.js'
-import { serviceInquirySchema } from '../../src/lib/validations/serviceInquirySchema.js'
+import { serviceInquirySchema, type ServiceInquiryFormData } from '../../src/lib/validations/serviceInquirySchema.js'
+
+type ParsedFormFields = Record<string, string | undefined>
+
+type SlackBlock = Record<string, unknown>
+
+type SlackNotificationData = ServiceInquiryFormData & { fileUrls?: string[] }
 
 // Disable body parsing - formidable will handle it
 export const config = {
@@ -11,7 +17,7 @@ export const config = {
   },
 }
 
-async function parseFormData(req: VercelRequest): Promise<{ fields: any; files: formidable.File[] }> {
+async function parseFormData(req: VercelRequest): Promise<{ fields: ParsedFormFields; files: formidable.File[] }> {
   return new Promise((resolve, reject) => {
     const form = formidable({
       maxFileSize: 50 * 1024 * 1024, // 50MB
@@ -19,14 +25,14 @@ async function parseFormData(req: VercelRequest): Promise<{ fields: any; files: 
       keepExtensions: true,
     })
 
-    form.parse(req as any, (err, fields, files) => {
+    form.parse(req, (err, fields, files) => {
       if (err) {
         reject(err)
         return
       }
 
       // Convert fields from arrays to single values
-      const parsedFields: any = {}
+      const parsedFields: ParsedFormFields = {}
       for (const [key, value] of Object.entries(fields)) {
         parsedFields[key] = Array.isArray(value) ? value[0] : value
       }
@@ -43,7 +49,7 @@ async function parseFormData(req: VercelRequest): Promise<{ fields: any; files: 
   })
 }
 
-async function sendToSlack(data: any): Promise<boolean> {
+async function sendToSlack(data: SlackNotificationData): Promise<boolean> {
   const webhookUrl = process.env.SLACK_WEBHOOK_URL
 
   if (!webhookUrl) {
@@ -51,7 +57,7 @@ async function sendToSlack(data: any): Promise<boolean> {
     return false
   }
 
-  const slackMessage = {
+  const slackMessage: { text: string; blocks: SlackBlock[] } = {
     text: `New Service Inquiry: ${data.projectTitle}`,
     blocks: [
       {
@@ -108,7 +114,7 @@ async function sendToSlack(data: any): Promise<boolean> {
   // Add file attachment notice if files exist
   if (data.fileUrls && data.fileUrls.length > 0) {
     const fileLinks = data.fileUrls.map((url: string, i: number) => `<${url}|File ${i + 1}>`).join(', ')
-      ; (slackMessage.blocks as any[]).push({
+    slackMessage.blocks.push({
         type: 'context',
         elements: [
           {
@@ -120,7 +126,7 @@ async function sendToSlack(data: any): Promise<boolean> {
   }
 
   // Add timestamp
-  ; (slackMessage.blocks as any[]).push({
+  slackMessage.blocks.push({
     type: 'context',
     elements: [
       {
@@ -276,15 +282,23 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
       inquiryId: inquiry.id
     })
 
-  } catch (error: any) {
+  } catch (error: unknown) {
     console.error('❌ Failed to process service inquiry:', error)
 
     // Handle validation errors
-    if (error.name === 'ZodError' || error.issues) {
-      const zodError = error.issues ? error : { issues: error.errors }
+    if (
+      error &&
+      typeof error === 'object' &&
+      ('issues' in error || ('name' in error && (error as { name: string }).name === 'ZodError'))
+    ) {
+      const zodError = error as {
+        issues?: Array<{ path: (string | number)[]; message: string }>
+        errors?: Array<{ path: (string | number)[]; message: string }>
+      }
+      const issues = zodError.issues ?? zodError.errors ?? []
       return res.status(400).json({
         error: 'Validation failed',
-        details: zodError.issues.map((e: any) => `${e.path.join('.')}: ${e.message}`)
+        details: issues.map((e) => `${e.path.join('.')}: ${e.message}`)
       })
     }
 

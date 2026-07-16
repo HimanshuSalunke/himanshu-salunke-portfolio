@@ -1,4 +1,15 @@
-import { siteConfig } from '../config/site';
+import { SITE_CONFIG } from '../config/site';
+
+const siteConfig = {
+  name: SITE_CONFIG.name,
+  author: SITE_CONFIG.author,
+  url: SITE_CONFIG.url,
+  themeColor: SITE_CONFIG.themeColor,
+  keywords: [SITE_CONFIG.description],
+  social: {
+    twitter: SITE_CONFIG.twitterHandle.replace(/^@/, ''),
+  },
+} as const;
 
 interface MetaTags {
   title: string;

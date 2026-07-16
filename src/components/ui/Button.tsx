@@ -1,7 +1,12 @@
 import React, { memo } from 'react'
-import { motion } from 'framer-motion'
+import { motion, type HTMLMotionProps } from 'framer-motion'
 
-interface ButtonProps extends React.ButtonHTMLAttributes<HTMLButtonElement> {
+type MotionSafeButtonAttrs = Omit<
+  React.ButtonHTMLAttributes<HTMLButtonElement>,
+  'onAnimationStart' | 'onDrag' | 'onDragStart' | 'onDragEnd' | 'onAnimationEnd'
+>
+
+interface ButtonProps extends MotionSafeButtonAttrs {
   variant?: 'primary' | 'secondary' | 'outline' | 'ghost'
   size?: 'sm' | 'md' | 'lg'
   children: React.ReactNode
@@ -42,11 +47,11 @@ export const Button: React.FC<ButtonProps> = memo(({
   
   const classes = `${baseClasses} ${variantClasses[variant]} ${sizeClasses[size]} ${className}`
 
-  const motionProps = {
+  const sharedMotion = {
     className: classes,
     whileHover: { scale: 1.02 },
     whileTap: { scale: 0.98 },
-  }
+  } as const
 
   if (as === 'a') {
     return (
@@ -54,8 +59,8 @@ export const Button: React.FC<ButtonProps> = memo(({
         href={href}
         target={target}
         rel={rel}
-        {...motionProps}
-        {...(props as any)}
+        {...sharedMotion}
+        {...(props as unknown as HTMLMotionProps<'a'>)}
       >
         {loading && (
           <svg
@@ -87,8 +92,8 @@ export const Button: React.FC<ButtonProps> = memo(({
   return (
     <motion.button
       disabled={disabled || loading}
-      {...motionProps}
-      {...(props as any)}
+      {...sharedMotion}
+      {...(props as unknown as HTMLMotionProps<'button'>)}
     >
       {loading && (
         <svg

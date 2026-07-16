@@ -96,7 +96,7 @@ export const Hero: React.FC = () => {
           <div className="text-lg sm:text-xl md:text-2xl lg:text-3xl mb-3 sm:mb-4 font-semibold text-blue-500 dark:text-blue-200">
             <span className="inline-block">😊</span>
             <span className="mx-1 sm:mx-2">Specialize in </span>
-            <TypewriterText text="Python, Machine Learning, Deep Learning, Gen AI" speed={150} />
+            <TypewriterText text="Python, Machine Learning, Microsoft Fabric, Deep Learning, Gen AI" speed={150} />
           </div>
 
           {/* Description */}

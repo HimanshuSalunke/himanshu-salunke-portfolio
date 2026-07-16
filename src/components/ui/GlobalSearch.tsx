@@ -18,6 +18,105 @@ interface GlobalSearchProps {
   expand?: boolean
 }
 
+const SEARCH_DATA: SearchResult[] = [
+  {
+    id: '1',
+    title: 'AI/ML Dashboard',
+    type: 'project',
+    url: '/work/ai-ml-dashboard',
+    description: 'Machine learning dashboard with real-time analytics',
+    category: 'AI/ML'
+  },
+  {
+    id: '2',
+    title: 'React Performance Optimizer',
+    type: 'project',
+    url: '/work/react-performance-optimizer',
+    description: 'Tool for optimizing React application performance',
+    category: 'Web Development'
+  },
+  {
+    id: '3',
+    title: 'Modern React Dashboard',
+    type: 'project',
+    url: '/work/react-dashboard',
+    description: 'A comprehensive dashboard built with React, TypeScript, and modern UI components',
+    category: 'Web Development'
+  },
+  {
+    id: '4',
+    title: 'Mobile App',
+    type: 'project',
+    url: '/work/mobile-app',
+    description: 'Cross-platform mobile application with React Native',
+    category: 'Mobile Development'
+  },
+  {
+    id: '5',
+    title: 'Machine Learning Fundamentals',
+    type: 'article',
+    url: 'https://www.linkedin.com/pulse/what-machine-learning-himanshu-salunke-dwgef/',
+    description: 'A comprehensive introduction to machine learning concepts',
+    category: 'Machine Learning'
+  },
+  {
+    id: '6',
+    title: 'Linear Regression Guide',
+    type: 'article',
+    url: 'https://www.linkedin.com/pulse/what-regression-machine-learning-himanshu-salunke-m0zff/',
+    description: 'Master linear regression from basics to advanced concepts',
+    category: 'Machine Learning'
+  },
+  {
+    id: '7',
+    title: 'Gradient Descent',
+    type: 'article',
+    url: 'https://www.linkedin.com/pulse/what-gradient-descent-machine-learning-himanshu-salunke-ray0f/',
+    description: 'Comprehensive guide to gradient descent optimization algorithm',
+    category: 'Machine Learning'
+  },
+  {
+    id: '8',
+    title: 'About Me',
+    type: 'page',
+    url: '/about',
+    description: 'Learn more about my background and experience',
+    category: 'Profile'
+  },
+  {
+    id: '9',
+    title: 'Contact',
+    type: 'page',
+    url: '/contact',
+    description: 'Get in touch with me',
+    category: 'Contact'
+  },
+  {
+    id: '10',
+    title: 'Work',
+    type: 'page',
+    url: '/work',
+    description: 'View my portfolio of projects and case studies',
+    category: 'Portfolio'
+  },
+  {
+    id: '11',
+    title: 'Articles',
+    type: 'page',
+    url: '/articles',
+    description: 'Read my latest articles and blog posts',
+    category: 'Blog'
+  },
+  {
+    id: '12',
+    title: 'Now',
+    type: 'page',
+    url: '/now',
+    description: 'What I\'m currently working on and learning',
+    category: 'Current'
+  }
+]
+
 export const GlobalSearch: React.FC<GlobalSearchProps> = ({ variant = 'default', expand = false }) => {
   const [isOpen, setIsOpen] = useState(false)
   const [isMounted, setIsMounted] = useState(false)
@@ -29,106 +128,6 @@ export const GlobalSearch: React.FC<GlobalSearchProps> = ({ variant = 'default',
   const prefersReducedMotion = useReducedMotion()
   const isCinematic = variant === 'cinematic'
 
-  // Standard search data
-  const searchData: SearchResult[] = [
-    {
-      id: '1',
-      title: 'AI/ML Dashboard',
-      type: 'project',
-      url: '/work/ai-ml-dashboard',
-      description: 'Machine learning dashboard with real-time analytics',
-      category: 'AI/ML'
-    },
-    {
-      id: '2',
-      title: 'React Performance Optimizer',
-      type: 'project',
-      url: '/work/react-performance-optimizer',
-      description: 'Tool for optimizing React application performance',
-      category: 'Web Development'
-    },
-    {
-      id: '3',
-      title: 'Modern React Dashboard',
-      type: 'project',
-      url: '/work/react-dashboard',
-      description: 'A comprehensive dashboard built with React, TypeScript, and modern UI components',
-      category: 'Web Development'
-    },
-    {
-      id: '4',
-      title: 'Mobile App',
-      type: 'project',
-      url: '/work/mobile-app',
-      description: 'Cross-platform mobile application with React Native',
-      category: 'Mobile Development'
-    },
-    {
-      id: '5',
-      title: 'Machine Learning Fundamentals',
-      type: 'article',
-      url: 'https://www.linkedin.com/pulse/what-machine-learning-himanshu-salunke-dwgef/',
-      description: 'A comprehensive introduction to machine learning concepts',
-      category: 'Machine Learning'
-    },
-    {
-      id: '6',
-      title: 'Linear Regression Guide',
-      type: 'article',
-      url: 'https://www.linkedin.com/pulse/what-regression-machine-learning-himanshu-salunke-m0zff/',
-      description: 'Master linear regression from basics to advanced concepts',
-      category: 'Machine Learning'
-    },
-    {
-      id: '7',
-      title: 'Gradient Descent',
-      type: 'article',
-      url: 'https://www.linkedin.com/pulse/what-gradient-descent-machine-learning-himanshu-salunke-ray0f/',
-      description: 'Comprehensive guide to gradient descent optimization algorithm',
-      category: 'Machine Learning'
-    },
-    {
-      id: '8',
-      title: 'About Me',
-      type: 'page',
-      url: '/about',
-      description: 'Learn more about my background and experience',
-      category: 'Profile'
-    },
-    {
-      id: '9',
-      title: 'Contact',
-      type: 'page',
-      url: '/contact',
-      description: 'Get in touch with me',
-      category: 'Contact'
-    },
-    {
-      id: '10',
-      title: 'Work',
-      type: 'page',
-      url: '/work',
-      description: 'View my portfolio of projects and case studies',
-      category: 'Portfolio'
-    },
-    {
-      id: '11',
-      title: 'Articles',
-      type: 'page',
-      url: '/articles',
-      description: 'Read my latest articles and blog posts',
-      category: 'Blog'
-    },
-    {
-      id: '12',
-      title: 'Now',
-      type: 'page',
-      url: '/now',
-      description: 'What I\'m currently working on and learning',
-      category: 'Current'
-    }
-  ]
-
   useEffect(() => {
     setIsMounted(true)
   }, [])
@@ -136,7 +135,7 @@ export const GlobalSearch: React.FC<GlobalSearchProps> = ({ variant = 'default',
   useEffect(() => {
     if (searchTerm.length > 0) {
       setIsLoading(true)
-      const filtered = searchData.filter(item =>
+      const filtered = SEARCH_DATA.filter(item =>
         item.title.toLowerCase().includes(searchTerm.toLowerCase()) ||
         item.description?.toLowerCase().includes(searchTerm.toLowerCase()) ||
         item.category?.toLowerCase().includes(searchTerm.toLowerCase())
@@ -242,7 +241,7 @@ export const GlobalSearch: React.FC<GlobalSearchProps> = ({ variant = 'default',
     setResults([])
   }
 
-  const quickLinks = searchData.filter((item) => item.type === 'page').slice(0, 4)
+  const quickLinks = SEARCH_DATA.filter((item) => item.type === 'page').slice(0, 4)
   const groupedResults = {
     project: results.filter((item) => item.type === 'project'),
     article: results.filter((item) => item.type === 'article'),
@@ -389,7 +388,7 @@ export const GlobalSearch: React.FC<GlobalSearchProps> = ({ variant = 'default',
   }
 
   const triggerClass = isCinematic
-    ? `flex h-9 items-center gap-1.5 rounded-full border border-purple-500/25 bg-white/60 px-2.5 text-sm text-neutral-500 backdrop-blur-sm transition-all hover:border-purple-500/45 hover:text-purple-700 dark:bg-neutral-950/50 dark:text-neutral-400 dark:hover:text-purple-300 lg:px-3.5 ${expand ? 'w-full justify-between px-3.5' : ''}`
+    ? `flex h-9 min-w-[36px] touch-manipulation items-center justify-center gap-1.5 rounded-full border border-neutral-300/90 bg-white px-2.5 text-sm font-medium text-neutral-900 shadow-md shadow-neutral-900/10 backdrop-blur-md transition-all hover:border-purple-500/55 hover:text-purple-800 dark:border-purple-500/45 dark:bg-[#0a0a18]/95 dark:text-neutral-100 dark:shadow-purple-500/15 dark:hover:border-purple-400/60 dark:hover:text-purple-200 sm:min-w-0 lg:px-3.5 ${expand ? 'h-11 w-full min-w-0 justify-between px-3.5 text-neutral-900 dark:text-neutral-100' : ''}`
     : 'group relative rounded-2xl bg-gradient-to-r from-neutral-100 to-neutral-200 p-3 shadow-lg transition-all duration-300 hover:from-primary-100 hover:to-secondary-100 hover:shadow-xl dark:from-neutral-700 dark:to-neutral-600 dark:hover:from-primary-900/20 dark:hover:to-secondary-900/20'
 
   return (
@@ -404,14 +403,14 @@ export const GlobalSearch: React.FC<GlobalSearchProps> = ({ variant = 'default',
         <Search
           className={
             isCinematic
-              ? 'h-4 w-4 shrink-0'
+              ? 'h-4 w-4 shrink-0 text-purple-600 dark:text-purple-300'
               : 'h-5 w-5 text-neutral-600 transition-colors group-hover:text-primary-600 dark:text-neutral-300 dark:group-hover:text-primary-400'
           }
         />
         {isCinematic && (
           <>
-            <span className={`font-medium ${expand ? 'inline' : 'hidden md:inline'}`}>Search</span>
-            <kbd className={`rounded-md border border-purple-500/20 bg-purple-500/5 px-1.5 py-0.5 font-mono text-[0.5625rem] text-neutral-500 dark:text-neutral-400 ${expand ? 'inline' : 'hidden lg:inline'}`}>
+            <span className={`font-medium ${expand ? 'inline' : 'hidden lg:inline'}`}>Search</span>
+            <kbd className={`rounded-md border border-purple-500/25 bg-purple-500/10 px-1.5 py-0.5 font-mono text-[0.5625rem] text-neutral-600 dark:border-purple-500/35 dark:bg-purple-500/15 dark:text-neutral-300 ${expand ? 'hidden sm:inline' : 'hidden xl:inline'}`}>
               ⌘K
             </kbd>
           </>
@@ -442,8 +441,8 @@ export const GlobalSearch: React.FC<GlobalSearchProps> = ({ variant = 'default',
                   ref={modalRef}
                   className={
                     isCinematic
-                      ? 'fixed inset-x-3 top-[12vh] z-[9999] mx-auto max-w-xl sm:inset-x-auto sm:left-1/2 sm:w-full sm:-translate-x-1/2'
-                      : 'fixed left-2 right-2 top-16 z-[9999] mx-auto max-w-lg sm:left-1/2 sm:right-auto sm:top-20 sm:-translate-x-1/2'
+                      ? 'fixed inset-x-3 top-[calc(var(--header-offset)+0.75rem)] z-[9999] mx-auto max-w-xl sm:inset-x-4 sm:left-1/2 sm:w-[calc(100%-2rem)] sm:-translate-x-1/2'
+                      : 'fixed left-2 right-2 top-[calc(var(--header-offset)+0.5rem)] z-[9999] mx-auto max-w-lg sm:left-1/2 sm:right-auto sm:-translate-x-1/2'
                   }
                   initial={{ opacity: 0, scale: 0.96, y: isCinematic ? 12 : -10 }}
                   animate={{ opacity: 1, scale: 1, y: 0 }}

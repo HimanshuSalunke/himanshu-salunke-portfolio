@@ -35,13 +35,6 @@ const PersonalInterests: React.FC = () => {
     }
   ]
 
-  const funFacts = [
-    "I once coded for 12 hours straight during a hackathon",
-    "I'm learning to play the guitar in my free time",
-    "I have a collection of vintage computer magazines",
-    "I can speak 3 languages fluently"
-  ]
-
   return (
     <motion.section
       className="mb-16"

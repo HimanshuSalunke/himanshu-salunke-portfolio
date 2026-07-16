@@ -1,5 +1,6 @@
 import React, { useMemo } from 'react'
 import { motion } from 'framer-motion'
+import { type Project } from '../../utils/clientMdx'
 
 interface Category {
   name: string
@@ -12,7 +13,7 @@ interface Category {
 }
 
 interface ProjectCategoriesProps {
-  projects: any[]
+  projects: Project[]
 }
 
 const ProjectCategories: React.FC<ProjectCategoriesProps> = ({ projects }) => {
@@ -43,7 +44,7 @@ const ProjectCategories: React.FC<ProjectCategoriesProps> = ({ projects }) => {
       icon: '👁️',
       color: 'from-blue-500 to-blue-600',
       projectCount: categoryCounts['Computer Vision'] || 0,
-      technologies: ['OpenCV', 'MediaPipe', 'YOLOv7', 'Real-time Processing'],
+      technologies: ['OpenCV', 'MediaPipe', 'YOLO26', 'Real-time Processing'],
       featured: true
     },
     {
@@ -70,7 +71,7 @@ const ProjectCategories: React.FC<ProjectCategoriesProps> = ({ projects }) => {
       icon: '⚙️',
       color: 'from-orange-500 to-orange-600',
       projectCount: categoryCounts['Data Engineering'] || 0,
-      technologies: ['Apache Airflow', 'AWS S3', 'PostgreSQL', 'Docker', 'ETL'],
+      technologies: ['Microsoft Fabric', 'Apache Spark', 'Apache Airflow', 'AWS S3', 'PostgreSQL', 'ETL'],
       featured: true
     }
   ]

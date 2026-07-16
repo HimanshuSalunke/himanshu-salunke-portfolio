@@ -4,6 +4,7 @@ import { motion } from 'framer-motion'
 import { useUnifiedStats } from '../../hooks/useUnifiedStats'
 import { articles } from '../../data/articles'
 import { fetchAllProjects } from '../../utils/projectAPI'
+import { type Project } from '../../utils/clientMdx'
 
 interface NavigationCardProps {
   title: string
@@ -113,7 +114,7 @@ const NavigationCard: React.FC<NavigationCardProps> = ({
 
 export const NavigationCards: React.FC = () => {
   const unifiedStats = useUnifiedStats()
-  const [projects, setProjects] = useState<any[]>([])
+  const [projects, setProjects] = useState<Project[]>([])
   const [projectsLoading, setProjectsLoading] = useState(true)
 
   // Fetch projects to get dynamic categories

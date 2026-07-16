@@ -2,8 +2,8 @@ import React from 'react'
 import { motion } from 'framer-motion'
 import {
     SiReact, SiTypescript, SiVite, SiTailwindcss, SiVercel,
-    SiNodedotjs, SiExpress, SiMdx, SiFramer, SiPostcss, SiEslint, SiPrettier,
-    SiVitest, SiSharp, SiSlack, SiPostgresql, SiRedis
+    SiExpress, SiMdx, SiFramer, SiPostcss, SiEslint, SiPrettier,
+    SiVitest, SiSharp, SiPostgresql
 } from 'react-icons/si'
 import {
     FaServer, FaDatabase, FaCode, FaPalette,

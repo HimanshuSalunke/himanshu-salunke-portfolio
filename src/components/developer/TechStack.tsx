@@ -1,14 +1,15 @@
-import React, { useState, useEffect } from 'react'
+import React from 'react'
 import { motion } from 'framer-motion'
 import { 
   SiReact, SiTypescript, SiJavascript, SiPython, SiFastapi, SiNodedotjs, SiFlask,
   SiTensorflow, SiPytorch, SiOpencv, SiScikitlearn, SiPandas, SiNumpy, SiJupyter,
   SiPostgresql, SiMongodb, SiRedis, SiDocker, SiKubernetes, SiAmazon, SiGooglecloud, SiGit, SiGithub,
-  SiNextdotjs, SiSass, SiVercel, SiApacheairflow, SiPlotly, SiTableau, SiPowers,
+  SiNextdotjs, SiSass, SiVercel, SiApacheairflow, SiApachespark, SiPlotly, SiTableau, SiPowers,
   SiHtml5, SiCss3, SiC, SiCplusplus, SiSlack, SiJira, SiLinux, SiKeras
 } from 'react-icons/si'
 import { 
-  FaBrain, FaRobot, FaChartLine, FaCogs, FaServer, FaChartBar, FaJava, FaDatabase, FaNetworkWired
+  FaBrain, FaRobot, FaChartLine, FaCogs, FaServer, FaChartBar, FaJava, FaDatabase, FaNetworkWired,
+  FaMicrosoft, FaWarehouse, FaCloud
 } from 'react-icons/fa'
 import { useGitHubStats } from '../../hooks/useGitHubStats'
 
@@ -33,7 +34,7 @@ const skillsData: Skill[] = [
   { name: 'Seaborn', level: 80, category: 'ai-ml', icon: FaChartBar, color: 'text-purple-500' },
   { name: 'Jupyter Notebooks', level: 90, category: 'ai-ml', icon: SiJupyter, color: 'text-orange-500' },
   { name: 'Keras', level: 80, category: 'ai-ml', icon: SiKeras, color: 'text-red-500' },
-  { name: 'YOLO', level: 75, category: 'ai-ml', icon: FaRobot, color: 'text-purple-600' },
+  { name: 'YOLO26', level: 75, category: 'ai-ml', icon: FaRobot, color: 'text-purple-600' },
   { name: 'IBM Watson Studio', level: 75, category: 'ai-ml', icon: FaServer, color: 'text-blue-600' },
   { name: 'LangChain', level: 75, category: 'ai-ml', icon: FaRobot, color: 'text-purple-600' },
   { name: 'OpenAI API', level: 80, category: 'ai-ml', icon: FaBrain, color: 'text-purple-500' },
@@ -57,6 +58,10 @@ const skillsData: Skill[] = [
   { name: 'SASS/SCSS', level: 85, category: 'frontend', icon: SiSass, color: 'text-pink-500' },
   
   // Cloud & Infrastructure
+  { name: 'Microsoft Fabric', level: 85, category: 'tools', icon: FaMicrosoft, color: 'text-sky-500' },
+  { name: 'OneLake', level: 80, category: 'tools', icon: FaCloud, color: 'text-sky-600' },
+  { name: 'Apache Spark', level: 80, category: 'tools', icon: SiApachespark, color: 'text-orange-500' },
+  { name: 'Delta Lake', level: 75, category: 'tools', icon: FaWarehouse, color: 'text-cyan-600' },
   { name: 'AWS Services', level: 80, category: 'tools', icon: SiAmazon, color: 'text-orange-500' },
   { name: 'AWS Lambda', level: 75, category: 'tools', icon: SiAmazon, color: 'text-orange-500' },
   { name: 'AWS S3', level: 80, category: 'tools', icon: SiAmazon, color: 'text-orange-500' },

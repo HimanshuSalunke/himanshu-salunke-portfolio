@@ -10,6 +10,7 @@ interface ThemeContextType {
 
 const ThemeContext = createContext<ThemeContextType | undefined>(undefined)
 
+// eslint-disable-next-line react-refresh/only-export-components -- theme hook co-located with provider
 export const useTheme = () => {
   const context = useContext(ThemeContext)
   if (context === undefined) {

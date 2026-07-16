@@ -64,6 +64,16 @@ export default defineConfig({
         target: 'http://localhost:5000',
         changeOrigin: true,
         secure: false,
+        // Keep Neura SSE streams unbuffered through the Vite proxy
+        configure: (proxy) => {
+          proxy.on('proxyRes', (proxyRes, _req, res) => {
+            const contentType = proxyRes.headers['content-type'] || ''
+            if (String(contentType).includes('text/event-stream')) {
+              res.setHeader('Cache-Control', 'no-cache, no-transform')
+              res.setHeader('X-Accel-Buffering', 'no')
+            }
+          })
+        },
       },
     },
   },

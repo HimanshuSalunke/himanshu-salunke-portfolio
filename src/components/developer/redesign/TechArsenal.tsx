@@ -1,18 +1,17 @@
-import React, { useMemo } from 'react'
+import React from 'react'
 import { motion } from 'framer-motion'
 import {
-    SiReact, SiTypescript, SiJavascript, SiPython, SiFastapi, SiNodedotjs, SiFlask,
+    SiReact, SiPython, SiFastapi, SiNodedotjs, SiFlask,
     SiTensorflow, SiPytorch, SiOpencv, SiScikitlearn, SiPandas, SiNumpy, SiJupyter,
     SiPostgresql, SiMongodb, SiRedis, SiDocker, SiKubernetes, SiAmazon, SiGooglecloud, SiGit, SiGithub,
-    SiNextdotjs, SiSass, SiVercel, SiApacheairflow, SiPlotly, SiTableau, SiPowers,
+    SiNextdotjs, SiSass, SiVercel, SiApacheairflow, SiApachespark, SiPlotly, SiTableau, SiPowers,
     SiHtml5, SiCss3, SiC, SiCplusplus, SiSlack, SiJira, SiLinux, SiKeras,
     SiStreamlit, SiHuggingface, SiNvidia, SiMui, SiThreedotjs, SiOnnx
 } from 'react-icons/si'
 import {
-    FaBrain, FaRobot, FaChartLine, FaCogs, FaServer, FaChartBar, FaJava, FaDatabase, FaNetworkWired,
-    FaBolt, FaGoogle, FaRocket, FaCode
+    FaBrain, FaRobot, FaChartLine, FaCogs, FaChartBar, FaJava, FaDatabase, FaNetworkWired,
+    FaBolt, FaGoogle, FaRocket, FaMicrosoft, FaWarehouse, FaCloud
 } from 'react-icons/fa'
-import { useGitHubStats } from '../../../hooks/useGitHubStats'
 
 interface Skill {
     name: string
@@ -38,7 +37,7 @@ const skillsData: Skill[] = [
     { name: 'Seaborn', level: 80, category: 'ai-ml', icon: FaChartBar, color: 'text-purple-500' },
     { name: 'Jupyter', level: 90, category: 'ai-ml', icon: SiJupyter, color: 'text-orange-500' },
     { name: 'Keras', level: 80, category: 'ai-ml', icon: SiKeras, color: 'text-red-500' },
-    { name: 'YOLO', level: 75, category: 'ai-ml', icon: FaRobot, color: 'text-purple-600' },
+    { name: 'YOLO26', level: 75, category: 'ai-ml', icon: FaRobot, color: 'text-purple-600' },
     { name: 'LangChain', level: 75, category: 'ai-ml', icon: FaRobot, color: 'text-purple-600' },
     { name: 'OpenAI API', level: 80, category: 'ai-ml', icon: FaBrain, color: 'text-purple-500' },
 
@@ -62,6 +61,10 @@ const skillsData: Skill[] = [
     { name: 'SASS/SCSS', level: 85, category: 'frontend', icon: SiSass, color: 'text-pink-500' },
 
     // Cloud & Infrastructure
+    { name: 'Microsoft Fabric', level: 85, category: 'tools', icon: FaMicrosoft, color: 'text-sky-500' },
+    { name: 'OneLake', level: 80, category: 'tools', icon: FaCloud, color: 'text-sky-600' },
+    { name: 'Apache Spark', level: 80, category: 'tools', icon: SiApachespark, color: 'text-orange-500' },
+    { name: 'Delta Lake', level: 75, category: 'tools', icon: FaWarehouse, color: 'text-cyan-600' },
     { name: 'AWS Services', level: 80, category: 'tools', icon: SiAmazon, color: 'text-orange-500' },
     { name: 'AWS Lambda', level: 75, category: 'tools', icon: SiAmazon, color: 'text-orange-500' },
     { name: 'Google Cloud AI', level: 75, category: 'tools', icon: SiGooglecloud, color: 'text-blue-600' },
@@ -95,14 +98,6 @@ const skillsData: Skill[] = [
     { name: 'Networking', level: 75, category: 'tools', icon: FaNetworkWired, color: 'text-green-600' }
 ]
 
-const categoryColors = {
-    frontend: 'from-blue-500 to-blue-600',
-    backend: 'from-green-500 to-green-600',
-    'ai-ml': 'from-purple-500 to-purple-600',
-    tools: 'from-orange-500 to-orange-600',
-    databases: 'from-red-500 to-red-600'
-}
-
 const categoryLabels = {
     'ai-ml': 'AI / Neural Nets',
     backend: 'Backend & Systems',
@@ -115,24 +110,7 @@ const categoryLabels = {
 import { FloatingIcons } from '../../ui/FloatingIcons'
 
 export const TechArsenal: React.FC = () => {
-    const githubStats = useGitHubStats('HimanshuSalunke')
     const categories = Object.keys(categoryLabels) as Array<keyof typeof categoryLabels>
-
-    // Language mapping (preserved from old TechStack.tsx)
-    const languageIconMap: { [key: string]: React.ComponentType<{ size?: number; className?: string }> } = {
-        'Python': SiPython,
-        'Java': FaJava, 'C': SiC, 'C++': SiCplusplus, 'React': SiReact,
-        'HTML': SiHtml5, 'CSS': SiCss3, 'Shell': SiGit, 'Dockerfile': SiDocker,
-        'SQL': FaDatabase, 'Jupyter Notebook': SiJupyter, 'Markdown': SiGithub
-    }
-
-    const languageColorMap: { [key: string]: string } = {
-        'Python': 'text-yellow-500',
-        'Java': 'text-red-500', 'C': 'text-blue-600', 'C++': 'text-blue-500', 'React': 'text-blue-500',
-        'HTML': 'text-orange-500', 'CSS': 'text-blue-500', 'Shell': 'text-green-500',
-        'Dockerfile': 'text-blue-500', 'SQL': 'text-blue-500', 'Jupyter Notebook': 'text-orange-500',
-        'Markdown': 'text-gray-500'
-    }
 
     return (
         <section className="relative min-h-screen py-20 px-4 bg-neutral-50 dark:bg-[#030014] overflow-hidden transition-colors duration-300">

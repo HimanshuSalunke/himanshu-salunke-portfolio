@@ -1,34 +1,14 @@
 import React from 'react'
 import { motion } from 'framer-motion'
+import liveContent from '../../data/site/live-content.json'
 
-const capabilities = [
-  {
-    type: 'AI_CORE',
-    title: 'Artificial Intelligence',
-    subtitle: 'Neural Networks & LLMs',
-    description: 'Deploying state-of-the-art Large Language Models and custom neural architectures to solve complex reasoning tasks.',
-    specs: [
-      'RAG (Retrieval Augmented Generation)',
-      'Fine-tuning (Llama, Mistral)',
-      'Agentic Workflows (LangGraph)',
-      'Computer Vision Pipelines'
-    ],
-    color: 'blue'
-  },
-  {
-    type: 'DATA_ENGINE',
-    title: 'Data Science',
-    subtitle: 'Analytics & Pipelines',
-    description: 'Transforming chaotic raw data into structured, actionable intelligence through automated ETL and visualization.',
-    specs: [
-      'Automated ETL Pipelines',
-      'Predictive Modeling',
-      'Real-time Dashboards',
-      'Statistical Analysis'
-    ],
-    color: 'purple'
-  }
-]
+const capabilityColors = ['blue', 'purple'] as const
+
+const capabilities = liveContent.services.capabilities.map((cap, index) => ({
+  ...cap,
+  type: index === 0 ? 'AI_CORE' : 'DATA_ENGINE',
+  color: capabilityColors[index] || 'blue',
+}))
 
 export const WhatICanBuild: React.FC = () => {
   return (

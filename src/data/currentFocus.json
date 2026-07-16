@@ -1,22 +1,22 @@
 [
   {
     "id": "gate-preparation",
-    "title": "GATE 2026 Preparation",
-    "description": "Intensive preparation for Graduate Aptitude Test in Engineering 2026, focusing on Data Science and Artificial Intelligence paper.",
+    "title": "GATE 2027 Preparation",
+    "description": "Intensive preparation for Graduate Aptitude Test in Engineering 2027, focusing on Data Science and Artificial Intelligence paper.",
     "icon": "book",
     "status": "active"
   },
   {
     "id": "computer-vision",
     "title": "Computer Vision Projects",
-    "description": "Developing real-time object detection and image processing solutions using YOLO and deep learning frameworks.",
+    "description": "Developing real-time object detection and image processing solutions using YOLO26 and deep learning frameworks.",
     "icon": "eye",
     "status": "ongoing"
   },
   {
     "id": "cloud-data-engineering",
     "title": "Cloud Data Engineering",
-    "description": "Building scalable data pipelines and analytics solutions using AWS services and modern data engineering practices.",
+    "description": "Building scalable data pipelines and analytics with Microsoft Fabric, OneLake, Apache Spark, and AWS data engineering services.",
     "icon": "cloud",
     "status": "learning"
   },

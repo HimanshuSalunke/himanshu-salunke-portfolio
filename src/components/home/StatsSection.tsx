@@ -3,6 +3,8 @@ import { motion } from 'framer-motion'
 import { StatsCounter } from '../ui/StatsCounter'
 import { useUnifiedStats } from '../../hooks/useUnifiedStats'
 
+type UnifiedStatsData = ReturnType<typeof useUnifiedStats>
+
 interface Stat {
   value: number
   suffix: string
@@ -12,7 +14,7 @@ interface Stat {
 }
 
 // Unique impact metrics for homepage only
-const getStats = (unifiedStats: any): Stat[] => [
+const getStats = (unifiedStats: UnifiedStatsData): Stat[] => [
   {
     value: unifiedStats.isLoading ? 0 : unifiedStats.projectsCompleted,
     suffix: '+',

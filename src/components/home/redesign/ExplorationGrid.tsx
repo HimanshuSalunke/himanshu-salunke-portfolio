@@ -1,152 +1,235 @@
 import React from 'react'
 import { Link } from 'react-router-dom'
-import { motion } from 'framer-motion'
-import { ArrowRight, Code, User, BookOpen, Briefcase, Layers } from 'lucide-react'
+import { motion, useReducedMotion } from 'framer-motion'
+import { ArrowRight, BookOpen, Briefcase, Code, Layers, User } from 'lucide-react'
+import {
+  MobileNeuralSpine,
+  NavigationLayerGraph,
+  NeuralMeshBackground,
+  neuralBodyClass,
+  neuralCardClass,
+  neuralHeadingClass,
+  SectionEdgeAccents,
+  SectionGridOverlay,
+} from './neural/NeuralPrimitives'
+
+type RouteAccent = 'green' | 'purple' | 'pink' | 'orange'
+
+const accentStyles: Record<
+  RouteAccent,
+  { border: string; iconColor: string; hoverGlow: string; arrow: string; iconBg: string }
+> = {
+  green: {
+    border: 'border-emerald-500/25 shadow-md shadow-emerald-500/5 hover:border-emerald-500/45',
+    iconColor: 'text-green-600 dark:text-green-400',
+    iconBg: 'bg-green-500/10',
+    hoverGlow: 'from-emerald-500/15',
+    arrow: 'text-green-500',
+  },
+  purple: {
+    border: 'border-purple-500/25 shadow-md shadow-purple-500/5 hover:border-purple-500/45',
+    iconColor: 'text-purple-600 dark:text-purple-400',
+    iconBg: 'bg-purple-500/10',
+    hoverGlow: 'from-purple-500/15',
+    arrow: 'text-purple-500',
+  },
+  pink: {
+    border: 'border-pink-500/25 shadow-md shadow-pink-500/5 hover:border-pink-500/45',
+    iconColor: 'text-pink-600 dark:text-pink-400',
+    iconBg: 'bg-pink-500/10',
+    hoverGlow: 'from-pink-500/15',
+    arrow: 'text-pink-500',
+  },
+  orange: {
+    border: 'border-orange-500/25 shadow-md shadow-orange-500/5 hover:border-orange-500/45',
+    iconColor: 'text-orange-600 dark:text-orange-400',
+    iconBg: 'bg-orange-500/10',
+    hoverGlow: 'from-orange-500/15',
+    arrow: 'text-orange-500',
+  },
+}
 
 interface GridItemProps {
-    to: string
-    title: string
-    subtitle: string
-    icon: React.ReactNode
-    className?: string
-    color: string
+  to: string
+  title: string
+  subtitle: string
+  icon: React.ReactNode
+  accent: RouteAccent
+  className?: string
+  delay?: number
 }
 
-const colorStyles = {
-    green: {
-        bg: 'bg-green-500',
-        text: 'text-green-600 dark:text-green-400',
-        arrow: 'text-green-500',
-        iconBg: 'bg-green-500/10'
-    },
-    purple: {
-        bg: 'bg-purple-500',
-        text: 'text-purple-600 dark:text-purple-400',
-        arrow: 'text-purple-500',
-        iconBg: 'bg-purple-500/10'
-    },
-    pink: {
-        bg: 'bg-pink-500',
-        text: 'text-pink-600 dark:text-pink-400',
-        arrow: 'text-pink-500',
-        iconBg: 'bg-pink-500/10'
-    },
-    orange: {
-        bg: 'bg-orange-500',
-        text: 'text-orange-600 dark:text-orange-400',
-        arrow: 'text-orange-500',
-        iconBg: 'bg-orange-500/10'
-    }
+const GridItem: React.FC<GridItemProps> = ({
+  to,
+  title,
+  subtitle,
+  icon,
+  accent,
+  className = '',
+  delay = 0,
+}) => {
+  const prefersReducedMotion = useReducedMotion()
+  const styles = accentStyles[accent]
+
+  return (
+    <motion.div
+      initial={prefersReducedMotion ? false : { opacity: 0, y: 16 }}
+      whileInView={{ opacity: 1, y: 0 }}
+      transition={{ duration: 0.45, delay }}
+      viewport={{ once: true, margin: '-20px' }}
+      whileHover={prefersReducedMotion ? undefined : { y: -4 }}
+      className={`h-full ${className}`}
+    >
+      <Link
+        to={to}
+        className={`group relative flex h-full min-h-[148px] flex-col justify-between overflow-hidden p-4 transition-colors duration-300 sm:p-6 md:min-h-0 ${neuralCardClass} ${styles.border}`}
+      >
+        <div
+          className={`pointer-events-none absolute -right-4 -top-4 h-20 w-20 rounded-full bg-gradient-to-br ${styles.hoverGlow} to-transparent opacity-0 blur-xl transition-opacity duration-500 group-hover:opacity-100`}
+        />
+
+        <div
+          className={`relative flex h-12 w-12 items-center justify-center rounded-2xl transition-transform duration-500 group-hover:scale-110 group-hover:rotate-3 ${styles.iconBg} ${styles.iconColor}`}
+        >
+          {icon}
+        </div>
+
+        <div className="relative">
+          <h3 className="mb-1 break-words text-lg font-bold text-neutral-900 transition-transform duration-300 group-hover:translate-x-1 dark:text-white sm:text-xl">
+            {title}
+          </h3>
+          <p className="text-sm font-medium leading-relaxed text-neutral-700 dark:text-neutral-400">
+            {subtitle}
+          </p>
+        </div>
+
+        <ArrowRight
+          className={`absolute right-5 top-5 h-5 w-5 opacity-0 transition-all duration-300 group-hover:opacity-100 lg:opacity-0 ${styles.arrow}`}
+        />
+      </Link>
+    </motion.div>
+  )
 }
 
-const GridItem: React.FC<GridItemProps> = ({ to, title, subtitle, icon, className, color }) => {
-    const styles = colorStyles[color as keyof typeof colorStyles] || colorStyles.green
+const ProjectsHub: React.FC = () => {
+  const prefersReducedMotion = useReducedMotion()
 
-    return (
-        <Link to={to} className={`group relative overflow-hidden rounded-3xl bg-white dark:bg-neutral-900 border border-neutral-200 dark:border-neutral-800 shadow-sm hover:shadow-xl transition-all duration-500 ${className}`}>
-            <div className={`absolute inset-0 opacity-0 group-hover:opacity-10 transition-opacity duration-500 ${styles.bg}`} />
-            <div className="absolute top-0 right-0 p-6 opacity-100 lg:opacity-0 lg:group-hover:opacity-100 transition-all duration-500 -translate-y-2 group-hover:translate-y-0">
-                <ArrowRight className={`w-6 h-6 ${styles.arrow}`} />
-            </div>
+  return (
+    <motion.div
+      initial={prefersReducedMotion ? false : { opacity: 0, y: 16 }}
+      whileInView={{ opacity: 1, y: 0 }}
+      transition={{ duration: 0.5 }}
+      viewport={{ once: true, margin: '-20px' }}
+      whileHover={prefersReducedMotion ? undefined : { scale: 1.01 }}
+      className="h-full md:col-span-2 md:row-span-2"
+    >
+      <Link
+        to="/work"
+        className="group relative flex h-full min-h-[220px] flex-col justify-end overflow-hidden rounded-2xl border border-blue-500/35 bg-gradient-to-br from-neutral-900 via-[#0a0a1a] to-neutral-950 shadow-2xl shadow-blue-500/15 dark:border-blue-500/45 dark:from-[#030014] dark:via-[#050520] dark:to-[#030014] sm:min-h-[240px] md:min-h-0"
+      >
+        <NeuralMeshBackground
+          idPrefix="hub-mesh"
+          className="pointer-events-none absolute inset-0 h-full w-full opacity-40 dark:opacity-50"
+        />
+        <div className="pointer-events-none absolute inset-0 grid-pattern opacity-[0.12]" />
+        <div className="pointer-events-none absolute inset-0 bg-gradient-to-br from-blue-600/25 via-purple-600/15 to-transparent transition-colors duration-500 group-hover:from-blue-600/35" />
 
-            <div className="relative h-full p-6 flex flex-col justify-between">
-                <div className={`w-12 h-12 rounded-2xl flex items-center justify-center ${styles.iconBg} ${styles.text} mb-4 transition-transform duration-500 group-hover:scale-110 group-hover:rotate-3`}>
-                    {icon}
-                </div>
-
-                <div>
-                    <h3 className="text-xl font-bold text-neutral-900 dark:text-white mb-1 group-hover:translate-x-1 transition-transform duration-300">
-                        {title}
-                    </h3>
-                    <p className="text-sm text-neutral-500 dark:text-neutral-400 leading-relaxed font-medium">
-                        {subtitle}
-                    </p>
-                </div>
-            </div>
-        </Link>
-    )
+        <div className="relative z-10 flex flex-col justify-end p-5 sm:p-8 md:p-10">
+          <div className="mb-4 flex h-14 w-14 items-center justify-center rounded-2xl bg-blue-600 text-white shadow-lg shadow-blue-500/30 transition-transform duration-500 group-hover:scale-110 sm:mb-6 sm:h-16 sm:w-16">
+            <Layers className="h-7 w-7 sm:h-8 sm:w-8" />
+          </div>
+          <h3 className="mb-2 break-words text-2xl font-bold text-white sm:mb-3 sm:text-3xl md:text-4xl">Explore Projects</h3>
+          <p className="max-w-md text-sm leading-relaxed text-blue-100 sm:text-base md:text-lg">
+            Discover my portfolio of 8+ innovative AI/ML projects, data science solutions, and
+            full-stack apps.
+          </p>
+          <div className="absolute right-6 top-6 flex h-12 w-12 items-center justify-center rounded-full border border-white/20 opacity-100 transition-all duration-500 lg:opacity-0 lg:group-hover:opacity-100 sm:right-8 sm:top-8">
+            <ArrowRight className="h-6 w-6 text-white" />
+          </div>
+        </div>
+      </Link>
+    </motion.div>
+  )
 }
 
 export const ExplorationGrid: React.FC = () => {
-    return (
-        <section className="py-24 bg-neutral-50 dark:bg-neutral-950">
-            <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-                <motion.div
-                    initial={{ opacity: 0, y: 20 }}
-                    whileInView={{ opacity: 1, y: 0 }}
-                    viewport={{ once: true }}
-                    className="text-center mb-16"
-                >
-                    <h2 className="text-3xl md:text-5xl font-bold text-neutral-900 dark:text-white mb-6">
-                        Explore My World
-                    </h2>
-                    <p className="text-lg text-neutral-600 dark:text-neutral-400 max-w-2xl mx-auto">
-                        Dive into my diverse ecosystem of projects, content, and professional services.
-                    </p>
-                </motion.div>
+  const prefersReducedMotion = useReducedMotion()
 
-                <div className="grid grid-cols-1 md:grid-cols-3 gap-6 auto-rows-auto md:auto-rows-[240px]">
-                    {/* Work - Primary (Large) */}
-                    <Link to="/work" className="group relative md:col-span-2 md:row-span-2 min-h-[280px] rounded-3xl overflow-hidden bg-neutral-900 dark:bg-black border border-neutral-800 shadow-2xl">
-                        <div className="absolute inset-0 bg-blue-600/20 group-hover:bg-blue-600/30 transition-colors duration-500" />
-                        <div className="absolute inset-0 grid-pattern opacity-20" />
+  return (
+    <section
+      aria-label="Explore"
+      className="relative overflow-x-hidden bg-neutral-50 dark:bg-[#030014]"
+    >
+      <NeuralMeshBackground idPrefix="explore-mesh" />
+      <SectionEdgeAccents showIcons />
+      <SectionGridOverlay />
+      <div className="pointer-events-none absolute inset-x-0 top-0 h-px bg-gradient-to-r from-transparent via-cyan-500/35 to-transparent" />
 
-                        <div className="absolute inset-0 flex flex-col justify-end p-8 sm:p-12">
-                            <div className="w-16 h-16 rounded-2xl bg-blue-600 flex items-center justify-center text-white mb-6 shadow-lg shadow-blue-500/30 group-hover:scale-110 transition-transform duration-500">
-                                <Layers className="w-8 h-8" />
-                            </div>
-                            <h3 className="text-3xl sm:text-4xl font-bold text-white mb-3">Explore Projects</h3>
-                            <p className="text-blue-100 text-lg max-w-md">
-                                Discover my portfolio of 8+ innovative AI/ML projects, data science solutions, and full-stack apps.
-                            </p>
+      <div className="relative z-10 mx-auto max-w-7xl px-4 py-14 sm:px-6 sm:py-20 md:py-24 lg:px-8">
+        <motion.div
+          initial={prefersReducedMotion ? false : { opacity: 0, y: 16 }}
+          whileInView={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.5 }}
+          viewport={{ once: true }}
+          className="relative z-10 mb-10 text-center sm:mb-14 md:mb-16"
+        >
+          <h2 className={`mb-4 ${neuralHeadingClass}`}>
+            Explore My World
+          </h2>
+          <p className={`mx-auto max-w-2xl ${neuralBodyClass}`}>
+            Dive into my diverse ecosystem of projects, content, and professional services.
+          </p>
+        </motion.div>
 
-                            <div className="absolute top-8 right-8 w-12 h-12 rounded-full border border-white/20 flex items-center justify-center opacity-100 lg:opacity-0 lg:group-hover:opacity-100 transition-all duration-500">
-                                <ArrowRight className="w-6 h-6 text-white" />
-                            </div>
-                        </div>
-                    </Link>
+        <div className="relative">
+          <MobileNeuralSpine idPrefix="explore" />
+          <NavigationLayerGraph idPrefix="explore-nav" animate={!prefersReducedMotion} />
 
-                    {/* About */}
-                    <GridItem
-                        to="/about"
-                        title="My Story"
-                        subtitle="Journey, Education & Goals"
-                        icon={<User className="w-6 h-6" />}
-                        color="green"
-                        className="md:row-span-1"
-                    />
+          <div className="relative z-10 grid auto-rows-auto grid-cols-1 gap-3 pl-1 sm:gap-4 sm:pl-0 md:auto-rows-[172px] md:grid-cols-3 md:gap-5 lg:gap-6">
+            <ProjectsHub />
 
-                    {/* Services */}
-                    <GridItem
-                        to="/services"
-                        title="Freelance Services"
-                        subtitle="Hire me for your next big project"
-                        icon={<Briefcase className="w-6 h-6" />}
-                        color="purple"
-                        className="md:row-span-1"
-                    />
+            <GridItem
+              to="/about"
+              title="My Story"
+              subtitle="Journey, Education & Goals"
+              icon={<User className="h-6 w-6" />}
+              accent="green"
+              className="md:row-span-1"
+              delay={0.1}
+            />
 
-                    {/* Articles */}
-                    <GridItem
-                        to="/articles"
-                        title="Articles"
-                        subtitle="Tech insights & tutorials"
-                        icon={<BookOpen className="w-6 h-6" />}
-                        color="pink"
-                        className="md:row-span-1"
-                    />
+            <GridItem
+              to="/services"
+              title="Freelance Services"
+              subtitle="Hire me for your next big project"
+              icon={<Briefcase className="h-6 w-6" />}
+              accent="purple"
+              className="md:row-span-1"
+              delay={0.16}
+            />
 
-                    {/* Developer */}
-                    <GridItem
-                        to="/developer"
-                        title="Developer Stats"
-                        subtitle="Tech stack & GitHub Activity"
-                        icon={<Code className="w-6 h-6" />}
-                        color="orange"
-                        className="md:row-span-1"
-                    />
-                </div>
-            </div>
-        </section>
-    )
+            <GridItem
+              to="/articles"
+              title="Articles"
+              subtitle="Tech insights & tutorials"
+              icon={<BookOpen className="h-6 w-6" />}
+              accent="pink"
+              className="md:row-span-1"
+              delay={0.22}
+            />
+
+            <GridItem
+              to="/developer"
+              title="Developer Stats"
+              subtitle="Tech stack & GitHub Activity"
+              icon={<Code className="h-6 w-6" />}
+              accent="orange"
+              className="md:row-span-1"
+              delay={0.28}
+            />
+          </div>
+        </div>
+      </div>
+    </section>
+  )
 }

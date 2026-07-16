@@ -1,0 +1,502 @@
+import React, { useCallback, useEffect, useRef, useState } from 'react'
+import { motion, useReducedMotion } from 'framer-motion'
+import { Volume2, VolumeX } from 'lucide-react'
+
+type Pose = 'idle' | 'wave-right' | 'wave-both' | 'bounce' | 'point-down' | 'celebrate'
+
+type ArmAngles = {
+  leftUpper: number
+  leftFore: number
+  rightUpper: number
+  rightFore: number
+}
+
+const WELCOME_SCRIPT: { text: string; pose: Pose }[] = [
+  { text: 'Hey there!', pose: 'wave-right' },
+  { text: "Welcome to Himanshu's portfolio!", pose: 'wave-both' },
+  { text: "I'm Neura, your cute cartoon guide!", pose: 'bounce' },
+  { text: 'Scroll down and explore the magic!', pose: 'point-down' },
+]
+
+const STORAGE_KEY = 'neura-welcomed-v2'
+
+const DEFAULT_ARMS: ArmAngles = { leftUpper: 0, leftFore: 0, rightUpper: 0, rightFore: 0 }
+
+function pickCuteVoice(): SpeechSynthesisVoice | null {
+  const voices = window.speechSynthesis.getVoices()
+  const matchers = [
+    (v: SpeechSynthesisVoice) =>
+      /samantha|karen|moira|tessa|fiona|google uk english female|google us english.*female|zira|michelle|hazel/i.test(
+        v.name,
+      ),
+    (v: SpeechSynthesisVoice) => v.lang.startsWith('en') && !v.localService,
+    (v: SpeechSynthesisVoice) => v.lang.startsWith('en'),
+  ]
+  for (const match of matchers) {
+    const found = voices.find(match)
+    if (found) return found
+  }
+  return voices[0] ?? null
+}
+
+function speakLine(text: string, voice: SpeechSynthesisVoice | null): Promise<void> {
+  return new Promise((resolve, reject) => {
+    const utterance = new SpeechSynthesisUtterance(text)
+    utterance.rate = 0.94
+    utterance.pitch = 1.48
+    utterance.volume = 1
+    utterance.lang = 'en-US'
+    if (voice) utterance.voice = voice
+
+    utterance.onstart = () => window.speechSynthesis.resume()
+    utterance.onend = () => resolve()
+    utterance.onerror = () => reject(new Error('speech error'))
+
+    window.speechSynthesis.speak(utterance)
+  })
+}
+
+function computeArmAngles(pose: Pose, isSpeaking: boolean, t: number): ArmAngles {
+  const wave = Math.sin(t * 11)
+  const waveAlt = Math.sin(t * 11 + Math.PI)
+  const slow = Math.sin(t * 2.4)
+
+  switch (pose) {
+    case 'wave-right':
+      return {
+        leftUpper: 12 + Math.sin(t * 4) * 8,
+        leftFore: Math.sin(t * 5) * 10,
+        rightUpper: -138 + wave * 32,
+        rightFore: 28 + wave * 42,
+      }
+    case 'wave-both':
+      return {
+        leftUpper: -128 + wave * 34,
+        leftFore: 32 + wave * 30,
+        rightUpper: 128 + waveAlt * 34,
+        rightFore: -32 + waveAlt * 30,
+      }
+    case 'bounce':
+      return {
+        leftUpper: -95 + Math.sin(t * 9) * 40,
+        leftFore: 18 + Math.sin(t * 9 + 0.6) * 28,
+        rightUpper: 95 + Math.sin(t * 9 + Math.PI) * 40,
+        rightFore: -18 + Math.sin(t * 9 + Math.PI + 0.6) * 28,
+      }
+    case 'point-down':
+      return {
+        leftUpper: 28 + slow * 5,
+        leftFore: 18,
+        rightUpper: 72 + slow * 3,
+        rightFore: 58,
+      }
+    case 'celebrate':
+      return {
+        leftUpper: -148 + wave * 18,
+        leftFore: 35 + wave * 22,
+        rightUpper: 148 + waveAlt * 18,
+        rightFore: -35 + waveAlt * 22,
+      }
+    default:
+      if (isSpeaking) {
+        return {
+          leftUpper: Math.sin(t * 6) * 18,
+          leftFore: Math.sin(t * 7 + 0.4) * 22,
+          rightUpper: Math.sin(t * 6 + Math.PI) * 18,
+          rightFore: Math.sin(t * 7 + Math.PI + 0.4) * 22,
+        }
+      }
+      return {
+        leftUpper: Math.sin(t * 1.4) * 10,
+        leftFore: Math.sin(t * 1.8) * 8,
+        rightUpper: Math.sin(t * 1.4 + Math.PI) * 10,
+        rightFore: Math.sin(t * 1.8 + Math.PI) * 8,
+      }
+  }
+}
+
+function useSyncedArmAnimation(
+  pose: Pose,
+  isSpeaking: boolean,
+  prefersReducedMotion: boolean | null,
+): ArmAngles {
+  const [angles, setAngles] = useState<ArmAngles>(DEFAULT_ARMS)
+
+  useEffect(() => {
+    if (prefersReducedMotion) {
+      setAngles(DEFAULT_ARMS)
+      return
+    }
+
+    const start = performance.now()
+    let frame = 0
+
+    const loop = (now: number) => {
+      const t = (now - start) / 1000
+      setAngles(computeArmAngles(pose, isSpeaking, t))
+      frame = requestAnimationFrame(loop)
+    }
+
+    frame = requestAnimationFrame(loop)
+    return () => cancelAnimationFrame(frame)
+  }, [pose, isSpeaking, prefersReducedMotion])
+
+  return angles
+}
+
+interface CartoonArmProps {
+  side: 'left' | 'right'
+  shoulderX: number
+  shoulderY: number
+  upper: number
+  fore: number
+}
+
+const CartoonArm: React.FC<CartoonArmProps> = ({ side, shoulderX, shoulderY, upper, fore }) => {
+  const isLeft = side === 'left'
+  const upperLen = 42
+  const foreLen = 36
+
+  return (
+    <g transform={`translate(${shoulderX} ${shoulderY}) rotate(${upper})`}>
+      <rect
+        x={isLeft ? -upperLen : 0}
+        y={-8}
+        width={upperLen}
+        height={16}
+        rx={8}
+        fill="url(#neura-body)"
+      />
+      <g transform={`translate(${isLeft ? -upperLen : upperLen} 0) rotate(${fore})`}>
+        <rect
+          x={isLeft ? -foreLen : 0}
+          y={-7}
+          width={foreLen}
+          height={14}
+          rx={7}
+          fill="url(#neura-body)"
+        />
+        <circle cx={isLeft ? -foreLen : foreLen} cy={0} r={13} fill="url(#neura-face)" />
+        <circle
+          cx={isLeft ? -foreLen + 4 : foreLen - 4}
+          cy={-3}
+          r={3}
+          fill="#f472b6"
+          opacity={0.55}
+        />
+      </g>
+    </g>
+  )
+}
+
+export const CartoonLivingEntity: React.FC = () => {
+  const prefersReducedMotion = useReducedMotion()
+  const [pose, setPose] = useState<Pose>('idle')
+  const [isSpeaking, setIsSpeaking] = useState(false)
+  const [mouthOpen, setMouthOpen] = useState(false)
+  const [subtitle, setSubtitle] = useState('')
+  const [muted, setMuted] = useState(false)
+  const [blink, setBlink] = useState(false)
+  const [autoBlocked, setAutoBlocked] = useState(false)
+  const mouthTimerRef = useRef<number | null>(null)
+  const playingRef = useRef(false)
+  const voiceRef = useRef<SpeechSynthesisVoice | null>(null)
+
+  const arms = useSyncedArmAnimation(pose, isSpeaking, prefersReducedMotion)
+
+  const stopMouth = useCallback(() => {
+    if (mouthTimerRef.current !== null) {
+      window.clearInterval(mouthTimerRef.current)
+      mouthTimerRef.current = null
+    }
+    setMouthOpen(false)
+  }, [])
+
+  const startMouth = useCallback(() => {
+    stopMouth()
+    mouthTimerRef.current = window.setInterval(() => {
+      setMouthOpen((open) => !open)
+    }, 85)
+  }, [stopMouth])
+
+  const playWelcome = useCallback(async () => {
+    if (playingRef.current || muted) return
+    if (!('speechSynthesis' in window)) return
+
+    playingRef.current = true
+    setIsSpeaking(true)
+    setAutoBlocked(false)
+    window.speechSynthesis.cancel()
+
+    const voice = voiceRef.current ?? pickCuteVoice()
+    voiceRef.current = voice
+
+    try {
+      for (const line of WELCOME_SCRIPT) {
+        if (muted) break
+        setPose(line.pose)
+        setSubtitle(line.text)
+        startMouth()
+        await speakLine(line.text, voice)
+        stopMouth()
+        await new Promise((r) => window.setTimeout(r, 160))
+      }
+      setPose('celebrate')
+      await new Promise((r) => window.setTimeout(r, 900))
+    } catch {
+      setAutoBlocked(true)
+      setSubtitle('Tap Neura if you did not hear the welcome!')
+    } finally {
+      setIsSpeaking(false)
+      stopMouth()
+      setPose('idle')
+      playingRef.current = false
+      window.setTimeout(() => setSubtitle(''), 2000)
+      localStorage.setItem(STORAGE_KEY, '1')
+    }
+  }, [muted, startMouth, stopMouth])
+
+  const tryAutoWelcome = useCallback(() => {
+    if (prefersReducedMotion || muted || playingRef.current) return
+    if (localStorage.getItem(STORAGE_KEY)) return
+    playWelcome()
+  }, [prefersReducedMotion, muted, playWelcome])
+
+  useEffect(() => {
+    const syncVoices = () => {
+      voiceRef.current = pickCuteVoice()
+    }
+    syncVoices()
+    window.speechSynthesis.addEventListener('voiceschanged', syncVoices)
+    return () => window.speechSynthesis.removeEventListener('voiceschanged', syncVoices)
+  }, [])
+
+  useEffect(() => {
+    if (prefersReducedMotion || muted) return
+
+    const blinkLoop = window.setInterval(() => {
+      setBlink(true)
+      window.setTimeout(() => setBlink(false), 130)
+    }, 2800)
+
+    return () => window.clearInterval(blinkLoop)
+  }, [prefersReducedMotion, muted])
+
+  useEffect(() => {
+    if (prefersReducedMotion || muted) return
+
+    let timer = window.setTimeout(tryAutoWelcome, 1200)
+
+    if (window.speechSynthesis.getVoices().length === 0) {
+      window.clearTimeout(timer)
+      const onReady = () => {
+        window.speechSynthesis.removeEventListener('voiceschanged', onReady)
+        timer = window.setTimeout(tryAutoWelcome, 700)
+      }
+      window.speechSynthesis.addEventListener('voiceschanged', onReady)
+    }
+
+    const fallbackUnlock = () => {
+      if (!localStorage.getItem(STORAGE_KEY) && !playingRef.current) {
+        tryAutoWelcome()
+      }
+    }
+    window.addEventListener('pointerdown', fallbackUnlock, { once: true })
+
+    return () => {
+      window.clearTimeout(timer)
+      window.removeEventListener('pointerdown', fallbackUnlock)
+    }
+  }, [prefersReducedMotion, muted, tryAutoWelcome])
+
+  useEffect(() => {
+    return () => {
+      stopMouth()
+      window.speechSynthesis.cancel()
+    }
+  }, [stopMouth])
+
+  const handleTap = () => {
+    if (muted) setMuted(false)
+    playWelcome()
+  }
+
+  const toggleMute = (event: React.MouseEvent) => {
+    event.stopPropagation()
+    if (!muted) {
+      window.speechSynthesis.cancel()
+      playingRef.current = false
+      setIsSpeaking(false)
+      stopMouth()
+      setPose('idle')
+      setSubtitle('')
+    }
+    setMuted((m) => !m)
+  }
+
+  const bodyY =
+    pose === 'bounce'
+      ? Math.sin(performance.now() / 180) * 10
+      : pose === 'celebrate'
+        ? Math.sin(performance.now() / 220) * 8
+        : 0
+
+  return (
+    <motion.div
+      className="pointer-events-auto absolute z-20 top-1/2 hidden w-[clamp(130px,14vw,230px)] -translate-y-1/2 sm:block"
+      style={{ left: 'clamp(0.75rem, calc((100vw - min(100vw, 64rem)) / 4), 7rem)' }}
+      initial={prefersReducedMotion ? false : { opacity: 0, x: -40, scale: 0.85 }}
+      animate={{ opacity: 1, x: 0, scale: 1 }}
+      transition={{ duration: 0.85, delay: 0.35, ease: [0.16, 1, 0.3, 1] }}
+    >
+      {(subtitle || autoBlocked) && (
+        <motion.div
+          className="absolute -top-2 left-1/2 z-30 w-max max-w-[220px] -translate-x-1/2 rounded-2xl border border-purple-500/30 bg-white/95 px-3 py-2 text-center text-[0.65rem] leading-snug text-purple-800 shadow-lg shadow-purple-500/15 dark:bg-[#0a0018]/95 dark:text-purple-100 lg:max-w-[260px] lg:text-xs"
+          initial={{ opacity: 0, y: 6 }}
+          animate={{ opacity: 1, y: 0 }}
+          role="status"
+          aria-live="polite"
+        >
+          {subtitle || 'Tap Neura to hear the welcome!'}
+        </motion.div>
+      )}
+
+      <motion.button
+        type="button"
+        onClick={handleTap}
+        className="relative w-full cursor-pointer border-0 bg-transparent p-0 outline-none focus-visible:ring-2 focus-visible:ring-purple-500 focus-visible:ring-offset-2"
+        aria-label={isSpeaking ? 'Neura is speaking' : 'Tap Neura to replay welcome'}
+      >
+        <motion.div
+          animate={
+            prefersReducedMotion
+              ? undefined
+              : pose === 'bounce' || pose === 'celebrate'
+                ? { y: [0, -14, -4, -16, 0] }
+                : isSpeaking
+                  ? { y: [0, -6, -2, -8, 0] }
+                  : { y: [0, -8, -3, -10, 0] }
+          }
+          transition={{
+            duration: pose === 'bounce' || pose === 'celebrate' ? 0.55 : isSpeaking ? 1.4 : 3.8,
+            repeat: Infinity,
+            ease: 'easeInOut',
+          }}
+        >
+          <div className="absolute -inset-5 rounded-full bg-gradient-to-br from-blue-500/25 via-purple-500/30 to-cyan-400/20 blur-2xl" />
+
+          <svg
+            viewBox="0 0 200 260"
+            className="relative w-full drop-shadow-[0_10px_28px_rgba(147,51,234,0.4)]"
+            aria-hidden="true"
+          >
+            <defs>
+              <linearGradient id="neura-body" x1="0%" y1="0%" x2="100%" y2="100%">
+                <stop offset="0%" stopColor="#3b82f6" />
+                <stop offset="55%" stopColor="#9333ea" />
+                <stop offset="100%" stopColor="#06b6d4" />
+              </linearGradient>
+              <linearGradient id="neura-face" x1="0%" y1="0%" x2="0%" y2="100%">
+                <stop offset="0%" stopColor="#c084fc" />
+                <stop offset="100%" stopColor="#6366f1" />
+              </linearGradient>
+            </defs>
+
+            <ellipse cx="100" cy="248" rx="54" ry="9" fill="#9333ea" opacity="0.22" />
+
+            {/* Legs */}
+            <g transform={`translate(0 ${bodyY * 0.2})`}>
+              <g transform={`translate(83 216) rotate(${pose === 'bounce' ? Math.sin(performance.now() / 120) * 12 : 0})`}>
+                <rect x="-13" y="-20" width="26" height="32" rx="13" fill="url(#neura-body)" />
+                <ellipse cx="0" cy="16" rx="16" ry="8" fill="url(#neura-face)" />
+              </g>
+              <g transform={`translate(117 216) rotate(${pose === 'bounce' ? Math.sin(performance.now() / 120 + Math.PI) * 12 : 0})`}>
+                <rect x="-13" y="-20" width="26" height="32" rx="13" fill="url(#neura-body)" />
+                <ellipse cx="0" cy="16" rx="16" ry="8" fill="url(#neura-face)" />
+              </g>
+            </g>
+
+            {/* Torso */}
+            <rect x="54" y="124" width="92" height="82" rx="36" fill="url(#neura-body)" />
+            <rect x="72" y="144" width="56" height="42" rx="16" fill="#0f172a" opacity="0.32" />
+            <circle cx="80" cy="165" r="5" fill="#22d3ee" opacity="0.85" />
+            <circle cx="100" cy="165" r="5" fill="#22d3ee" opacity="0.85" />
+            <circle cx="120" cy="165" r="5" fill="#22d3ee" opacity="0.85" />
+
+            {/* Arms - native SVG transforms, 2 segments + hands */}
+            <CartoonArm
+              side="left"
+              shoulderX={58}
+              shoulderY={148}
+              upper={arms.leftUpper}
+              fore={arms.leftFore}
+            />
+            <CartoonArm
+              side="right"
+              shoulderX={142}
+              shoulderY={148}
+              upper={arms.rightUpper}
+              fore={arms.rightFore}
+            />
+
+            {/* Head */}
+            <g
+              transform={`translate(100 88) rotate(${
+                pose === 'wave-both'
+                  ? Math.sin(performance.now() / 350) * 6
+                  : pose === 'wave-right'
+                    ? Math.sin(performance.now() / 400) * 5 + 4
+                    : 0
+              })`}
+            >
+              <circle cx="0" cy="0" r="56" fill="url(#neura-face)" />
+              <circle cx="0" cy="6" r="46" fill="#7c3aed" opacity="0.2" />
+
+              <g transform={`rotate(${isSpeaking ? Math.sin(performance.now() / 200) * 10 : Math.sin(performance.now() / 500) * 5})`}>
+                <rect x="-3" y="-66" width="6" height="24" rx="3" fill="#ddd6fe" />
+                <circle cx="0" cy="-70" r="10" fill="#22d3ee" />
+              </g>
+
+              <ellipse cx="-24" cy="-4" rx="17" ry={blink ? 2 : 19} fill="white" />
+              <ellipse cx="24" cy="-4" rx="17" ry={blink ? 2 : 19} fill="white" />
+              {!blink && (
+                <>
+                  <circle cx="-20" cy="-2" r="8" fill="#0f172a" />
+                  <circle cx="20" cy="-2" r="8" fill="#0f172a" />
+                  <circle cx="-17" cy="-7" r="3" fill="white" />
+                  <circle cx="23" cy="-7" r="3" fill="white" />
+                </>
+              )}
+
+              {mouthOpen && isSpeaking ? (
+                <ellipse cx="0" cy="24" rx="16" ry="12" fill="#1e1b4b" />
+              ) : isSpeaking ? (
+                <ellipse cx="0" cy="24" rx="14" ry="5" fill="#1e1b4b" />
+              ) : (
+                <path
+                  d="M -16 20 Q 0 30 16 20"
+                  stroke="#1e1b4b"
+                  strokeWidth="4"
+                  fill="none"
+                  strokeLinecap="round"
+                />
+              )}
+
+              <circle cx="-40" cy="10" r="9" fill="#f472b6" opacity="0.38" />
+              <circle cx="40" cy="10" r="9" fill="#f472b6" opacity="0.38" />
+            </g>
+          </svg>
+        </motion.div>
+      </motion.button>
+
+      <button
+        type="button"
+        onClick={toggleMute}
+        className="absolute -bottom-1 -right-1 flex h-7 w-7 items-center justify-center rounded-full border border-purple-500/30 bg-white/90 text-purple-600 shadow-md backdrop-blur-sm hover:bg-purple-50 dark:bg-[#0a0018]/90 dark:text-purple-300"
+        aria-label={muted ? 'Unmute Neura' : 'Mute Neura'}
+      >
+        {muted ? <VolumeX className="h-3.5 w-3.5" /> : <Volume2 className="h-3.5 w-3.5" />}
+      </button>
+    </motion.div>
+  )
+}

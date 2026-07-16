@@ -3,23 +3,88 @@ import { motion } from 'framer-motion'
 import { ImageWithShimmer } from '../ui/ImageWithShimmer'
 import { Tag } from '../ui/Tag'
 import { Button } from '../ui/Button'
-import { ProjectGallery } from '../ui/ProjectGallery'
+
+type MotionSafeProps = Record<string, unknown>
+
+const MOTION_CONFLICT_PROP_KEYS = [
+  'onDrag',
+  'onDragStart',
+  'onDragEnd',
+  'onCopy',
+  'onCopyCapture',
+  'onCut',
+  'onCutCapture',
+  'onPaste',
+  'onPasteCapture',
+] as const
 
 // Helper function to filter out conflicting props between HTML and Framer Motion
-const filterMotionProps = (props: any) => {
-  const { 
-    onDrag, 
-    onDragStart, 
-    onDragEnd,
-    onCopy,
-    onCopyCapture,
-    onCut,
-    onCutCapture,
-    onPaste,
-    onPasteCapture,
-    ...filteredProps 
-  } = props
+const filterMotionProps = (props: MotionSafeProps) => {
+  const filteredProps = { ...props }
+  for (const key of MOTION_CONFLICT_PROP_KEYS) {
+    delete filteredProps[key]
+  }
   return filteredProps
+}
+
+type CodeBlockProps = React.HTMLAttributes<HTMLElement> & { className?: string }
+
+// eslint-disable-next-line react-refresh/only-export-components -- MDX code block with hooks
+const CodeBlock: React.FC<CodeBlockProps> = ({ children, className, ...props }) => {
+  const language = className?.replace('language-', '') || 'text'
+  const [copied, setCopied] = React.useState(false)
+
+  const copyToClipboard = async () => {
+    try {
+      await navigator.clipboard.writeText(children as string)
+      setCopied(true)
+      setTimeout(() => setCopied(false), 2000)
+    } catch (err) {
+      console.error('Failed to copy code:', err)
+    }
+  }
+
+  return (
+    <motion.div
+      className="bg-neutral-900 dark:bg-neutral-950 rounded-xl mb-6 overflow-hidden shadow-lg"
+      initial={{ opacity: 0, y: 20 }}
+      whileInView={{ opacity: 1, y: 0 }}
+      transition={{ duration: 0.6 }}
+      viewport={{ once: true }}
+    >
+      {/* Code header with language and copy button */}
+      <div className="flex items-center justify-between px-4 py-2 bg-neutral-800 dark:bg-neutral-900 border-b border-neutral-700">
+        <span className="text-xs text-neutral-400 font-mono uppercase tracking-wide">
+          {language}
+        </span>
+        <button
+          onClick={copyToClipboard}
+          className="flex items-center gap-2 px-3 py-1 text-xs text-neutral-400 hover:text-white transition-colors rounded-md hover:bg-neutral-700"
+        >
+          {copied ? (
+            <>
+              <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
+              </svg>
+              Copied!
+            </>
+          ) : (
+            <>
+              <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M8 16H6a2 2 0 01-2-2V6a2 2 0 012-2h8a2 2 0 012 2v2m-6 12h8a2 2 0 002-2v-8a2 2 0 00-2-2h-8a2 2 0 00-2 2v8a2 2 0 002 2z" />
+              </svg>
+              Copy
+            </>
+          )}
+        </button>
+      </div>
+      <pre className="p-6 text-neutral-100 text-sm leading-relaxed overflow-x-auto">
+        <code className={className} {...props}>
+          {children}
+        </code>
+      </pre>
+    </motion.div>
+  )
 }
 
 // Custom components for MDX rendering in project pages
@@ -125,7 +190,7 @@ export const MDXComponents = {
   ),
 
   // Enhanced code blocks with syntax highlighting
-  code: ({ children, className, ...props }: React.HTMLAttributes<HTMLElement> & { className?: string }) => {
+  code: ({ children, className, ...props }: CodeBlockProps) => {
     const isInline = !className?.includes('language-')
     
     if (isInline) {
@@ -139,60 +204,7 @@ export const MDXComponents = {
       )
     }
 
-    const language = className?.replace('language-', '') || 'text'
-    const [copied, setCopied] = React.useState(false)
-
-    const copyToClipboard = async () => {
-      try {
-        await navigator.clipboard.writeText(children as string)
-        setCopied(true)
-        setTimeout(() => setCopied(false), 2000)
-      } catch (err) {
-        console.error('Failed to copy code:', err)
-      }
-    }
-
-    return (
-      <motion.div
-        className="bg-neutral-900 dark:bg-neutral-950 rounded-xl mb-6 overflow-hidden shadow-lg"
-        initial={{ opacity: 0, y: 20 }}
-        whileInView={{ opacity: 1, y: 0 }}
-        transition={{ duration: 0.6 }}
-        viewport={{ once: true }}
-      >
-        {/* Code header with language and copy button */}
-        <div className="flex items-center justify-between px-4 py-2 bg-neutral-800 dark:bg-neutral-900 border-b border-neutral-700">
-          <span className="text-xs text-neutral-400 font-mono uppercase tracking-wide">
-            {language}
-          </span>
-          <button
-            onClick={copyToClipboard}
-            className="flex items-center gap-2 px-3 py-1 text-xs text-neutral-400 hover:text-white transition-colors rounded-md hover:bg-neutral-700"
-          >
-            {copied ? (
-              <>
-                <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
-                </svg>
-                Copied!
-              </>
-            ) : (
-              <>
-                <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M8 16H6a2 2 0 01-2-2V6a2 2 0 012-2h8a2 2 0 012 2v2m-6 12h8a2 2 0 002-2v-8a2 2 0 00-2-2h-8a2 2 0 00-2 2v8a2 2 0 002 2z" />
-                </svg>
-                Copy
-              </>
-            )}
-          </button>
-        </div>
-        <pre className="p-6 text-neutral-100 text-sm leading-relaxed overflow-x-auto">
-          <code className={className} {...props}>
-            {children}
-          </code>
-        </pre>
-      </motion.div>
-    )
+    return <CodeBlock className={className} {...props}>{children}</CodeBlock>
   },
 
   pre: ({ children, ...props }: React.HTMLAttributes<HTMLPreElement>) => (
@@ -231,7 +243,7 @@ export const MDXComponents = {
   ),
 
   // Enhanced images
-  img: ({ src, alt, ...props }: React.ImgHTMLAttributes<HTMLImageElement>) => (
+  img: ({ src, alt, width, height }: React.ImgHTMLAttributes<HTMLImageElement>) => (
     <motion.div
       className="my-8"
       initial={{ opacity: 0, y: 20 }}
@@ -243,15 +255,14 @@ export const MDXComponents = {
         src={src || ''}
         alt={alt || ''}
         className="w-full rounded-xl shadow-lg"
-        width={typeof props.width === 'string' ? parseInt(props.width) : props.width}
-        height={typeof props.height === 'string' ? parseInt(props.height) : props.height}
-        {...(props as any)}
+        width={typeof width === 'string' ? parseInt(width) : width}
+        height={typeof height === 'string' ? parseInt(height) : height}
       />
     </motion.div>
   ),
 
   // Custom components for project-specific content
-  ProjectImage: ({ src, alt, caption, ...props }: { src: string; alt: string; caption?: string } & React.ImgHTMLAttributes<HTMLImageElement>) => (
+  ProjectImage: ({ src, alt, caption, width, height }: { src: string; alt: string; caption?: string } & React.ImgHTMLAttributes<HTMLImageElement>) => (
     <motion.figure
       className="my-8"
       initial={{ opacity: 0, y: 20 }}
@@ -263,9 +274,8 @@ export const MDXComponents = {
         src={src}
         alt={alt}
         className="w-full rounded-xl shadow-lg"
-        width={typeof props.width === 'string' ? parseInt(props.width) : props.width}
-        height={typeof props.height === 'string' ? parseInt(props.height) : props.height}
-        {...(props as any)}
+        width={typeof width === 'string' ? parseInt(width) : width}
+        height={typeof height === 'string' ? parseInt(height) : height}
       />
       {caption && (
         <figcaption className="text-center text-sm text-neutral-500 dark:text-neutral-400 mt-2">
