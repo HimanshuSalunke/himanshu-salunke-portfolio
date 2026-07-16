@@ -2,13 +2,24 @@
   "profile": {
     "fullName": "Himanshu Kishor Salunke",
     "headline": "Aspiring Data Scientist & ML Engineer / Junior Software Developer (Backend)",
+    "primaryRole": "Junior Software Developer (Backend)",
     "location": "Remote / India (IST)",
     "email": "contact.himanshusalunke@gmail.com",
+    "secondaryEmail": "salunkehimanshu2001@gmail.com",
+    "phone": "+91-9860553332",
     "linkedin": "https://www.linkedin.com/in/himanshuksalunke",
     "github": "https://github.com/HimanshuSalunke",
+    "twitter": "https://twitter.com/Wiser_0221",
+    "twitterHandle": "@Wiser_0221",
     "portfolio": "https://himanshu-salunke.vercel.app",
+    "resumeUrl": "/Himanshu_Salunke_Resume.pdf",
+    "resumeDownload": "https://himanshu-salunke.vercel.app/Himanshu_Salunke_Resume.pdf",
     "responseTime": "Within 24 hours",
     "availability": "Available for new freelance projects and open to opportunities",
+    "gateExam": {
+      "target": "GATE 2027",
+      "paper": "Data Science and Artificial Intelligence"
+    },
     "summary": "Builds custom AI systems, data pipelines, and scalable backend APIs. Focus areas include computer vision, machine learning, RAG/LLM systems, and cloud data engineering with Microsoft Fabric and AWS."
   },
   "experience": [
@@ -26,7 +37,7 @@
   "education": [
     {
       "degree": "Bachelor of Technology in Data Science",
-      "school": "R. C. Patel Institute of Technology",
+      "school": "R. C. Patel Institute of Technology, Shirpur - An Autonomous Institute",
       "period": "Dec 2021 - June 2024",
       "score": "7.39 CGPA",
       "page": "/about"
@@ -37,40 +48,406 @@
       "period": "Aug 2017 - May 2021",
       "score": "9.4 CGPA / 89.09%",
       "page": "/about"
+    },
+    {
+      "degree": "Secondary School Certificate (SSC)",
+      "school": "K. S. K. New City High School, Dhule",
+      "period": "March 2016 - March 2017",
+      "score": "50.00%",
+      "page": "/about"
     }
   ],
+  "storyTimeline": [
+    {
+      "id": "beginning",
+      "title": "The Beginning",
+      "subtitle": "Early Curiosity",
+      "period": "Childhood",
+      "type": "story",
+      "description": "Journey into technology started with curiosity and a desire to solve problems. Always fascinated by how things work and loved taking apart gadgets to understand their inner workings.",
+      "tags": ["Curiosity", "Gadgets"]
+    },
+    {
+      "id": "ssc",
+      "title": "Secondary School Certificate (SSC)",
+      "subtitle": "K. S. K. New City High School, Dhule",
+      "period": "March 2016 - March 2017",
+      "type": "education",
+      "description": "Completed secondary school education with strong foundation in science and mathematics. Developed analytical thinking and problem-solving skills.",
+      "stats": [{ "label": "Percentage", "value": "50.00%" }],
+      "tags": ["Mathematics", "Science"]
+    },
+    {
+      "id": "medical-recovery",
+      "title": "Medical Recovery & Academic Resilience Journey",
+      "subtitle": "Personal Development & Recovery",
+      "period": "Dec 2015 - 2021",
+      "type": "recovery",
+      "description": "Faced a significant medical challenge that required extensive recovery and rehabilitation, with multiple surgical procedures and an extended recovery that impacted educational progression. Maintained commitment to academic excellence and personal development.",
+      "detailedDescription": "In December 2015, sustained a severe fracture in the left leg that broke completely from the main upper joint. Required immediate surgery with screws fitted to support the bone. Was in 9th standard and had to rest for 2 years to heal. Significantly impacted 10th standard performance (50% marks) due to irregular school attendance. Could not walk properly for several more years after the initial recovery; full recovery and normal mobility took a total of 6 years.",
+      "stats": [{ "label": "Recovery", "value": "6 Years" }],
+      "tags": ["Resilience", "Determination", "Growth"]
+    },
+    {
+      "id": "diploma-degree",
+      "title": "Diploma in Computer Science and Engineering",
+      "subtitle": "R. C. Patel Polytechnic, Shirpur",
+      "period": "Aug 2017 - May 2021",
+      "type": "education",
+      "description": "Comprehensive foundation in computer science fundamentals, programming languages, and software development methodologies with strong emphasis on practical applications.",
+      "stats": [
+        { "label": "CGPA", "value": "9.4" },
+        { "label": "Duration", "value": "3 Years" }
+      ],
+      "tags": ["Software Engineering", "Web Dev"]
+    },
+    {
+      "id": "btech-degree",
+      "title": "Bachelor of Technology in Data Science",
+      "subtitle": "R. C. Patel Institute of Technology, Shirpur - An Autonomous Institute",
+      "period": "Dec 2021 - June 2024",
+      "type": "education",
+      "description": "Specialized in Data Science with focus on Machine Learning, Statistics, and Data Analysis. Developed expertise in modern AI technologies and data-driven solutions.",
+      "stats": [
+        { "label": "CGPA", "value": "7.39" },
+        { "label": "Duration", "value": "3 Years" }
+      ],
+      "tags": ["Computer Vision", "NLP", "Research"]
+    },
+    {
+      "id": "grubpac-backend-developer",
+      "title": "Junior Software Developer",
+      "subtitle": "GrubPac Technologies, Delhi, India",
+      "period": "March 2026 - Present",
+      "type": "work",
+      "description": "Designing and building scalable REST APIs and backend services using Node.js, Express, TypeScript, and PostgreSQL on AWS Cloud for smart logistics and delivery management platforms.",
+      "stats": [
+        { "label": "Role", "value": "Backend" },
+        { "label": "Status", "value": "Present" }
+      ],
+      "tags": ["Node.js", "Express", "TypeScript", "PostgreSQL", "AWS Cloud", "REST APIs"]
+    },
+    {
+      "id": "the-future",
+      "title": "The Future & Vision",
+      "subtitle": "Aspiring Data Scientist",
+      "period": "Present",
+      "type": "story",
+      "description": "Preparing for GATE 2027 while building innovative projects and contributing to the tech community. Goal is to become a leading data scientist who creates solutions that make a positive impact on society.",
+      "tags": ["GATE 2027", "Innovation", "Impact"]
+    }
+  ],
+  "achievements": [
+    {
+      "title": "Grand Finalist",
+      "event": "SUNHACKS 2022 - International Level",
+      "year": "2022",
+      "level": "international",
+      "category": "hackathon",
+      "achievement": "Grand Finalist",
+      "description": "Spearheaded a cross-functional effort at SUNHACKS 2022, an International Level Hackathon, securing Grand Finalist recognition among 15 elite teams.",
+      "participants": 60
+    },
+    {
+      "title": "Grand Finalist",
+      "event": "Smart India Hackathon 2022",
+      "year": "2022",
+      "level": "national",
+      "category": "hackathon",
+      "achievement": "Grand Finalist",
+      "description": "Achieved Grand Finalist status at the National level in the Smart India Hackathon 2022, competing against 50 teams.",
+      "participants": 300
+    },
+    {
+      "title": "Internal Hackathon Lead",
+      "event": "Smart India Hackathon 2023",
+      "year": "2023",
+      "level": "institutional",
+      "category": "leadership",
+      "achievement": "Leadership Role",
+      "description": "Led and coordinated an Internal Hackathon for Smart India Hackathon 2023, overseeing 85 teams and fostering innovation and collaboration.",
+      "teamSize": 85
+    }
+  ],
+  "mission": {
+    "title": "My Mission",
+    "content": "To leverage the power of artificial intelligence and data science to solve real-world problems, create innovative solutions, and make technology more accessible and beneficial for everyone. Committed to continuous learning, ethical development practices, and building a future where technology serves humanity's greatest needs.",
+    "goals": [
+      "Develop AI solutions that address real-world challenges",
+      "Contribute to open-source projects and the tech community",
+      "Mentor others and share knowledge through writing and teaching",
+      "Build ethical and responsible AI systems",
+      "Create technology that improves people's lives"
+    ]
+  },
+  "values": [
+    {
+      "title": "Excellence",
+      "description": "Strive for excellence in everything - from writing clean code to delivering exceptional user experiences."
+    },
+    {
+      "title": "Innovation",
+      "description": "Push boundaries and find creative solutions to complex problems using cutting-edge technology."
+    },
+    {
+      "title": "Learning",
+      "description": "Continuous learning is at the heart of the journey - always exploring new technologies and expanding knowledge."
+    },
+    {
+      "title": "Impact",
+      "description": "Create technology that makes a positive difference in people's lives and contributes to society's betterment."
+    },
+    {
+      "title": "Collaboration",
+      "description": "Believe in teamwork and enjoy working with others to build something greater than the sum of its parts."
+    },
+    {
+      "title": "Resilience",
+      "description": "Personal journey taught that resilience and determination can overcome any obstacle in life."
+    }
+  ],
+  "interests": [
+    {
+      "category": "Technology",
+      "items": [
+        { "name": "Open Source Projects", "description": "Contributing to and maintaining open source repositories" },
+        { "name": "Tech Blogs & Podcasts", "description": "Staying updated with latest trends and innovations" },
+        { "name": "Coding Challenges", "description": "Solving problems on various coding platforms" }
+      ]
+    },
+    {
+      "category": "Learning",
+      "items": [
+        { "name": "Online Courses", "description": "Taking courses on Coursera, DataCamp, and Scaler" },
+        { "name": "Research Papers", "description": "Reading latest AI/ML research and academic papers on Towards Data Science" },
+        { "name": "Documentation", "description": "Writing and maintaining technical documentation" }
+      ]
+    },
+    {
+      "category": "Creative",
+      "items": [
+        { "name": "UI/UX Design", "description": "Creating beautiful and intuitive user interfaces" },
+        { "name": "Data Visualization", "description": "Turning complex data into compelling visual stories" },
+        { "name": "Writing", "description": "Sharing knowledge through technical articles and blogs" }
+      ]
+    }
+  ],
+  "shortTermGoals": [
+    { "goal": "Complete React 19 migration for all projects", "progress": 75, "deadline": "End of month" },
+    { "goal": "Launch AI-powered portfolio features", "progress": 40, "deadline": "Next 2 weeks" },
+    { "goal": "Write 3 technical articles", "progress": 60, "deadline": "This quarter" },
+    { "goal": "Contribute to 5 open source projects", "progress": 20, "deadline": "Ongoing" }
+  ],
+  "learningNow": [
+    {
+      "title": "Advanced React Patterns",
+      "description": "Exploring compound components, render props, and custom hooks for better component architecture."
+    },
+    {
+      "title": "LLM Fine-tuning & RAG",
+      "description": "Going deeper into retrieval-augmented generation, vector databases, and fine-tuning large language models for domain-specific use cases."
+    },
+    {
+      "title": "Multimodal AI",
+      "description": "Studying vision-language models and multimodal architectures that combine computer vision with NLP beyond single-modality pipelines."
+    },
+    {
+      "title": "Model Optimization & Inference",
+      "description": "Advancing into model quantization, ONNX/TensorRT export, and low-latency inference for production and edge deployment."
+    }
+  ],
+  "techStackGroups": [
+    {
+      "label": "Deep Learning & NLP",
+      "items": ["PyTorch", "TensorFlow", "BERT", "Transformers", "LangChain", "FAISS", "LSTM", "XGBoost", "Prophet"]
+    },
+    {
+      "label": "Computer Vision",
+      "items": ["YOLO26", "OpenCV", "MediaPipe", "EasyOCR", "ONNX Runtime", "CUDA"]
+    },
+    {
+      "label": "Data Engineering",
+      "items": ["Microsoft Fabric", "OneLake", "Lakehouse", "Apache Spark", "Delta Lake", "Apache Airflow", "AWS Glue", "Amazon Athena", "ETL Pipelines", "PostgreSQL", "Docker"]
+    },
+    {
+      "label": "Backend & AWS Cloud",
+      "items": ["FastAPI", "Node.js", "TypeScript", "AWS S3", "Amazon QuickSight", "WebSockets"]
+    }
+  ],
+  "closingQuote": {
+    "text": "Every setback is a setup for a comeback. The challenges I've faced have only made me stronger, more determined, and more passionate about using technology to create positive change.",
+    "attribution": "Himanshu Kishor Salunke"
+  },
   "credentials": [
     {
       "name": "Microsoft Certified: Fabric Data Engineer Associate (DP-700)",
       "issuer": "Microsoft",
-      "date": "July 2026"
+      "date": "July 2026",
+      "description": "DP-700 professional certification in Microsoft Fabric data engineering - lakehouses, pipelines, Spark, and analytics workloads.",
+      "verificationUrl": "https://drive.google.com/file/d/1whcpSSwO1_RPhKAWxo-eiWWw66uFIO4-/view?usp=sharing"
     },
     {
       "name": "DataCamp Certified: Associate Data Engineer",
       "issuer": "DataCamp",
-      "date": "May 2024"
+      "date": "May 2024",
+      "description": "Certification in data engineering, ETL processes, and data pipeline development.",
+      "verificationUrl": "https://drive.google.com/file/d/1JseSVzsLL9maBkDioIufZIjpuhb07bSX/view"
     },
     {
       "name": "DataCamp Certified: Associate Data Analyst",
       "issuer": "DataCamp",
-      "date": "May 2024"
+      "date": "May 2024",
+      "description": "Professional certification demonstrating expertise in data analysis, statistical modeling, and data visualization.",
+      "verificationUrl": "https://drive.google.com/file/d/1sRj_7Guc-tVBmw_bNZnBh6EcVmZUj1es/view"
     },
     {
       "name": "Google Business Intelligence Certification",
       "issuer": "Google",
-      "date": "April 2024"
+      "date": "April 2024",
+      "description": "Certification in business intelligence, data visualization, and analytics on Google Cloud Platform.",
+      "verificationUrl": "https://drive.google.com/file/d/1CSfaO1kV1XpbChKfmWojA44Ge3xgVRvM/view"
     },
     {
       "name": "Google Data Analytics Certification",
       "issuer": "Google",
-      "date": "February 2024"
+      "date": "February 2024",
+      "description": "Professional certification in data analytics, statistical analysis, and data-driven decision making.",
+      "verificationUrl": "https://drive.google.com/file/d/1lrOPW3huOrYh1s5oakKSYOCJZHOKMq93/view"
     },
     {
       "name": "Data Scientist Professional Certificate",
       "issuer": "DataCamp",
-      "date": "October 2023"
+      "date": "October 2023",
+      "description": "Comprehensive certification covering machine learning, statistical analysis, and data science methodologies.",
+      "verificationUrl": "https://drive.google.com/file/d/1CQIOT7vUbOoVcX7dwVmBBZNH9FOPiKrm/view"
     }
   ],
+  "skills": [
+    { "name": "Python", "level": 95, "category": "ai-ml" },
+    { "name": "TensorFlow", "level": 85, "category": "ai-ml" },
+    { "name": "PyTorch", "level": 80, "category": "ai-ml" },
+    { "name": "XGBoost", "level": 85, "category": "ai-ml" },
+    { "name": "Hugging Face", "level": 85, "category": "ai-ml" },
+    { "name": "Scikit-learn", "level": 90, "category": "ai-ml" },
+    { "name": "Pandas", "level": 95, "category": "ai-ml" },
+    { "name": "NumPy", "level": 90, "category": "ai-ml" },
+    { "name": "OpenCV", "level": 85, "category": "ai-ml" },
+    { "name": "MediaPipe", "level": 80, "category": "ai-ml" },
+    { "name": "Matplotlib", "level": 85, "category": "ai-ml" },
+    { "name": "Seaborn", "level": 80, "category": "ai-ml" },
+    { "name": "Jupyter", "level": 90, "category": "ai-ml" },
+    { "name": "Keras", "level": 80, "category": "ai-ml" },
+    { "name": "YOLO26", "level": 75, "category": "ai-ml" },
+    { "name": "LangChain", "level": 75, "category": "ai-ml" },
+    { "name": "OpenAI API", "level": 80, "category": "ai-ml" },
+    { "name": "Java", "level": 75, "category": "backend" },
+    { "name": "C", "level": 80, "category": "backend" },
+    { "name": "C++", "level": 75, "category": "backend" },
+    { "name": "SQL", "level": 85, "category": "backend" },
+    { "name": "HTML", "level": 90, "category": "frontend" },
+    { "name": "CSS", "level": 90, "category": "frontend" },
+    { "name": "React", "level": 90, "category": "frontend" },
+    { "name": "Next.js", "level": 85, "category": "frontend" },
+    { "name": "Three.js", "level": 75, "category": "frontend" },
+    { "name": "Material UI", "level": 80, "category": "frontend" },
+    { "name": "Streamlit", "level": 90, "category": "frontend" },
+    { "name": "Node.js", "level": 80, "category": "backend" },
+    { "name": "FastAPI", "level": 80, "category": "backend" },
+    { "name": "Flask", "level": 75, "category": "backend" },
+    { "name": "SASS/SCSS", "level": 85, "category": "frontend" },
+    { "name": "Microsoft Fabric", "level": 85, "category": "tools" },
+    { "name": "OneLake", "level": 80, "category": "tools" },
+    { "name": "Apache Spark", "level": 80, "category": "tools" },
+    { "name": "Delta Lake", "level": 75, "category": "tools" },
+    { "name": "AWS Services", "level": 80, "category": "tools" },
+    { "name": "AWS Lambda", "level": 75, "category": "tools" },
+    { "name": "Google Cloud AI", "level": 75, "category": "tools" },
+    { "name": "CUDA", "level": 75, "category": "tools" },
+    { "name": "ONNX", "level": 70, "category": "tools" },
+    { "name": "Docker", "level": 80, "category": "tools" },
+    { "name": "Kubernetes", "level": 70, "category": "tools" },
+    { "name": "Vercel", "level": 85, "category": "tools" },
+    { "name": "Linux", "level": 80, "category": "tools" },
+    { "name": "Plotly", "level": 85, "category": "tools" },
+    { "name": "Tableau", "level": 75, "category": "tools" },
+    { "name": "PowerBI", "level": 70, "category": "tools" },
+    { "name": "PostgreSQL", "level": 85, "category": "databases" },
+    { "name": "Neon (Serverless PG)", "level": 85, "category": "databases" },
+    { "name": "MongoDB", "level": 80, "category": "databases" },
+    { "name": "Redis", "level": 75, "category": "databases" },
+    { "name": "Vercel Blob", "level": 80, "category": "databases" },
+    { "name": "FAISS", "level": 85, "category": "databases" },
+    { "name": "Git", "level": 90, "category": "tools" },
+    { "name": "GitHub", "level": 85, "category": "tools" },
+    { "name": "Apache Airflow", "level": 75, "category": "tools" },
+    { "name": "AWS Glue", "level": 70, "category": "tools" },
+    { "name": "Jira", "level": 75, "category": "tools" },
+    { "name": "Slack", "level": 80, "category": "tools" },
+    { "name": "Networking", "level": 75, "category": "tools" }
+  ],
+  "skillCategories": {
+    "ai-ml": "AI / Neural Nets",
+    "backend": "Backend & Systems",
+    "frontend": "User Interface",
+    "tools": "DevOps & Toolchain",
+    "databases": "Data Storage"
+  },
+  "portfolioSiteStack": [
+    {
+      "layer": "Frontend Framework",
+      "description": "Modern React-based UI with TypeScript",
+      "technologies": ["React 18", "TypeScript", "Vite"]
+    },
+    {
+      "layer": "Styling & Design",
+      "description": "Responsive design system with theming and animations",
+      "technologies": ["Tailwind CSS", "Framer Motion", "PostCSS"]
+    },
+    {
+      "layer": "Backend & Data",
+      "description": "Serverless architecture with Neon Postgres and Vercel Blob",
+      "technologies": ["Serverless Functions", "Neon Postgres", "Vercel Blob", "Express.js"]
+    },
+    {
+      "layer": "Content Management",
+      "description": "MDX-based content for projects and articles",
+      "technologies": ["MDX", "Gray Matter", "Sharp"]
+    },
+    {
+      "layer": "Deployment & Hosting",
+      "description": "Vercel hosting with analytics and performance monitoring",
+      "technologies": ["Vercel", "Vercel Analytics", "Vercel Speed Insights"]
+    },
+    {
+      "layer": "Development Tools",
+      "description": "Code quality and testing toolchain",
+      "technologies": ["ESLint", "Prettier", "Vitest", "Git"]
+    }
+  ],
+  "metrics": {
+    "freelanceProjectsClaim": "26+",
+    "clientSatisfactionClaim": "90%",
+    "note": "Project and article totals must always use counts.projects and counts.articles from knowledge, not marketing copy alone."
+  },
+  "projectCategories": [
+    "Machine Learning",
+    "Computer Vision",
+    "Deep Learning",
+    "Data Analysis",
+    "Data Engineering"
+  ],
+  "forms": {
+    "contact": {
+      "page": "/contact",
+      "fields": ["name", "email", "subject", "message"],
+      "purpose": "General hiring, collaboration, and questions"
+    },
+    "serviceInquiry": {
+      "page": "/services",
+      "fields": ["clientType", "domain", "budget", "deadline", "dataset info", "study year (if student)", "file upload"],
+      "purpose": "Freelance project booking and service inquiries"
+    }
+  },
   "services": {
     "page": "/services",
     "availability": "Available for New Projects",
@@ -152,20 +529,29 @@
     }
   },
   "siteNavigation": {
-    "/": "Home - intro and highlights",
-    "/about": "Personal story, career journey, current job/employer details, education, certifications, goals",
+    "/": "Home - intro, current focus, impact highlights",
+    "/about": "Personal story, career journey, current job/employer, education, certifications, achievements, mission, values, goals",
     "/work": "Portfolio projects and case studies only - not employment details",
-    "/services": "Freelance services, capabilities, pricing, process, and booking/inquiry",
-    "/developer": "Tech stack and developer profile",
-    "/articles": "LinkedIn articles and writing",
-    "/contact": "Contact form, email, LinkedIn - hiring and collaboration"
+    "/services": "Freelance services, capabilities, pricing, process, booking/inquiry",
+    "/developer": "Full tech stack with proficiency levels and this portfolio site architecture",
+    "/articles": "LinkedIn articles and technical writing",
+    "/contact": "Contact form, email, LinkedIn, phone - hiring and collaboration"
   },
   "faqHints": [
-    "Current job / is he working / employer / GrubPac / experience → answer from experience and point to /about (never /work)",
-    "Projects / case studies / portfolio work → /work and projects list",
-    "Services / freelancing / pricing / how to book → services object and /services or /contact",
-    "Skills / tech stack → /developer and project tech stacks",
-    "Certifications / education / story → /about",
-    "Contact / hire / collaborate → /contact and profile.email"
+    "Off-topic / general knowledge / unrelated coding / news / other people → politely refuse; only Himanshu + this portfolio are in scope",
+    "Current job / is he working / employer / GrubPac / experience → experience + storyTimeline work entry; page /about (never /work)",
+    "Personal story / recovery / resilience / childhood → storyTimeline; page /about",
+    "Achievements / hackathons / SIH / SUNHACKS → achievements; page /about",
+    "Mission / values / goals → mission, values, shortTermGoals; page /about",
+    "Projects / case studies / portfolio work → projects array; page /work",
+    "Services / freelancing / pricing / how to book → services object; page /services or /contact",
+    "Skills / tech stack / proficiency → skills + techStackGroups + skillCategories; page /developer",
+    "What is this website built with → portfolioSiteStack; page /developer",
+    "Certifications / education → credentials + education; page /about",
+    "Contact / hire / collaborate / phone / email → profile.email (primary), profile.phone, profile.linkedin; page /contact",
+    "Secondary footer email is profile.secondaryEmail - prefer profile.email unless user asks for alternate email",
+    "Resume / CV → profile.resumeUrl (/Himanshu_Salunke_Resume.pdf) also on header and /about",
+    "Articles count must equal counts.articles; list every title from articles array when asked for all",
+    "Project count must equal counts.projects"
   ]
 }

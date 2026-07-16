@@ -618,8 +618,8 @@ app.post('/api/neura/chat', async (req, res) => {
       body: JSON.stringify({
         model: NEURA_MODEL,
         messages,
-        temperature: 0.35,
-        max_tokens: 400,
+        temperature: 0.25,
+        max_tokens: 2200,
         stream: wantStream,
       }),
     });

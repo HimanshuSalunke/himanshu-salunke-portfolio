@@ -1,6 +1,7 @@
 import React, { useCallback, useEffect, useRef, useState } from 'react'
 import { AnimatePresence, motion, useReducedMotion } from 'framer-motion'
 import { Loader2, MessageCircle, Minus, Send, X } from 'lucide-react'
+import Markdown from 'markdown-to-jsx'
 
 type ChatRole = 'user' | 'assistant'
 
@@ -426,7 +427,57 @@ interface NeuraMessageBubbleProps {
   tail?: 'left' | 'right' | 'none'
   sender?: string
   className?: string
+  /** Render assistant replies as Markdown lists/headings */
+  markdown?: boolean
 }
+
+const neuraMarkdownOptions = {
+  forceBlock: true,
+  overrides: {
+    h1: {
+      component: 'h3',
+      props: { className: 'mb-1.5 mt-2 text-sm font-semibold first:mt-0' },
+    },
+    h2: {
+      component: 'h3',
+      props: { className: 'mb-1.5 mt-2 text-sm font-semibold first:mt-0' },
+    },
+    h3: {
+      props: { className: 'mb-1.5 mt-2 text-sm font-semibold first:mt-0' },
+    },
+    h4: {
+      props: { className: 'mb-1 mt-2 text-sm font-semibold first:mt-0' },
+    },
+    p: {
+      props: { className: 'mb-2 last:mb-0' },
+    },
+    ul: {
+      props: { className: 'mb-2 list-disc space-y-1 pl-4 last:mb-0' },
+    },
+    ol: {
+      props: { className: 'mb-2 list-decimal space-y-1 pl-4 last:mb-0' },
+    },
+    li: {
+      props: { className: 'leading-snug' },
+    },
+    strong: {
+      props: { className: 'font-semibold' },
+    },
+    a: {
+      props: {
+        className: 'font-medium underline underline-offset-2 break-all',
+        target: '_blank',
+        rel: 'noopener noreferrer',
+      },
+    },
+    code: {
+      props: {
+        className:
+          'rounded bg-black/5 px-1 py-0.5 font-mono text-[0.75em] dark:bg-white/10',
+      },
+    },
+  },
+} as const
 
 const bubbleStyles: Record<BubbleVariant, string> = {
   default:
@@ -445,6 +496,7 @@ const NeuraMessageBubble: React.FC<NeuraMessageBubbleProps> = ({
   tail = 'left',
   sender,
   className = '',
+  markdown = false,
 }) => {
   const tailClass =
     tail === 'right'
@@ -452,6 +504,13 @@ const NeuraMessageBubble: React.FC<NeuraMessageBubbleProps> = ({
       : tail === 'left'
         ? 'rounded-bl-sm sm:rounded-bl-md'
         : 'rounded-2xl'
+
+  const body =
+    markdown && typeof children === 'string' ? (
+      <Markdown options={neuraMarkdownOptions}>{children}</Markdown>
+    ) : (
+      children
+    )
 
   return (
     <div
@@ -468,7 +527,7 @@ const NeuraMessageBubble: React.FC<NeuraMessageBubbleProps> = ({
           {sender}
         </p>
       )}
-      <p className="relative z-[1] break-words [overflow-wrap:anywhere]">{children}</p>
+      <div className="relative z-[1] break-words [overflow-wrap:anywhere]">{body}</div>
       {tail !== 'none' && (
         <span
           className={`absolute -bottom-1.5 h-2.5 w-2.5 rotate-45 border-b border-r border-inherit bg-inherit ${
@@ -848,7 +907,7 @@ export const CartoonLivingEntity: React.FC = () => {
             animate={{ opacity: 1, y: 0, scale: 1 }}
             exit={prefersReducedMotion ? { opacity: 0 } : { opacity: 0, y: 16, scale: 0.96 }}
             transition={{ duration: prefersReducedMotion ? 0.14 : 0.28, ease: [0.16, 1, 0.3, 1] }}
-            className="pointer-events-auto flex max-h-[min(calc(100dvh-5.5rem),34rem)] w-[min(calc(100vw-1.25rem),22rem)] flex-col overflow-hidden rounded-2xl border border-purple-500/30 bg-white/55 shadow-2xl shadow-purple-500/20 backdrop-blur-md dark:border-purple-500/40 dark:bg-[#0a0018]/70 sm:w-[min(calc(100vw-2rem),23.75rem)]"
+            className="pointer-events-auto flex max-h-[min(calc(100dvh-5.5rem),40rem)] w-[min(calc(100vw-1.25rem),24.5rem)] flex-col overflow-hidden rounded-2xl border border-purple-500/30 bg-white/55 shadow-2xl shadow-purple-500/20 backdrop-blur-md dark:border-purple-500/40 dark:bg-[#0a0018]/70 sm:w-[min(calc(100vw-2rem),26.5rem)]"
           >
             <div className="relative z-20 flex shrink-0 items-center justify-between gap-2 border-b border-purple-500/20 bg-gradient-to-r from-purple-500/15 via-blue-500/10 to-cyan-500/10 px-3 py-2.5 backdrop-blur-md sm:px-4 sm:py-3 dark:border-purple-500/30">
               <div className="flex min-w-0 items-center gap-2.5">
@@ -890,7 +949,7 @@ export const CartoonLivingEntity: React.FC = () => {
               </div>
             </div>
 
-            <div className="relative min-h-[16.5rem] flex-1 sm:min-h-[19rem]">
+            <div className="relative min-h-[19rem] flex-1 sm:min-h-[22.5rem]">
               {/* Neura stays visible as a soft watermark behind chat - not removed */}
               <div
                 className="pointer-events-none absolute inset-0 flex items-end justify-center pb-0 pt-10 opacity-[0.4]"
@@ -930,6 +989,7 @@ export const CartoonLivingEntity: React.FC = () => {
                           variant={msg.role === 'user' ? 'user' : 'default'}
                           tail={msg.role === 'user' ? 'right' : 'left'}
                           sender={msg.role === 'user' ? 'You' : 'Neura'}
+                          markdown={msg.role === 'assistant'}
                           className="w-fit max-w-[92%] sm:max-w-[95%]"
                         >
                           {msg.text}

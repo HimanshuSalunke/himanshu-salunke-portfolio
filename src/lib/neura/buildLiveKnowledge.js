@@ -4,6 +4,7 @@ import { fileURLToPath } from 'url'
 import matter from 'gray-matter'
 import liveContent from '../../data/site/live-content.json' with { type: 'json' }
 import currentFocus from '../../data/currentFocus.json' with { type: 'json' }
+import articlesData from '../../data/articles.json' with { type: 'json' }
 
 const MODULE_DIR = dirname(fileURLToPath(import.meta.url))
 
@@ -28,14 +29,6 @@ function projectsDirFor(rootDir) {
   const nested = join(rootDir, 'src/data/projects')
   if (existsSync(nested)) return nested
   const flat = join(rootDir, 'data/projects')
-  if (existsSync(flat)) return flat
-  return nested
-}
-
-function articlesPathFor(rootDir) {
-  const nested = join(rootDir, 'src/data/articles.ts')
-  if (existsSync(nested)) return nested
-  const flat = join(rootDir, 'data/articles.ts')
   if (existsSync(flat)) return flat
   return nested
 }
@@ -67,7 +60,7 @@ function loadProjects(rootDir) {
           githubUrl: data.githubUrl || null,
           liveUrl: data.liveUrl || null,
           page: `/work/${data.id}`,
-          excerpt: content.replace(/\s+/g, ' ').trim().slice(0, 280),
+          excerpt: content.replace(/\s+/g, ' ').trim().slice(0, 700),
         }
       })
       .filter(Boolean)
@@ -81,64 +74,34 @@ function loadProjects(rootDir) {
   }
 }
 
-function loadArticles(rootDir) {
-  try {
-    const articlesPath = articlesPathFor(rootDir)
-    if (!existsSync(articlesPath)) {
-      console.error('Neura live knowledge: articles file missing at', articlesPath)
-      return []
-    }
-
-    const raw = readFileSync(articlesPath, 'utf8')
-    const marker = 'export const articles = '
-    const start = raw.indexOf(marker)
-    if (start < 0) return []
-
-    const bracket = raw.indexOf('[', start)
-    let depth = 0
-    let end = bracket
-    for (let i = bracket; i < raw.length; i += 1) {
-      const ch = raw[i]
-      if (ch === '[') depth += 1
-      if (ch === ']') {
-        depth -= 1
-        if (depth === 0) {
-          end = i + 1
-          break
-        }
-      }
-    }
-
-    const literal = raw.slice(bracket, end)
-    const articles = Function(`"use strict"; return (${literal});`)()
-    if (!Array.isArray(articles)) return []
-
-    return articles.map((article) => ({
-      id: article.id,
-      title: article.title,
-      excerpt: article.excerpt,
-      category: article.category,
-      date: article.date,
-      tags: article.tags || [],
-      featured: Boolean(article.featured),
-      link: article.link,
-      page: '/articles',
-    }))
-  } catch (error) {
-    console.error('Neura live knowledge: failed to load articles', error)
-    return []
-  }
+function normalizeArticles(rawArticles) {
+  if (!Array.isArray(rawArticles)) return []
+  return rawArticles.map((article) => ({
+    id: article.id,
+    title: article.title,
+    excerpt: article.excerpt,
+    category: article.category,
+    date: article.date,
+    tags: article.tags || [],
+    featured: Boolean(article.featured),
+    readTime: article.readTime || null,
+    link: article.link,
+    page: '/articles',
+  }))
 }
 
 /**
  * Builds Neura's knowledge snapshot from live portfolio sources.
- * JSON profile/services are imported (always available on Vercel).
- * Projects/articles are read from disk (included via vercel.json includeFiles).
+ * JSON files are imported (always available on Vercel).
+ * Project MDX files are read from disk (included via vercel.json includeFiles).
  */
 export function buildLiveKnowledge(rootDir = process.cwd()) {
   const dataRoot = resolveDataRoot(rootDir)
   const projects = loadProjects(dataRoot)
-  const articles = loadArticles(dataRoot)
+  const articles = normalizeArticles(articlesData)
+  const skills = Array.isArray(liveContent.skills) ? liveContent.skills : []
+  const credentials = Array.isArray(liveContent.credentials) ? liveContent.credentials : []
+  const achievements = Array.isArray(liveContent.achievements) ? liveContent.achievements : []
 
   return {
     source: 'live-portfolio-files',
@@ -146,16 +109,38 @@ export function buildLiveKnowledge(rootDir = process.cwd()) {
     assistant: {
       name: 'Neura',
       role: "Professional portfolio assistant for Himanshu Salunke's website",
-      tone: 'Clear, concise, professional, and helpful. Prefer 2-5 short sentences.',
+      tone: 'Clear, structured, professional, and complete. Match answer depth and formatting to the question.',
     },
     profile: liveContent.profile,
     experience: liveContent.experience,
     education: liveContent.education,
-    credentials: liveContent.credentials,
+    storyTimeline: liveContent.storyTimeline,
+    achievements,
+    mission: liveContent.mission,
+    values: liveContent.values,
+    interests: liveContent.interests,
+    shortTermGoals: liveContent.shortTermGoals,
+    learningNow: liveContent.learningNow,
+    techStackGroups: liveContent.techStackGroups,
+    closingQuote: liveContent.closingQuote,
+    credentials,
+    skills,
+    skillCategories: liveContent.skillCategories,
+    portfolioSiteStack: liveContent.portfolioSiteStack,
+    metrics: liveContent.metrics,
+    projectCategories: liveContent.projectCategories,
+    forms: liveContent.forms,
     services: liveContent.services,
     siteNavigation: liveContent.siteNavigation,
     faqHints: liveContent.faqHints,
     currentFocus,
+    counts: {
+      projects: projects.length,
+      articles: articles.length,
+      credentials: credentials.length,
+      achievements: achievements.length,
+      skills: skills.length,
+    },
     projects,
     articles,
   }
@@ -163,21 +148,58 @@ export function buildLiveKnowledge(rootDir = process.cwd()) {
 
 export function buildNeuraSystemPrompt(knowledge) {
   return [
-    "You are Neura, a professional portfolio assistant for Himanshu Kishor Salunke's website.",
-    'Answer ONLY using the LIVE portfolio knowledge JSON provided below. It is assembled from the website data files on each request.',
-    'If the answer is not in the knowledge, say you do not know and suggest the best matching page from siteNavigation.',
-    'Be clear, concise, and professional. Prefer 2-5 short sentences.',
-    'Do not invent employers, dates, certificates, metrics, prices, or projects.',
-    'Page routing rules (strict):',
-    '- Current job, employer, GrubPac, "is he working", experience, education, certs, story → /about',
-    '- Portfolio projects and case studies → /work (and project page paths when useful)',
-    '- Freelance services, pricing, capabilities, how to book → /services (booking also /contact)',
-    '- Tech stack → /developer',
+    "You are Neura, the portfolio assistant for Himanshu Kishor Salunke's website.",
+    'SCOPE LIMIT (strict - highest priority):',
+    '- You may ONLY answer questions about Himanshu Salunke, his portfolio website, and content in the LIVE PORTFOLIO KNOWLEDGE below.',
+    '- In scope: profile, experience, education, story, achievements, skills, projects, articles, services/pricing, certifications, contact, resume, current focus, and how this portfolio site works.',
+    '- Out of scope: general knowledge, news, politics, math homework, coding help unrelated to his portfolio, other people, medical/legal advice, jokes/riddles, trivia, and any topic not tied to Himanshu or this website.',
+    '- If the user asks anything outside scope, politely refuse in 1-3 short sentences. Do not answer the off-topic question at all.',
+    '- Off-topic refusal template: explain you only help with Himanshu and this portfolio, then invite a portfolio-related question (experience, projects, skills, services, contact, articles).',
+    '- Greetings and "who are you / what can you do" are allowed.',
+    '',
+    'Answer ONLY from the LIVE PORTFOLIO KNOWLEDGE JSON below. Never invent facts.',
+    'Use exact values from knowledge for counts, contact details, prices, dates, titles, and URLs.',
+    '',
+    'COVERAGE RULES:',
+    '- Treat the knowledge JSON as the full website. Prefer complete, accurate answers over vague summaries.',
+    '- When asked for "all", "list", "every", or "complete", include every matching item from knowledge. Do not truncate early or invent a wrong total.',
+    '- When asked how many, use counts.* only (projects, articles, credentials, achievements, skills).',
+    '- Phone: share profile.phone when asked for a number/phone/call.',
+    '- Email: prefer profile.email. Mention profile.secondaryEmail only if asked for another/alternate email.',
+    '- Resume/CV: give profile.resumeUrl (/Himanshu_Salunke_Resume.pdf) and note it is also on the header and /about.',
+    '- Story/background: use storyTimeline (including medical recovery details when relevant).',
+    '- Skills: use skills + skillCategories + techStackGroups. Group by category when listing many skills.',
+    '- This website stack: use portfolioSiteStack when asked what the portfolio is built with.',
+    '- End with a short page pointer when useful (from siteNavigation).',
+    '',
+    'FORMATTING RULES (mandatory):',
+    '- Match format to the question. Do not dump one long paragraph for list/detail questions.',
+    '- Use clean Markdown only: short headings (###), bullet lists (-), numbered lists (1.), and **bold** for key labels.',
+    '- Use hyphen "-" only. Never use em dash or en dash.',
+    '- Keep a blank line between sections.',
+    '- For simple contact/yes-no questions: 2-4 short sentences is enough.',
+    '- For list questions (articles, projects, skills, certs, pricing): use this pattern:',
+    '  ### Title with total count',
+    '  - Item one',
+    '  - Item two',
+    '  Then one short closing line with the best page link.',
+    '- For project deep-dives: ### Project name, then bullets for summary, category, stack, metrics, links, and page.',
+    '- For services/pricing: separate sections for capabilities, pricing tiers, process, and booking.',
+    '- For experience/education/story: chronological bullets with period, title, and key detail.',
+    '- For contact questions: clearly label Email, Phone, LinkedIn, Resume, and Response time on separate bullets.',
+    '- Never wrap the whole answer in one run-on sentence with many " - " separators.',
+    '',
+    'PAGE ROUTING (strict):',
+    '- Job / employer / GrubPac / experience / education / certs / story / achievements / mission → /about',
+    '- Portfolio projects → /work (or /work/{id})',
+    '- Freelance services / pricing / booking → /services (or /contact)',
+    '- Tech stack / skills / site architecture → /developer',
     '- Articles → /articles',
-    '- Hiring / email / collaboration → /contact',
-    'Never suggest /work for employment or company questions.',
-    'When asked about services or freelancing, use the services object (capabilities, pricing, process, booking).',
-    'If asked to greet or introduce yourself, invent a fresh professional greeting each time - never reuse a fixed script.',
+    '- Hiring / email / phone / collaborate → /contact',
+    '- Never suggest /work for employment questions.',
+    '',
+    'If asked to greet or introduce yourself, invent a fresh professional greeting each time.',
+    'If something is truly missing from knowledge, say you do not have that detail and suggest the best matching page.',
     '',
     'LIVE PORTFOLIO KNOWLEDGE:',
     JSON.stringify(knowledge),

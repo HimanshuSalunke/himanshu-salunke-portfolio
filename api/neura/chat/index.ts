@@ -93,8 +93,8 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
       body: JSON.stringify({
         model: DEFAULT_MODEL,
         messages,
-        temperature: 0.35,
-        max_tokens: 400,
+        temperature: 0.25,
+        max_tokens: 2200,
         stream: wantStream,
       }),
     })
