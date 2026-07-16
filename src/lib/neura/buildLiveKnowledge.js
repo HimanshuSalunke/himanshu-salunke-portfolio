@@ -1,14 +1,53 @@
-import { readdirSync, readFileSync } from 'fs'
-import { join } from 'path'
+import { existsSync, readdirSync, readFileSync } from 'fs'
+import { dirname, join } from 'path'
+import { fileURLToPath } from 'url'
 import matter from 'gray-matter'
+import liveContent from '../../data/site/live-content.json' with { type: 'json' }
+import currentFocus from '../../data/currentFocus.json' with { type: 'json' }
 
-function readJson(filePath) {
-  return JSON.parse(readFileSync(filePath, 'utf8'))
+const MODULE_DIR = dirname(fileURLToPath(import.meta.url))
+
+function resolveDataRoot(preferred) {
+  const candidates = [
+    preferred,
+    process.cwd(),
+    join(process.cwd(), '..'),
+    join(MODULE_DIR, '../../..'),
+    join(MODULE_DIR, '../../../..'),
+  ].filter(Boolean)
+
+  for (const root of candidates) {
+    if (existsSync(join(root, 'src/data/projects'))) return root
+    if (existsSync(join(root, 'data/projects'))) return root
+  }
+
+  return process.cwd()
+}
+
+function projectsDirFor(rootDir) {
+  const nested = join(rootDir, 'src/data/projects')
+  if (existsSync(nested)) return nested
+  const flat = join(rootDir, 'data/projects')
+  if (existsSync(flat)) return flat
+  return nested
+}
+
+function articlesPathFor(rootDir) {
+  const nested = join(rootDir, 'src/data/articles.ts')
+  if (existsSync(nested)) return nested
+  const flat = join(rootDir, 'data/articles.ts')
+  if (existsSync(flat)) return flat
+  return nested
 }
 
 function loadProjects(rootDir) {
-  const projectsDir = join(rootDir, 'src/data/projects')
+  const projectsDir = projectsDirFor(rootDir)
   try {
+    if (!existsSync(projectsDir)) {
+      console.error('Neura live knowledge: projects directory missing at', projectsDir)
+      return []
+    }
+
     return readdirSync(projectsDir)
       .filter((file) => file.endsWith('.mdx'))
       .map((file) => {
@@ -44,7 +83,13 @@ function loadProjects(rootDir) {
 
 function loadArticles(rootDir) {
   try {
-    const raw = readFileSync(join(rootDir, 'src/data/articles.ts'), 'utf8')
+    const articlesPath = articlesPathFor(rootDir)
+    if (!existsSync(articlesPath)) {
+      console.error('Neura live knowledge: articles file missing at', articlesPath)
+      return []
+    }
+
+    const raw = readFileSync(articlesPath, 'utf8')
     const marker = 'export const articles = '
     const start = raw.indexOf(marker)
     if (start < 0) return []
@@ -86,14 +131,14 @@ function loadArticles(rootDir) {
 }
 
 /**
- * Builds Neura's knowledge snapshot from live portfolio sources
- * (MDX projects, articles.ts, currentFocus.json, site/live-content.json).
+ * Builds Neura's knowledge snapshot from live portfolio sources.
+ * JSON profile/services are imported (always available on Vercel).
+ * Projects/articles are read from disk (included via vercel.json includeFiles).
  */
 export function buildLiveKnowledge(rootDir = process.cwd()) {
-  const live = readJson(join(rootDir, 'src/data/site/live-content.json'))
-  const currentFocus = readJson(join(rootDir, 'src/data/currentFocus.json'))
-  const projects = loadProjects(rootDir)
-  const articles = loadArticles(rootDir)
+  const dataRoot = resolveDataRoot(rootDir)
+  const projects = loadProjects(dataRoot)
+  const articles = loadArticles(dataRoot)
 
   return {
     source: 'live-portfolio-files',
@@ -103,13 +148,13 @@ export function buildLiveKnowledge(rootDir = process.cwd()) {
       role: "Professional portfolio assistant for Himanshu Salunke's website",
       tone: 'Clear, concise, professional, and helpful. Prefer 2-5 short sentences.',
     },
-    profile: live.profile,
-    experience: live.experience,
-    education: live.education,
-    credentials: live.credentials,
-    services: live.services,
-    siteNavigation: live.siteNavigation,
-    faqHints: live.faqHints,
+    profile: liveContent.profile,
+    experience: liveContent.experience,
+    education: liveContent.education,
+    credentials: liveContent.credentials,
+    services: liveContent.services,
+    siteNavigation: liveContent.siteNavigation,
+    faqHints: liveContent.faqHints,
     currentFocus,
     projects,
     articles,

@@ -1,4 +1,9 @@
 {
+  "functions": {
+    "api/neura/chat/index.ts": {
+      "includeFiles": "src/data/**"
+    }
+  },
   "rewrites": [
     {
       "source": "/((?!api/).*)",
