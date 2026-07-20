@@ -24,6 +24,25 @@ const navigation: NavigationItem[] = [
   { name: 'Contact', href: '/contact' },
 ]
 
+/** Prefetch lazy page chunks on hover/focus without changing navigation. */
+const routePreloaders: Record<string, () => Promise<unknown>> = {
+  '/': () => import('../../../app/pages/Home'),
+  '/about': () => import('../../../app/pages/About'),
+  '/work': () => import('../../../app/pages/Work'),
+  '/services': () => import('../../../app/pages/Services'),
+  '/articles': () => import('../../../app/pages/Articles'),
+  '/contact': () => import('../../../app/pages/Contact'),
+  '/developer': () => import('../../../app/pages/Developer'),
+}
+
+const preloadRouteChunk = (href: string) => {
+  const load = routePreloaders[href]
+  if (!load) return
+  void load().catch(() => {
+    // Prefetch is best-effort; navigation still works if it fails.
+  })
+}
+
 const isNavActive = (pathname: string, item: NavigationItem) => {
   if (pathname === item.href) return true
   if (item.submenu?.some((sub) => pathname === sub.href)) return true
@@ -177,11 +196,15 @@ export const CinematicHeader: React.FC = () => {
                   <div
                     key={item.name}
                     className="relative"
-                    onMouseEnter={() => hasSubmenu && setOpenDropdown(item.name)}
+                    onMouseEnter={() => {
+                      preloadRouteChunk(item.href)
+                      if (hasSubmenu) setOpenDropdown(item.name)
+                    }}
                     onMouseLeave={() => hasSubmenu && setOpenDropdown(null)}
                   >
                     <Link
                       to={item.href}
+                      onFocus={() => preloadRouteChunk(item.href)}
                       className={`relative flex items-center gap-1 rounded-full px-2.5 py-1.5 text-[0.8125rem] font-medium transition-all duration-300 xl:px-3.5 xl:text-sm ${
                         active
                           ? 'bg-gradient-to-r from-blue-600 to-purple-600 text-white shadow-md shadow-purple-500/25'
@@ -211,10 +234,12 @@ export const CinematicHeader: React.FC = () => {
                               <Link
                                 key={sub.name}
                                 to={sub.href}
+                                onMouseEnter={() => preloadRouteChunk(sub.href)}
+                                onFocus={() => preloadRouteChunk(sub.href)}
                                 className={`block rounded-xl px-3.5 py-2.5 text-sm transition-colors ${
                                   subActive
-                                    ? 'bg-purple-500/10 font-medium text-purple-700 dark:text-purple-300'
-                                    : 'text-neutral-600 hover:bg-neutral-100 hover:text-neutral-900 dark:text-neutral-300 dark:hover:bg-white/8 dark:hover:text-white'
+                                    ? 'bg-purple-500/10 font-medium text-purple-700 dark:bg-purple-500/15 dark:text-purple-200'
+                                    : 'text-neutral-700 hover:bg-neutral-100 hover:text-neutral-900 dark:text-neutral-200 dark:hover:!bg-purple-500/20 dark:hover:!text-white'
                                 }`}
                               >
                                 {sub.name}
@@ -335,6 +360,8 @@ export const CinematicHeader: React.FC = () => {
                         <Link
                           to={item.href}
                           onClick={() => setIsMenuOpen(false)}
+                          onMouseEnter={() => preloadRouteChunk(item.href)}
+                          onFocus={() => preloadRouteChunk(item.href)}
                           className={`flex min-h-[44px] touch-manipulation items-center rounded-xl px-4 py-3 text-base font-semibold transition-colors ${
                             active
                               ? 'bg-gradient-to-r from-blue-600/12 to-purple-600/18 text-purple-950 dark:from-blue-500/15 dark:to-purple-500/20 dark:text-purple-100'
@@ -350,10 +377,12 @@ export const CinematicHeader: React.FC = () => {
                               key={sub.name}
                               to={sub.href}
                               onClick={() => setIsMenuOpen(false)}
+                              onMouseEnter={() => preloadRouteChunk(sub.href)}
+                              onFocus={() => preloadRouteChunk(sub.href)}
                               className={`flex min-h-[40px] touch-manipulation items-center rounded-xl py-2 pl-7 pr-4 text-sm transition-colors ${
                                 subActive
                                   ? 'font-semibold text-purple-800 dark:text-purple-200'
-                                  : 'text-neutral-700 hover:bg-neutral-50 hover:text-neutral-950 dark:text-neutral-300 dark:hover:bg-white/5 dark:hover:text-white'
+                                  : 'text-neutral-700 hover:bg-neutral-100 hover:text-neutral-950 dark:text-neutral-200 dark:hover:!bg-purple-500/20 dark:hover:!text-white'
                               }`}
                             >
                               {sub.name}

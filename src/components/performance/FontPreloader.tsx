@@ -1,77 +1,18 @@
 import React, { useEffect } from 'react'
 
-interface FontPreloaderProps {
-  fonts?: Array<{
-    family: string
-    weight?: string | number
-    style?: string
-    display?: 'auto' | 'block' | 'swap' | 'fallback' | 'optional'
-  }>
-}
+/** Fonts are self-hosted via @fontsource in main.tsx - no runtime preload needed. */
+export const FontPreloader: React.FC = () => null
 
-export const FontPreloader: React.FC<FontPreloaderProps> = ({
-  fonts = [
-    { family: 'Inter', weight: '400', display: 'swap' },
-    { family: 'Inter', weight: '500', display: 'swap' },
-    { family: 'Inter', weight: '600', display: 'swap' },
-    { family: 'Inter', weight: '700', display: 'swap' },
-    { family: 'JetBrains Mono', weight: '400', display: 'swap' },
-    { family: 'JetBrains Mono', weight: '500', display: 'swap' },
-  ]
-}) => {
-  useEffect(() => {
-    // Fonts are loaded once from index.html to avoid duplicate requests and layout shift
-  }, [fonts])
-
-  return null
-}
-
-export const FontDisplayOptimizer: React.FC = () => {
-  useEffect(() => {
-    // Optimize font display for better performance
-    const optimizeFontDisplay = () => {
-      // Set font-display: swap for all fonts
-      const style = document.createElement('style')
-      style.textContent = `
-        @font-face {
-          font-family: 'Inter';
-          font-display: swap;
-        }
-        @font-face {
-          font-family: 'JetBrains Mono';
-          font-display: swap;
-        }
-      `
-      document.head.appendChild(style)
-    }
-
-    optimizeFontDisplay()
-  }, [])
-
-  return null
-}
+export const FontDisplayOptimizer: React.FC = () => null
 
 export const CriticalResourcePreloader: React.FC = () => {
   useEffect(() => {
-    // Preload critical resources
-    const preloadCriticalResources = () => {
-      const criticalResources = [
-        { href: '/api/current-focus', as: 'fetch', crossOrigin: 'anonymous' },
-      ]
-
-      criticalResources.forEach(resource => {
-        const link = document.createElement('link')
-        link.rel = 'preload'
-        link.href = resource.href
-        link.as = resource.as
-        if (resource.crossOrigin) {
-          link.crossOrigin = resource.crossOrigin
-        }
-        document.head.appendChild(link)
-      })
-    }
-
-    preloadCriticalResources()
+    const link = document.createElement('link')
+    link.rel = 'preload'
+    link.href = '/api/current-focus'
+    link.as = 'fetch'
+    link.crossOrigin = 'anonymous'
+    document.head.appendChild(link)
   }, [])
 
   return null

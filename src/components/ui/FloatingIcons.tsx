@@ -1,5 +1,5 @@
 import React from 'react'
-import { motion } from 'framer-motion'
+import { motion, useReducedMotion } from 'framer-motion'
 import {
     SiTensorflow, SiPytorch, SiHuggingface, SiNvidia, SiOpencv
 } from 'react-icons/si'
@@ -8,7 +8,8 @@ import {
 } from 'react-icons/fa'
 
 export const FloatingIcons: React.FC = () => {
-    // Icons to float in the background - AI & Neural Network Themed
+    const prefersReducedMotion = useReducedMotion()
+
     const bgIcons = [
         { Icon: FaBrain, color: 'text-purple-500', size: 60, x: '10%', y: '20%', duration: 8 },
         { Icon: SiTensorflow, color: 'text-orange-500', size: 55, x: '85%', y: '15%', duration: 10 },
@@ -22,28 +23,33 @@ export const FloatingIcons: React.FC = () => {
 
     return (
         <div className="absolute inset-0 overflow-hidden pointer-events-none z-0">
-            {/* Cinematic Gradients - Stronger for better visibility */}
-            <div className="absolute top-0 left-0 w-[600px] h-[600px] bg-purple-500/10 dark:bg-purple-500/15 rounded-full blur-[120px] mix-blend-multiply dark:mix-blend-screen animate-pulse" />
-            <div className="absolute bottom-0 right-0 w-[600px] h-[600px] bg-blue-500/10 dark:bg-blue-500/15 rounded-full blur-[120px] mix-blend-multiply dark:mix-blend-screen animate-pulse" />
+            <div className={`absolute top-0 left-0 w-[600px] h-[600px] bg-purple-500/10 dark:bg-purple-500/15 rounded-full blur-[120px] mix-blend-multiply dark:mix-blend-screen ${prefersReducedMotion ? '' : 'animate-pulse'}`} />
+            <div className={`absolute bottom-0 right-0 w-[600px] h-[600px] bg-blue-500/10 dark:bg-blue-500/15 rounded-full blur-[120px] mix-blend-multiply dark:mix-blend-screen ${prefersReducedMotion ? '' : 'animate-pulse'}`} />
 
-            {/* Floating Icons */}
             {bgIcons.map((item, idx) => (
                 <motion.div
                     key={idx}
-                    // Increased opacity: opacity-40 in light mode for visibility
                     className={`absolute ${item.color} opacity-40 dark:opacity-30 will-change-transform`}
                     initial={{ x: item.x, y: item.y }}
-                    animate={{
-                        y: [0, -30, 0],
-                        rotate: [0, 10, -10, 0],
-                        scale: [1, 1.1, 1]
-                    }}
-                    transition={{
-                        duration: item.duration,
-                        repeat: Infinity,
-                        ease: "easeInOut",
-                        delay: idx * 0.5
-                    }}
+                    animate={
+                      prefersReducedMotion
+                        ? undefined
+                        : {
+                            y: [0, -30, 0],
+                            rotate: [0, 10, -10, 0],
+                            scale: [1, 1.1, 1],
+                          }
+                    }
+                    transition={
+                      prefersReducedMotion
+                        ? undefined
+                        : {
+                            duration: item.duration,
+                            repeat: Infinity,
+                            ease: 'easeInOut',
+                            delay: idx * 0.5,
+                          }
+                    }
                     style={{ left: item.x, top: item.y }}
                 >
                     <item.Icon size={item.size} />

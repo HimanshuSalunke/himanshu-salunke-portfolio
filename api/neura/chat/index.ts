@@ -9,9 +9,9 @@ export const config = {
 }
 
 const REQUESTY_URL = 'https://router.requesty.ai/v1/chat/completions'
-const DEFAULT_MODEL = process.env.REQUESTY_MODEL || 'openai/gpt-4.1-nano'
+const DEFAULT_MODEL = process.env.REQUESTY_MODEL || 'openai/gpt-5-nano'
 const MAX_MESSAGE_LENGTH = 500
-const MAX_HISTORY = 8
+const MAX_HISTORY = 12
 
 interface ChatMessage {
   role: 'user' | 'assistant' | 'system'
@@ -64,6 +64,11 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
     const message = typeof body.message === 'string' ? body.message.trim() : ''
     const history = normalizeHistory(body.history)
     const wantStream = body.stream !== false
+    const pagePath =
+      typeof body.pagePath === 'string' && body.pagePath.startsWith('/')
+        ? body.pagePath.slice(0, 200)
+        : '/'
+    const pageHint = typeof body.pageHint === 'string' ? body.pageHint.slice(0, 300) : ''
 
     if (!message) {
       return res.status(400).json({ error: 'Message is required.' })
@@ -77,7 +82,10 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
 
     const knowledge = buildLiveKnowledge(process.cwd())
     const messages: ChatMessage[] = [
-      { role: 'system', content: buildNeuraSystemPrompt(knowledge) },
+      {
+        role: 'system',
+        content: buildNeuraSystemPrompt(knowledge, { pagePath, pageHint }),
+      },
       ...history,
       { role: 'user', content: message },
     ]

@@ -1,7 +1,33 @@
-import React, { useCallback, useEffect, useRef, useState } from 'react'
+import React, { useCallback, useEffect, useMemo, useRef, useState } from 'react'
 import { AnimatePresence, motion, useReducedMotion } from 'framer-motion'
-import { Loader2, MessageCircle, Minus, Send, X } from 'lucide-react'
+import { useLocation } from 'react-router-dom'
+import {
+  Check,
+  Copy,
+  Eraser,
+  ExternalLink,
+  Loader2,
+  MessageCircle,
+  Minus,
+  Send,
+  Square,
+  ThumbsDown,
+  ThumbsUp,
+  X,
+} from 'lucide-react'
 import Markdown from 'markdown-to-jsx'
+import {
+  STARTER_CHIPS,
+  QUICK_ACTIONS,
+  OFFLINE_FAQ,
+  clearPersistedThread,
+  extractPortfolioLinks,
+  getFollowUpChips,
+  loadPersistedThread,
+  pageContextHint,
+  savePersistedThread,
+  trackNeuraEvent,
+} from '../../../lib/neura/agentUx.ts'
 
 type ChatRole = 'user' | 'assistant'
 
@@ -9,6 +35,7 @@ type ChatMessage = {
   id: string
   role: ChatRole
   text: string
+  feedback?: 'up' | 'down'
 }
 
 type Pose = 'idle' | 'wave-right' | 'wave-both' | 'bounce' | 'point-down' | 'celebrate'
@@ -75,6 +102,8 @@ async function streamNeuraApi(
   history: HistoryItem[],
   onChunk: (fullText: string) => void,
   signal?: AbortSignal,
+  pagePath = '/',
+  pageHint = '',
 ): Promise<string> {
   const response = await fetch('/api/neura/chat', {
     method: 'POST',
@@ -87,6 +116,8 @@ async function streamNeuraApi(
       message,
       history,
       stream: true,
+      pagePath,
+      pageHint,
     }),
   })
 
@@ -287,12 +318,14 @@ function useSyncedBodyPose(
   pose: Pose,
   isSpeaking: boolean,
   prefersReducedMotion: boolean | null,
+  /** When false (chat closed), stop the rAF loop to free the main thread. */
+  enabled: boolean,
 ): BodyPose {
   const [body, setBody] = useState<BodyPose>(DEFAULT_POSE)
   const bodyRef = useRef<BodyPose>(DEFAULT_POSE)
 
   useEffect(() => {
-    if (prefersReducedMotion) {
+    if (!enabled || prefersReducedMotion) {
       bodyRef.current = DEFAULT_POSE
       setBody(DEFAULT_POSE)
       return
@@ -311,7 +344,7 @@ function useSyncedBodyPose(
 
     frame = requestAnimationFrame(loop)
     return () => cancelAnimationFrame(frame)
-  }, [pose, isSpeaking, prefersReducedMotion])
+  }, [pose, isSpeaking, prefersReducedMotion, enabled])
 
   return body
 }
@@ -559,24 +592,61 @@ const NeuraFabPreview: React.FC<{ body: BodyPose; blink: boolean }> = ({ body, b
 
 export const CartoonLivingEntity: React.FC = () => {
   const prefersReducedMotion = useReducedMotion()
+  const location = useLocation()
   const [pose, setPose] = useState<Pose>('idle')
   const [blink, setBlink] = useState(false)
   const [isOpen, setIsOpen] = useState(false)
   const [hasWelcomed, setHasWelcomed] = useState(() => !!localStorage.getItem(STORAGE_KEY))
   const [showFabTeaser, setShowFabTeaser] = useState(() => !localStorage.getItem(FAB_SEEN_KEY))
   const [fabTeaserText, setFabTeaserText] = useState('')
-  const [messages, setMessages] = useState<ChatMessage[]>([])
+  const [messages, setMessages] = useState<ChatMessage[]>(() => loadPersistedThread())
   const [input, setInput] = useState('')
   const [isThinking, setIsThinking] = useState(false)
   const [chatError, setChatError] = useState('')
+  const [copyFlash, setCopyFlash] = useState('')
   const welcomeInFlightRef = useRef(false)
   const messagesEndRef = useRef<HTMLDivElement | null>(null)
   const inputRef = useRef<HTMLInputElement | null>(null)
   const idleIntroStartedRef = useRef(false)
   const clearSessionOnExitRef = useRef(false)
   const chatRequestAbortRef = useRef<AbortController | null>(null)
+  const persistReadyRef = useRef(false)
 
-  const body = useSyncedBodyPose(pose, false, prefersReducedMotion)
+  const body = useSyncedBodyPose(pose, false, prefersReducedMotion, isOpen)
+  const pageHint = useMemo(() => pageContextHint(location.pathname), [location.pathname])
+
+  const lastUserText = useMemo(() => {
+    for (let i = messages.length - 1; i >= 0; i -= 1) {
+      if (messages[i].role === 'user') return messages[i].text
+    }
+    return ''
+  }, [messages])
+
+  const lastAssistant = useMemo(() => {
+    for (let i = messages.length - 1; i >= 0; i -= 1) {
+      if (messages[i].role === 'assistant' && messages[i].text.trim()) return messages[i]
+    }
+    return null
+  }, [messages])
+
+  const followUps = useMemo(() => {
+    if (!lastAssistant || isThinking) return []
+    return getFollowUpChips(lastUserText, lastAssistant.text)
+  }, [lastAssistant, lastUserText, isThinking])
+
+  const linkCards = useMemo(() => {
+    if (!lastAssistant || isThinking) return []
+    return extractPortfolioLinks(lastAssistant.text)
+  }, [lastAssistant, isThinking])
+
+  useEffect(() => {
+    persistReadyRef.current = true
+  }, [])
+
+  useEffect(() => {
+    if (!persistReadyRef.current) return
+    savePersistedThread(messages)
+  }, [messages])
 
   const beginChatRequest = useCallback(() => {
     chatRequestAbortRef.current?.abort()
@@ -585,12 +655,25 @@ export const CartoonLivingEntity: React.FC = () => {
     return controller
   }, [])
 
+  const stopGeneration = useCallback(() => {
+    chatRequestAbortRef.current?.abort()
+    chatRequestAbortRef.current = null
+    setIsThinking(false)
+    welcomeInFlightRef.current = false
+    trackNeuraEvent('neura_stop_generation')
+  }, [])
+
   const playWelcome = useCallback(async () => {
     if (welcomeInFlightRef.current || isThinking) return
+    // Do not wipe a restored thread with a fresh greeting.
+    if (messages.some((m) => m.text.trim().length > 0)) {
+      localStorage.setItem(STORAGE_KEY, '1')
+      setHasWelcomed(true)
+      return
+    }
 
     welcomeInFlightRef.current = true
     setChatError('')
-    setMessages([])
     idleIntroStartedRef.current = true
     setIsThinking(true)
     setPose('wave-both')
@@ -618,6 +701,8 @@ export const CartoonLivingEntity: React.FC = () => {
           )
         },
         controller.signal,
+        location.pathname,
+        pageHint,
       )
 
       if (!controller.signal.aborted) {
@@ -628,6 +713,7 @@ export const CartoonLivingEntity: React.FC = () => {
       if (!controller.signal.aborted) {
         setIsThinking(false)
         setMessages((prev) => prev.filter((msg) => msg.text.trim().length > 0))
+        setChatError(OFFLINE_FAQ)
       }
     } finally {
       window.clearTimeout(timeoutId)
@@ -639,13 +725,18 @@ export const CartoonLivingEntity: React.FC = () => {
       setPose('idle')
       welcomeInFlightRef.current = false
     }
-  }, [isThinking, beginChatRequest])
+  }, [isThinking, beginChatRequest, messages, location.pathname, pageHint])
 
   const tryAutoWelcome = useCallback(() => {
     if (welcomeInFlightRef.current || !isOpen) return
+    if (messages.some((m) => m.text.trim().length > 0)) {
+      localStorage.setItem(STORAGE_KEY, '1')
+      setHasWelcomed(true)
+      return
+    }
     if (localStorage.getItem(STORAGE_KEY)) return
     playWelcome()
-  }, [playWelcome, isOpen])
+  }, [playWelcome, isOpen, messages])
 
   const openChat = useCallback(() => {
     clearSessionOnExitRef.current = false
@@ -654,7 +745,8 @@ export const CartoonLivingEntity: React.FC = () => {
     if (!localStorage.getItem(FAB_SEEN_KEY)) {
       localStorage.setItem(FAB_SEEN_KEY, '1')
     }
-  }, [])
+    trackNeuraEvent('neura_open', { path: location.pathname })
+  }, [location.pathname])
 
   const minimizeChat = useCallback(() => {
     if (!isOpen) return
@@ -662,15 +754,29 @@ export const CartoonLivingEntity: React.FC = () => {
     setIsOpen(false)
   }, [isOpen])
 
+  /** Close hides the panel but keeps the conversation for this visit. */
   const closeChat = useCallback(() => {
     if (!isOpen) return
-    clearSessionOnExitRef.current = true
+    clearSessionOnExitRef.current = false
     chatRequestAbortRef.current?.abort()
     chatRequestAbortRef.current = null
     setIsThinking(false)
     welcomeInFlightRef.current = false
     setIsOpen(false)
   }, [isOpen])
+
+  const clearChat = useCallback(() => {
+    chatRequestAbortRef.current?.abort()
+    chatRequestAbortRef.current = null
+    setIsThinking(false)
+    welcomeInFlightRef.current = false
+    idleIntroStartedRef.current = false
+    setMessages([])
+    setInput('')
+    setChatError('')
+    clearPersistedThread()
+    trackNeuraEvent('neura_clear_chat')
+  }, [])
 
   const handlePanelExitComplete = useCallback(() => {
     if (!clearSessionOnExitRef.current) return
@@ -686,14 +792,14 @@ export const CartoonLivingEntity: React.FC = () => {
     else openChat()
   }, [isOpen, openChat, minimizeChat])
 
-  const sendMessage = useCallback(
-    async (event?: React.FormEvent) => {
-      event?.preventDefault()
-      const text = input.trim().slice(0, MAX_CHAT_LENGTH)
+  const askNeura = useCallback(
+    async (rawText: string) => {
+      const text = rawText.trim().slice(0, MAX_CHAT_LENGTH)
       if (!text || isThinking) return
 
       setChatError('')
       setInput('')
+      trackNeuraEvent('neura_ask', { path: location.pathname, preview: text.slice(0, 80) })
 
       const userMessage: ChatMessage = {
         id: `user-${Date.now()}`,
@@ -707,7 +813,7 @@ export const CartoonLivingEntity: React.FC = () => {
             (msg.role === 'user' || msg.role === 'assistant') &&
             msg.text.trim().length > 0,
         )
-        .slice(-8)
+        .slice(-12)
         .map((msg) => ({ role: msg.role, content: msg.text.trim() }))
 
       const assistantId = `assistant-${Date.now()}`
@@ -739,6 +845,8 @@ export const CartoonLivingEntity: React.FC = () => {
             )
           },
           controller.signal,
+          location.pathname,
+          pageHint,
         )
 
         if (!controller.signal.aborted) setIsThinking(false)
@@ -753,7 +861,7 @@ export const CartoonLivingEntity: React.FC = () => {
               ? 'That took too long. Please try again.'
               : error.message
             : 'Something went wrong. Please try again in a moment.'
-        setChatError(fallback)
+        setChatError(`${fallback}\n\n${OFFLINE_FAQ}`)
         setMessages((prev) => {
           const withoutEmpty = prev.filter(
             (msg) => msg.id !== assistantId || msg.text.trim().length > 0,
@@ -761,6 +869,7 @@ export const CartoonLivingEntity: React.FC = () => {
           return withoutEmpty
         })
         setIsThinking(false)
+        trackNeuraEvent('neura_error', { message: fallback.slice(0, 120) })
       } finally {
         window.clearTimeout(timeoutId)
         if (chatRequestAbortRef.current === controller) {
@@ -768,8 +877,46 @@ export const CartoonLivingEntity: React.FC = () => {
         }
       }
     },
-    [input, isThinking, messages, beginChatRequest],
+    [isThinking, messages, beginChatRequest, location.pathname, pageHint],
   )
+
+  const sendMessage = useCallback(
+    async (event?: React.FormEvent) => {
+      event?.preventDefault()
+      await askNeura(input)
+    },
+    [askNeura, input],
+  )
+
+  const handleQuickAction = useCallback(
+    async (action: (typeof QUICK_ACTIONS)[number]) => {
+      if (action.copyText) {
+        try {
+          await navigator.clipboard.writeText(action.copyText)
+          setCopyFlash(action.id)
+          window.setTimeout(() => setCopyFlash(''), 1600)
+          trackNeuraEvent('neura_copy', { id: action.id })
+        } catch {
+          setChatError(`Could not copy. Value: ${action.copyText}`)
+        }
+        return
+      }
+      if (action.href) {
+        trackNeuraEvent('neura_action_link', { id: action.id, href: action.href })
+        window.open(action.href, action.href.endsWith('.pdf') ? '_blank' : '_self')
+        return
+      }
+      if (action.prompt) await askNeura(action.prompt)
+    },
+    [askNeura],
+  )
+
+  const setFeedback = useCallback((messageId: string, value: 'up' | 'down') => {
+    setMessages((prev) =>
+      prev.map((m) => (m.id === messageId ? { ...m, feedback: value } : m)),
+    )
+    trackNeuraEvent('neura_feedback', { messageId, value })
+  }, [])
 
   useEffect(() => {
     if (!isOpen || hasWelcomed) return
@@ -814,12 +961,15 @@ export const CartoonLivingEntity: React.FC = () => {
             )
           },
           controller.signal,
+          location.pathname,
+          pageHint,
         )
         if (!cancelled && !controller.signal.aborted) setIsThinking(false)
       } catch {
         if (!cancelled && !controller.signal.aborted) {
           setIsThinking(false)
           setMessages((prev) => prev.filter((msg) => msg.id !== messageId || msg.text.trim()))
+          setChatError(OFFLINE_FAQ)
         }
       } finally {
         window.clearTimeout(timeoutId)
@@ -845,7 +995,7 @@ export const CartoonLivingEntity: React.FC = () => {
     // messages.length is read once on open intentionally. Including it in deps
     // re-runs/aborts the stream and leaves the Thinking state stuck.
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [isOpen, hasWelcomed, beginChatRequest])
+  }, [isOpen, hasWelcomed, beginChatRequest, location.pathname, pageHint])
 
   useEffect(() => {
     if (isOpen || !showFabTeaser) return
@@ -870,7 +1020,11 @@ export const CartoonLivingEntity: React.FC = () => {
   }, [isOpen, showFabTeaser, prefersReducedMotion])
 
   useEffect(() => {
-    if (prefersReducedMotion) return
+    // Blink only while chat is open - closed FAB stays static for main-thread savings.
+    if (!isOpen || prefersReducedMotion) {
+      setBlink(false)
+      return
+    }
 
     const blinkLoop = window.setInterval(() => {
       setBlink(true)
@@ -878,7 +1032,7 @@ export const CartoonLivingEntity: React.FC = () => {
     }, 2800)
 
     return () => window.clearInterval(blinkLoop)
-  }, [prefersReducedMotion])
+  }, [isOpen, prefersReducedMotion])
 
   useEffect(() => {
     if (!isOpen) return
@@ -940,6 +1094,15 @@ export const CartoonLivingEntity: React.FC = () => {
               <div className="flex shrink-0 items-center gap-0.5">
                 <button
                   type="button"
+                  onClick={clearChat}
+                  className="flex h-10 w-10 touch-manipulation items-center justify-center rounded-full text-purple-700 transition-colors hover:bg-purple-500/10 dark:text-purple-100 dark:hover:bg-purple-500/20 sm:h-9 sm:w-9"
+                  aria-label="Clear Neura chat"
+                  title="Clear chat"
+                >
+                  <Eraser className="h-4 w-4" />
+                </button>
+                <button
+                  type="button"
                   onClick={minimizeChat}
                   className="flex h-10 w-10 touch-manipulation items-center justify-center rounded-full text-purple-700 transition-colors hover:bg-purple-500/10 dark:text-purple-100 dark:hover:bg-purple-500/20 sm:h-9 sm:w-9"
                   aria-label="Minimize Neura chat"
@@ -980,7 +1143,7 @@ export const CartoonLivingEntity: React.FC = () => {
               </div>
 
               <div className="absolute inset-0 z-10 flex flex-col">
-                <div className="min-h-0 flex-1 overflow-y-auto overscroll-contain px-3 pb-14 pt-2.5 [mask-image:linear-gradient(to_bottom,black_0%,black_90%,transparent_100%)] sm:px-4 sm:pb-16 sm:pt-3">
+                <div className="min-h-0 flex-1 overflow-y-auto overscroll-contain px-3 pb-2 pt-2.5 sm:px-4 sm:pt-3">
                   <div className="flex flex-col items-stretch justify-start gap-2.5 sm:gap-3">
                     {messages
                       .filter((msg) => msg.role === 'user' || msg.text.trim().length > 0)
@@ -990,7 +1153,7 @@ export const CartoonLivingEntity: React.FC = () => {
                         className={
                           msg.role === 'user'
                             ? 'flex w-full justify-end'
-                            : 'flex w-full justify-start'
+                            : 'flex w-full flex-col items-start gap-1.5'
                         }
                       >
                         <NeuraMessageBubble
@@ -1002,6 +1165,36 @@ export const CartoonLivingEntity: React.FC = () => {
                         >
                           {msg.text}
                         </NeuraMessageBubble>
+                        {msg.role === 'assistant' &&
+                          lastAssistant?.id === msg.id &&
+                          !isThinking && (
+                            <div className="flex flex-wrap items-center gap-1 pl-1">
+                              <button
+                                type="button"
+                                onClick={() => setFeedback(msg.id, 'up')}
+                                className={`inline-flex h-7 w-7 touch-manipulation items-center justify-center rounded-full border transition ${
+                                  msg.feedback === 'up'
+                                    ? 'border-emerald-400/50 bg-emerald-500/15 text-emerald-700 dark:text-emerald-300'
+                                    : 'border-purple-400/25 text-purple-700 hover:bg-purple-500/10 dark:text-purple-200'
+                                }`}
+                                aria-label="Helpful answer"
+                              >
+                                <ThumbsUp className="h-3.5 w-3.5" />
+                              </button>
+                              <button
+                                type="button"
+                                onClick={() => setFeedback(msg.id, 'down')}
+                                className={`inline-flex h-7 w-7 touch-manipulation items-center justify-center rounded-full border transition ${
+                                  msg.feedback === 'down'
+                                    ? 'border-rose-400/50 bg-rose-500/15 text-rose-700 dark:text-rose-300'
+                                    : 'border-purple-400/25 text-purple-700 hover:bg-purple-500/10 dark:text-purple-200'
+                                }`}
+                                aria-label="Unhelpful answer"
+                              >
+                                <ThumbsDown className="h-3.5 w-3.5" />
+                              </button>
+                            </div>
+                          )}
                       </div>
                     ))}
                     {isThinking && (
@@ -1024,12 +1217,61 @@ export const CartoonLivingEntity: React.FC = () => {
                           variant="warning"
                           sender="Neura"
                           tail="none"
+                          markdown
                           className="w-fit max-w-full"
                         >
                           {chatError}
                         </NeuraMessageBubble>
                       </div>
                     )}
+
+                    {!isThinking && linkCards.length > 0 && (
+                      <div className="flex flex-wrap gap-1.5 pl-0.5">
+                        {linkCards.map((link) => (
+                          <a
+                            key={link.href}
+                            href={link.href}
+                            target={link.href.endsWith('.pdf') ? '_blank' : undefined}
+                            rel={link.href.endsWith('.pdf') ? 'noopener noreferrer' : undefined}
+                            className="inline-flex max-w-full items-center gap-1 rounded-full border border-purple-400/30 bg-white/80 px-2.5 py-1 text-[0.7rem] font-medium text-purple-900 shadow-sm dark:border-purple-400/25 dark:bg-[#16082a] dark:text-purple-100"
+                          >
+                            <ExternalLink className="h-3 w-3 shrink-0" aria-hidden />
+                            <span className="truncate capitalize">{link.label}</span>
+                          </a>
+                        ))}
+                      </div>
+                    )}
+
+                    {!isThinking && messages.length === 0 && (
+                      <div className="flex flex-wrap gap-1.5">
+                        {STARTER_CHIPS.map((chip) => (
+                          <button
+                            key={chip.label}
+                            type="button"
+                            onClick={() => void askNeura(chip.prompt)}
+                            className="rounded-full border border-purple-400/30 bg-white/80 px-2.5 py-1 text-[0.7rem] font-medium text-purple-900 transition hover:bg-purple-500/10 dark:border-purple-400/25 dark:bg-[#16082a] dark:text-purple-100 dark:hover:bg-purple-500/20"
+                          >
+                            {chip.label}
+                          </button>
+                        ))}
+                      </div>
+                    )}
+
+                    {!isThinking && lastAssistant && followUps.length > 0 && (
+                      <div className="flex flex-wrap gap-1.5">
+                        {followUps.map((chip) => (
+                          <button
+                            key={chip}
+                            type="button"
+                            onClick={() => void askNeura(chip)}
+                            className="rounded-full border border-cyan-400/30 bg-cyan-50/80 px-2.5 py-1 text-[0.7rem] font-medium text-cyan-950 transition hover:bg-cyan-500/15 dark:border-cyan-400/25 dark:bg-cyan-950/50 dark:text-cyan-50"
+                          >
+                            {chip}
+                          </button>
+                        ))}
+                      </div>
+                    )}
+
                     <div ref={messagesEndRef} />
                   </div>
                 </div>
@@ -1037,6 +1279,25 @@ export const CartoonLivingEntity: React.FC = () => {
             </div>
 
             <div className="relative z-20 shrink-0 border-t border-purple-500/15 bg-white/70 px-3 pb-3 pt-2 backdrop-blur-md dark:border-purple-500/25 dark:bg-[#0a0018]/75 sm:px-4 sm:pb-4 sm:pt-3">
+              <div className="mb-2 flex gap-1.5 overflow-x-auto pb-0.5 [scrollbar-width:none] [&::-webkit-scrollbar]:hidden">
+                {QUICK_ACTIONS.map((action) => (
+                  <button
+                    key={action.id}
+                    type="button"
+                    onClick={() => void handleQuickAction(action)}
+                    className="inline-flex shrink-0 items-center gap-1 rounded-full border border-purple-400/30 bg-white/85 px-2.5 py-1 text-[0.68rem] font-semibold text-purple-900 dark:border-purple-400/25 dark:bg-[#16082a] dark:text-purple-100"
+                  >
+                    {action.copyText ? (
+                      copyFlash === action.id ? (
+                        <Check className="h-3 w-3" aria-hidden />
+                      ) : (
+                        <Copy className="h-3 w-3" aria-hidden />
+                      )
+                    ) : null}
+                    {action.label}
+                  </button>
+                ))}
+              </div>
               <form onSubmit={sendMessage} className="flex items-center gap-1.5 sm:gap-2">
                 <label htmlFor="neura-chat-input" className="sr-only">
                   Ask Neura about the portfolio
@@ -1053,18 +1314,25 @@ export const CartoonLivingEntity: React.FC = () => {
                   className="min-w-0 flex-1 rounded-full border border-purple-400/40 bg-white/90 px-3.5 py-2.5 text-sm text-neutral-900 outline-none transition placeholder:text-purple-400/80 focus:border-purple-500 focus:ring-2 focus:ring-purple-500/25 disabled:opacity-60 dark:border-purple-400/30 dark:bg-[#120024]/90 dark:text-purple-50 dark:placeholder:text-purple-300/50 dark:focus:border-purple-400 dark:focus:ring-purple-400/20"
                   autoComplete="off"
                 />
-                <button
-                  type="submit"
-                  disabled={isThinking || !input.trim()}
-                  className="flex h-10 w-10 shrink-0 touch-manipulation items-center justify-center rounded-full bg-gradient-to-br from-blue-500 via-purple-500 to-cyan-400 text-white shadow-md shadow-purple-500/25 transition enabled:hover:scale-[1.03] enabled:active:scale-95 disabled:cursor-not-allowed disabled:opacity-45"
-                  aria-label="Send message to Neura"
-                >
-                  {isThinking ? (
-                    <Loader2 className="h-4 w-4 animate-spin" aria-hidden />
-                  ) : (
+                {isThinking ? (
+                  <button
+                    type="button"
+                    onClick={stopGeneration}
+                    className="flex h-10 w-10 shrink-0 touch-manipulation items-center justify-center rounded-full border border-rose-400/40 bg-rose-500/15 text-rose-700 shadow-sm dark:text-rose-200"
+                    aria-label="Stop Neura response"
+                  >
+                    <Square className="h-3.5 w-3.5 fill-current" />
+                  </button>
+                ) : (
+                  <button
+                    type="submit"
+                    disabled={!input.trim()}
+                    className="flex h-10 w-10 shrink-0 touch-manipulation items-center justify-center rounded-full bg-gradient-to-br from-blue-500 via-purple-500 to-cyan-400 text-white shadow-md shadow-purple-500/25 transition enabled:hover:scale-[1.03] enabled:active:scale-95 disabled:cursor-not-allowed disabled:opacity-45"
+                    aria-label="Send message to Neura"
+                  >
                     <Send className="h-4 w-4" aria-hidden />
-                  )}
-                </button>
+                  </button>
+                )}
               </form>
             </div>
           </motion.div>

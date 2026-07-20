@@ -550,8 +550,8 @@ app.get('/api/current-focus', (req, res) => {
 
 // Neura AI chat (Requesty)
 const NEURA_MAX_MESSAGE_LENGTH = 500;
-const NEURA_MAX_HISTORY = 8;
-const NEURA_MODEL = process.env.REQUESTY_MODEL || 'openai/gpt-4.1-nano';
+const NEURA_MAX_HISTORY = 12;
+const NEURA_MODEL = process.env.REQUESTY_MODEL || 'openai/gpt-5-nano';
 
 function normalizeNeuraHistory(input) {
   if (!Array.isArray(input)) return [];
@@ -588,6 +588,12 @@ app.post('/api/neura/chat', async (req, res) => {
     const message = typeof req.body?.message === 'string' ? req.body.message.trim() : '';
     const history = normalizeNeuraHistory(req.body?.history);
     const wantStream = req.body?.stream !== false;
+    const pagePath =
+      typeof req.body?.pagePath === 'string' && req.body.pagePath.startsWith('/')
+        ? String(req.body.pagePath).slice(0, 200)
+        : '/';
+    const pageHint =
+      typeof req.body?.pageHint === 'string' ? String(req.body.pageHint).slice(0, 300) : '';
 
     if (!message) {
       return res.status(400).json({ error: 'Message is required.' });
@@ -602,7 +608,7 @@ app.post('/api/neura/chat', async (req, res) => {
     const knowledge = buildLiveKnowledge(__dirname);
 
     const messages = [
-      { role: 'system', content: buildNeuraSystemPrompt(knowledge) },
+      { role: 'system', content: buildNeuraSystemPrompt(knowledge, { pagePath, pageHint }) },
       ...history,
       { role: 'user', content: message },
     ];

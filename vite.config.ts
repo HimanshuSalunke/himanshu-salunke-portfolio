@@ -79,7 +79,7 @@ export default defineConfig({
   },
   build: {
     target: 'esnext',
-    sourcemap: true,
+    sourcemap: false,
     rollupOptions: {
       external: ['canvas', 'fs', 'path'],
       output: {

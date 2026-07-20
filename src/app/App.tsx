@@ -6,15 +6,12 @@ import { ThemeProvider } from '../context/ThemeContext'
 import { CinematicHeader } from '../components/header/redesign/CinematicHeader'
 import { CinematicFooter } from '../components/footer/redesign/CinematicFooter'
 import { ProgressTracker, EasterEgg } from '../components/gamification/ProgressTracker'
-import { CartoonLivingEntity } from '../components/home/redesign/CartoonLivingEntity'
 import { ScrollToTop } from '../components/ui/ScrollToTop'
 import { FontPreloader, FontDisplayOptimizer, CriticalResourcePreloader } from '../components/performance/FontPreloader'
 import { RouteErrorBoundary, RouteLoadingFallback } from '../components/performance/RouteErrorBoundary'
 import { SkipLinks } from '../components/accessibility/SkipLinks'
 import { ToastProvider, ToastStyles } from '../components/ui/Toast'
-import { AnalyticsBanner } from '../components/analytics/AnalyticsBanner'
-import { VercelAnalytics } from '../components/analytics/VercelAnalytics'
-import { useAnalytics } from '../hooks/useAnalytics'
+import { useReducedMotion } from 'framer-motion'
 
 // Lazy load pages for better performance
 const Home = lazy(() => import('./pages/Home.tsx'))
@@ -26,6 +23,11 @@ const Contact = lazy(() => import('./pages/Contact.tsx'))
 const Developer = lazy(() => import('./pages/Developer.tsx'))
 const Services = lazy(() => import('./pages/Services.tsx'))
 const NotFound = lazy(() => import('./pages/NotFound.tsx'))
+const CartoonLivingEntity = lazy(() =>
+  import('../components/home/redesign/CartoonLivingEntity').then((m) => ({
+    default: m.CartoonLivingEntity,
+  })),
+)
 
 // Loading component
 const LoadingSpinner: React.FC = () => <RouteLoadingFallback />
@@ -33,18 +35,32 @@ const LoadingSpinner: React.FC = () => <RouteLoadingFallback />
 // Separated Routes component to use useLocation hook inside Router context
 const AppRoutes: React.FC = () => {
   const location = useLocation()
-  const { isAnalyticsEnabled, enableAnalytics, disableAnalytics } = useAnalytics()
+  const prefersReducedMotion = useReducedMotion()
   const isSupported = false
   const isUpdated = false
   const updateServiceWorker = () => { }
 
-  // Scroll reset and Analytics tracking
+  // Scroll reset on route change
   React.useEffect(() => {
     // Reset scroll
     window.scrollTo(0, 0)
     const timeoutId = setTimeout(() => window.scrollTo(0, 0), 50)
     return () => clearTimeout(timeoutId)
   }, [location.pathname])
+
+  const pageTransition = prefersReducedMotion
+    ? {
+        initial: { opacity: 0 },
+        animate: { opacity: 1 },
+        exit: { opacity: 0 },
+        transition: { duration: 0.12 },
+      }
+    : {
+        initial: { opacity: 0 },
+        animate: { opacity: 1 },
+        exit: { opacity: 0 },
+        transition: { duration: 0.2, ease: 'easeOut' as const },
+      }
 
   return (
     <>
@@ -63,10 +79,10 @@ const AppRoutes: React.FC = () => {
             <AnimatePresence mode="wait">
               <motion.div
                 key={location.pathname}
-                initial={{ opacity: 0, y: 12 }}
-                animate={{ opacity: 1, y: 0 }}
-                exit={{ opacity: 0, y: -12 }}
-                transition={{ duration: 0.35, ease: 'easeInOut' }}
+                initial={pageTransition.initial}
+                animate={pageTransition.animate}
+                exit={pageTransition.exit}
+                transition={pageTransition.transition}
                 className="min-h-screen"
               >
                 <Suspense fallback={<LoadingSpinner />}>
@@ -89,12 +105,12 @@ const AppRoutes: React.FC = () => {
         </main>
 
         <CinematicFooter />
-        <CartoonLivingEntity />
+        <Suspense fallback={null}>
+          <CartoonLivingEntity />
+        </Suspense>
         <EasterEgg />
         <ToastProvider />
         <ToastStyles />
-        <VercelAnalytics isEnabled={isAnalyticsEnabled} />
-        <AnalyticsBanner onAccept={enableAnalytics} onDecline={disableAnalytics} />
 
         {isSupported && isUpdated && (
           <div className="fixed bottom-4 right-4 z-50 bg-white dark:bg-neutral-800 border border-neutral-200 dark:border-neutral-700 rounded-lg shadow-lg p-4 max-w-sm">

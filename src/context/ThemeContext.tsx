@@ -63,6 +63,19 @@ export const ThemeProvider: React.FC<ThemeProviderProps> = ({ children }) => {
     
     // Save to localStorage
     localStorage.setItem('theme', theme)
+
+    // Keep browser chrome in sync with light/dark across devices
+    const themeColor = theme === 'dark' ? '#030014' : '#ffffff'
+    let meta = document.querySelector('meta[name="theme-color"]')
+    if (!meta) {
+      meta = document.createElement('meta')
+      meta.setAttribute('name', 'theme-color')
+      document.head.appendChild(meta)
+    }
+    meta.setAttribute('content', themeColor)
+
+    const msTile = document.querySelector('meta[name="msapplication-TileColor"]')
+    if (msTile) msTile.setAttribute('content', themeColor)
   }, [theme])
 
   const toggleTheme = () => {

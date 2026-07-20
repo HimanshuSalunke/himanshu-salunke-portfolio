@@ -90,21 +90,31 @@ export const ImageWithShimmer: React.FC<ImageWithShimmerProps> = ({
         />
       )}
 
-      {/* Actual image */}
+      {/* Actual image - prefer WebP sibling when present (generated offline) */}
       {isInView && (
-        <motion.img
-          src={src}
-          alt={alt}
-          width={width}
-          height={height}
-          className={`w-full h-full transition-opacity duration-300 ${
-            isLoaded ? 'opacity-100' : 'opacity-0'
-          } ${className}`}
-          onLoad={handleLoad}
-          onError={handleError}
-          loading={priority ? 'eager' : 'lazy'}
-          decoding="async"
-        />
+        <picture>
+          {/\.(jpe?g|png)$/i.test(src) && (
+            <source
+              type="image/webp"
+              srcSet={src.replace(/\.(jpe?g|png)$/i, '.webp')}
+            />
+          )}
+          <motion.img
+            ref={imgRef}
+            src={src}
+            alt={alt}
+            width={width}
+            height={height}
+            className={`w-full h-full transition-opacity duration-300 ${
+              isLoaded ? 'opacity-100' : 'opacity-0'
+            } ${className}`}
+            onLoad={handleLoad}
+            onError={handleError}
+            loading={priority ? 'eager' : 'lazy'}
+            decoding="async"
+            fetchPriority={priority ? 'high' : undefined}
+          />
+        </picture>
       )}
 
       {/* Error state */}
