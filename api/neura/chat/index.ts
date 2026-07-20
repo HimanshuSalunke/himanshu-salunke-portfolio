@@ -3,6 +3,7 @@ import {
   buildLiveKnowledge,
   buildNeuraSystemPrompt,
 } from '../../../src/lib/neura/buildLiveKnowledge.js'
+import { buildRequestyChatBody } from '../../../src/lib/neura/requestyChat.js'
 
 export const config = {
   supportsResponseStreaming: true,
@@ -99,13 +100,15 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
         'HTTP-Referer': process.env.VITE_SITE_URL || 'https://himanshu-salunke.vercel.app',
         'X-Title': 'Neura Portfolio Assistant',
       },
-      body: JSON.stringify({
-        model: DEFAULT_MODEL,
-        messages,
-        temperature: 0.2,
-        max_tokens: MAX_OUTPUT_TOKENS,
-        stream: wantStream,
-      }),
+      body: JSON.stringify(
+        buildRequestyChatBody({
+          model: DEFAULT_MODEL,
+          messages,
+          temperature: 0.2,
+          max_tokens: MAX_OUTPUT_TOKENS,
+          stream: wantStream,
+        }),
+      ),
     })
 
     if (!response.ok) {

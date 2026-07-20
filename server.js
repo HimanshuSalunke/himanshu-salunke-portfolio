@@ -8,6 +8,7 @@ import multer from 'multer';
 import { put } from '@vercel/blob';
 import { PrismaClient } from '@prisma/client';
 import { buildLiveKnowledge, buildNeuraSystemPrompt } from './src/lib/neura/buildLiveKnowledge.js';
+import { buildRequestyChatBody } from './src/lib/neura/requestyChat.js';
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
@@ -622,13 +623,15 @@ app.post('/api/neura/chat', async (req, res) => {
         'HTTP-Referer': process.env.VITE_SITE_URL || 'https://himanshu-salunke.vercel.app',
         'X-Title': 'Neura Portfolio Assistant',
       },
-      body: JSON.stringify({
-        model: NEURA_MODEL,
-        messages,
-        temperature: 0.2,
-        max_tokens: NEURA_MAX_OUTPUT_TOKENS,
-        stream: wantStream,
-      }),
+      body: JSON.stringify(
+        buildRequestyChatBody({
+          model: NEURA_MODEL,
+          messages,
+          temperature: 0.2,
+          max_tokens: NEURA_MAX_OUTPUT_TOKENS,
+          stream: wantStream,
+        }),
+      ),
     });
 
     if (!response.ok) {
