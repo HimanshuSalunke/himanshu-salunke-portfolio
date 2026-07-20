@@ -11,7 +11,8 @@ export const config = {
 const REQUESTY_URL = 'https://router.requesty.ai/v1/chat/completions'
 const DEFAULT_MODEL = process.env.REQUESTY_MODEL || 'openai/gpt-5-nano'
 const MAX_MESSAGE_LENGTH = 500
-const MAX_HISTORY = 12
+const MAX_HISTORY = 6
+const MAX_OUTPUT_TOKENS = 900
 
 interface ChatMessage {
   role: 'user' | 'assistant' | 'system'
@@ -101,8 +102,8 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
       body: JSON.stringify({
         model: DEFAULT_MODEL,
         messages,
-        temperature: 0.25,
-        max_tokens: 2200,
+        temperature: 0.2,
+        max_tokens: MAX_OUTPUT_TOKENS,
         stream: wantStream,
       }),
     })

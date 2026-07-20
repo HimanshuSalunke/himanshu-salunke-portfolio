@@ -7,6 +7,11 @@ import currentFocus from '../../data/currentFocus.json' with { type: 'json' }
 import articlesData from '../../data/articles.json' with { type: 'json' }
 
 const MODULE_DIR = dirname(fileURLToPath(import.meta.url))
+const KNOWLEDGE_CACHE_MS = 5 * 60 * 1000
+
+let cachedKnowledge = null
+let cachedKnowledgeAt = 0
+let cachedRoot = ''
 
 function resolveDataRoot(preferred) {
   const candidates = [
@@ -46,21 +51,19 @@ function loadProjects(rootDir) {
       .map((file) => {
         const fileContent = readFileSync(join(projectsDir, file), 'utf8')
         if (fileContent.trim().startsWith('<!--')) return null
-        const { data, content } = matter(fileContent)
+        const { data } = matter(fileContent)
         return {
           id: data.id,
           title: data.title,
-          summary: data.summary,
+          summary: typeof data.summary === 'string' ? data.summary.slice(0, 220) : data.summary,
           category: data.category,
           date: data.date,
-          techStack: data.techStack || [],
+          techStack: Array.isArray(data.techStack) ? data.techStack.slice(0, 10) : [],
           featured: Boolean(data.featured),
           status: data.status || null,
-          metrics: data.metrics || [],
           githubUrl: data.githubUrl || null,
           liveUrl: data.liveUrl || null,
           page: `/work/${data.id}`,
-          excerpt: content.replace(/\s+/g, ' ').trim().slice(0, 700),
         }
       })
       .filter(Boolean)
@@ -74,65 +77,99 @@ function loadProjects(rootDir) {
   }
 }
 
+/** Compact article rows - titles/tags only (excerpts were ~5KB and slowed every request). */
 function normalizeArticles(rawArticles) {
   if (!Array.isArray(rawArticles)) return []
   return rawArticles.map((article) => ({
     id: article.id,
     title: article.title,
-    excerpt: article.excerpt,
     category: article.category,
     date: article.date,
-    tags: article.tags || [],
+    tags: Array.isArray(article.tags) ? article.tags.slice(0, 6) : [],
     featured: Boolean(article.featured),
-    readTime: article.readTime || null,
-    link: article.link,
     page: '/articles',
   }))
 }
 
+function compactCredentials(list) {
+  if (!Array.isArray(list)) return []
+  return list.map((item) => ({
+    title: item.title || item.name,
+    issuer: item.issuer || item.organization || null,
+    year: item.year || item.date || null,
+  }))
+}
+
+function compactSkills(list) {
+  if (!Array.isArray(list)) return []
+  return list.map((item) => {
+    if (typeof item === 'string') return item
+    return item.name || item.title || item.skill || item
+  })
+}
+
 /**
  * Builds Neura's knowledge snapshot from live portfolio sources.
+ * Kept compact so every chat request stays fast (TTFT).
  * JSON files are imported (always available on Vercel).
  * Project MDX files are read from disk (included via vercel.json includeFiles).
  */
 export function buildLiveKnowledge(rootDir = process.cwd()) {
   const dataRoot = resolveDataRoot(rootDir)
+  const now = Date.now()
+  if (
+    cachedKnowledge &&
+    cachedRoot === dataRoot &&
+    now - cachedKnowledgeAt < KNOWLEDGE_CACHE_MS
+  ) {
+    return cachedKnowledge
+  }
+
   const projects = loadProjects(dataRoot)
   const articles = normalizeArticles(articlesData)
-  const skills = Array.isArray(liveContent.skills) ? liveContent.skills : []
-  const credentials = Array.isArray(liveContent.credentials) ? liveContent.credentials : []
-  const achievements = Array.isArray(liveContent.achievements) ? liveContent.achievements : []
+  const skills = compactSkills(liveContent.skills)
+  const credentials = compactCredentials(liveContent.credentials)
+  const achievements = Array.isArray(liveContent.achievements)
+    ? liveContent.achievements.map((item) =>
+        typeof item === 'string'
+          ? item
+          : item.title || item.name || JSON.stringify(item).slice(0, 120),
+      )
+    : []
 
-  return {
+  const profile = liveContent.profile || {}
+  const knowledge = {
     source: 'live-portfolio-files',
     generatedAt: new Date().toISOString(),
     assistant: {
       name: 'Neura',
-      role: "Professional portfolio assistant for Himanshu Salunke's website",
-      tone: 'Clear, structured, professional, and complete. Match answer depth and formatting to the question.',
+      role: "Portfolio assistant for Himanshu Salunke",
+      tone: 'Clear, concise, accurate. Prefer short answers unless the user asks for a full list.',
     },
-    profile: liveContent.profile,
+    profile: {
+      fullName: profile.fullName,
+      headline: profile.headline,
+      location: profile.location,
+      email: profile.email,
+      secondaryEmail: profile.secondaryEmail,
+      phone: profile.phone,
+      linkedin: profile.linkedin,
+      github: profile.github,
+      availability: profile.availability,
+      resumeUrl: profile.resumeUrl,
+      portfolio: profile.portfolio,
+    },
     experience: liveContent.experience,
     education: liveContent.education,
     storyTimeline: liveContent.storyTimeline,
     achievements,
-    mission: liveContent.mission,
-    values: liveContent.values,
-    interests: liveContent.interests,
-    shortTermGoals: liveContent.shortTermGoals,
-    learningNow: liveContent.learningNow,
-    techStackGroups: liveContent.techStackGroups,
-    closingQuote: liveContent.closingQuote,
     credentials,
     skills,
     skillCategories: liveContent.skillCategories,
+    techStackGroups: liveContent.techStackGroups,
     portfolioSiteStack: liveContent.portfolioSiteStack,
-    metrics: liveContent.metrics,
-    projectCategories: liveContent.projectCategories,
-    forms: liveContent.forms,
     services: liveContent.services,
     siteNavigation: liveContent.siteNavigation,
-    faqHints: liveContent.faqHints,
     currentFocus,
     counts: {
       projects: projects.length,
@@ -144,6 +181,11 @@ export function buildLiveKnowledge(rootDir = process.cwd()) {
     projects,
     articles,
   }
+
+  cachedKnowledge = knowledge
+  cachedKnowledgeAt = now
+  cachedRoot = dataRoot
+  return knowledge
 }
 
 export function buildNeuraSystemPrompt(knowledge, options = {}) {
@@ -160,64 +202,50 @@ export function buildNeuraSystemPrompt(knowledge, options = {}) {
     '- In scope: profile, experience, education, story, achievements, skills, projects, articles, services/pricing, certifications, contact, resume, current focus, and how this portfolio site works.',
     '- Out of scope: general knowledge, news, politics, math homework, coding help unrelated to his portfolio, other people, medical/legal advice, jokes/riddles, trivia, and any topic not tied to Himanshu or this website.',
     '- If the user asks anything outside scope, politely refuse in 1-3 short sentences. Do not answer the off-topic question at all.',
-    '- Off-topic refusal template: explain you only help with Himanshu and this portfolio, then invite a portfolio-related question (experience, projects, skills, services, contact, articles).',
     '- Greetings and "who are you / what can you do" are allowed.',
     '',
     'Answer ONLY from the LIVE PORTFOLIO KNOWLEDGE JSON below. Never invent facts.',
     'Use exact values from knowledge for counts, contact details, prices, dates, titles, and URLs.',
-    'Use prior chat turns when the user says "that", "his role", "those projects", or similar - stay consistent within the conversation.',
+    'Use prior chat turns when the user says "that", "his role", "those projects", or similar.',
+    '',
+    'SPEED / LENGTH (important):',
+    '- Default to a tight answer: 2-6 short bullets or 2-4 sentences.',
+    '- Do not pad with filler. Finish the answer fully - never cut a sentence mid-word.',
+    '- For list questions, one compact line per item (title - one key point). Include every matching item.',
+    '- For "how many" questions, answer with the number first, then at most one short line.',
     '',
     'PAGE CONTEXT:',
     `- Current pagePath: ${pagePath}`,
     `- ${pageHint}`,
-    '- Briefly acknowledge page context only when it helps; do not force it into every answer.',
+    '- Acknowledge page context only when it helps.',
     '',
     'HIRE / FIT FLOW (when user wants to hire, collaborate, or assess fit):',
-    '- Lead with availability from profile.availability.',
-    '- Then: strongest fit areas (backend / AI-ML / data) from experience + skills + projects.',
-    '- Then: services pricing summary if freelance, or contact path if full-time hiring.',
-    '- Always end with clear next steps: email, phone, /contact form, and resume URL.',
+    '- Lead with profile.availability, then fit areas, then services/contact next steps.',
+    '- Always include email, phone, /contact, and resume URL.',
     '',
     'COVERAGE RULES:',
-    '- Treat the knowledge JSON as the full website. Prefer complete, accurate answers over vague summaries.',
-    '- When asked for "all", "list", "every", or "complete", include every matching item from knowledge. Do not truncate early or invent a wrong total.',
-    '- When asked how many, use counts.* only (projects, articles, credentials, achievements, skills).',
-    '- Phone: share profile.phone when asked for a number/phone/call.',
-    '- Email: prefer profile.email. Mention profile.secondaryEmail only if asked for another/alternate email.',
-    '- Resume/CV: give profile.resumeUrl (/Himanshu_Salunke_Resume.pdf) and note it is also on the header and /about.',
-    '- Story/background: use storyTimeline (including medical recovery details when relevant).',
-    '- Skills: use skills + skillCategories + techStackGroups. Group by category when listing many skills.',
-    '- This website stack: use portfolioSiteStack when asked what the portfolio is built with.',
-    '- End with a short Source line using a real path from siteNavigation (example: Source: /about).',
+    '- When asked how many, use counts.* only.',
+    '- Phone: profile.phone. Email: profile.email (secondaryEmail only if asked).',
+    '- Resume: profile.resumeUrl (/Himanshu_Salunke_Resume.pdf).',
+    '- Story: storyTimeline. Skills: skills + skillCategories + techStackGroups.',
+    '- End with a short Source line using a real path from siteNavigation (example: Source: /work).',
     '',
-    'FORMATTING RULES (mandatory):',
-    '- Match format to the question. Do not dump one long paragraph for list/detail questions.',
-    '- Use clean Markdown only: short headings (###), bullet lists (-), numbered lists (1.), and **bold** for key labels.',
+    'FORMATTING RULES:',
+    '- Use Markdown: ### headings, - bullets, **bold** labels.',
     '- Use hyphen "-" only. Never use em dash or en dash.',
-    '- Keep a blank line between sections.',
-    '- For simple contact/yes-no questions: 2-4 short sentences is enough.',
-    '- For list questions (articles, projects, skills, certs, pricing): use this pattern:',
-    '  ### Title with total count',
-    '  - Item one',
-    '  - Item two',
-    '  Then one short closing line with the best page link.',
-    '- For project deep-dives: ### Project name, then bullets for summary, category, stack, metrics, links, and page.',
-    '- For services/pricing: separate sections for capabilities, pricing tiers, process, and booking.',
-    '- For experience/education/story: chronological bullets with period, title, and key detail.',
-    '- For contact questions: clearly label Email, Phone, LinkedIn, Resume, and Response time on separate bullets.',
-    '- Never wrap the whole answer in one run-on sentence with many " - " separators.',
+    '- Blank line between sections.',
+    '- Never wrap the whole answer in one run-on sentence.',
     '',
-    'PAGE ROUTING (strict):',
-    '- Job / employer / GrubPac / experience / education / certs / story / achievements / mission → /about',
+    'PAGE ROUTING:',
+    '- Job / employer / GrubPac / experience / education / certs / story → /about',
     '- Portfolio projects → /work (or /work/{id})',
-    '- Freelance services / pricing / booking → /services (or /contact)',
-    '- Tech stack / skills / site architecture → /developer',
+    '- Freelance / pricing → /services',
+    '- Skills / site stack → /developer',
     '- Articles → /articles',
-    '- Hiring / email / phone / collaborate → /contact',
-    '- Never suggest /work for employment questions.',
+    '- Contact / hire → /contact',
     '',
-    'If asked to greet or introduce yourself, invent a fresh professional greeting each time.',
-    'If something is truly missing from knowledge, say you do not have that detail and suggest the best matching page.',
+    'If asked to greet, invent a fresh short professional greeting.',
+    'If a detail is missing, say so and suggest the best matching page.',
     '',
     'LIVE PORTFOLIO KNOWLEDGE:',
     JSON.stringify(knowledge),

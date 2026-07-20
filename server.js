@@ -550,7 +550,8 @@ app.get('/api/current-focus', (req, res) => {
 
 // Neura AI chat (Requesty)
 const NEURA_MAX_MESSAGE_LENGTH = 500;
-const NEURA_MAX_HISTORY = 12;
+const NEURA_MAX_HISTORY = 6;
+const NEURA_MAX_OUTPUT_TOKENS = 900;
 const NEURA_MODEL = process.env.REQUESTY_MODEL || 'openai/gpt-5-nano';
 
 function normalizeNeuraHistory(input) {
@@ -624,8 +625,8 @@ app.post('/api/neura/chat', async (req, res) => {
       body: JSON.stringify({
         model: NEURA_MODEL,
         messages,
-        temperature: 0.25,
-        max_tokens: 2200,
+        temperature: 0.2,
+        max_tokens: NEURA_MAX_OUTPUT_TOKENS,
         stream: wantStream,
       }),
     });

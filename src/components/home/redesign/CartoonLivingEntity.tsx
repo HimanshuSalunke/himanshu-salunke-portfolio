@@ -610,6 +610,7 @@ export const CartoonLivingEntity: React.FC = () => {
   const idleIntroStartedRef = useRef(false)
   const clearSessionOnExitRef = useRef(false)
   const chatRequestAbortRef = useRef<AbortController | null>(null)
+  const askInFlightRef = useRef(false)
   const persistReadyRef = useRef(false)
 
   const body = useSyncedBodyPose(pose, false, prefersReducedMotion, isOpen)
@@ -658,6 +659,7 @@ export const CartoonLivingEntity: React.FC = () => {
   const stopGeneration = useCallback(() => {
     chatRequestAbortRef.current?.abort()
     chatRequestAbortRef.current = null
+    askInFlightRef.current = false
     setIsThinking(false)
     welcomeInFlightRef.current = false
     trackNeuraEvent('neura_stop_generation')
@@ -768,6 +770,7 @@ export const CartoonLivingEntity: React.FC = () => {
   const clearChat = useCallback(() => {
     chatRequestAbortRef.current?.abort()
     chatRequestAbortRef.current = null
+    askInFlightRef.current = false
     setIsThinking(false)
     welcomeInFlightRef.current = false
     idleIntroStartedRef.current = false
@@ -795,10 +798,13 @@ export const CartoonLivingEntity: React.FC = () => {
   const askNeura = useCallback(
     async (rawText: string) => {
       const text = rawText.trim().slice(0, MAX_CHAT_LENGTH)
-      if (!text || isThinking) return
+      // Ref blocks double-clicks before React re-renders isThinking.
+      if (!text || askInFlightRef.current || isThinking) return
 
+      askInFlightRef.current = true
       setChatError('')
       setInput('')
+      setIsThinking(true)
       trackNeuraEvent('neura_ask', { path: location.pathname, preview: text.slice(0, 80) })
 
       const userMessage: ChatMessage = {
@@ -813,15 +819,14 @@ export const CartoonLivingEntity: React.FC = () => {
             (msg.role === 'user' || msg.role === 'assistant') &&
             msg.text.trim().length > 0,
         )
-        .slice(-12)
+        .slice(-6)
         .map((msg) => ({ role: msg.role, content: msg.text.trim() }))
 
       const assistantId = `assistant-${Date.now()}`
       setMessages((prev) => [...prev, userMessage])
-      setIsThinking(true)
 
       const controller = beginChatRequest()
-      const timeoutId = window.setTimeout(() => controller.abort(), 45000)
+      const timeoutId = window.setTimeout(() => controller.abort(), 35000)
 
       try {
         let assistantStarted = false
@@ -871,6 +876,7 @@ export const CartoonLivingEntity: React.FC = () => {
         setIsThinking(false)
         trackNeuraEvent('neura_error', { message: fallback.slice(0, 120) })
       } finally {
+        askInFlightRef.current = false
         window.clearTimeout(timeoutId)
         if (chatRequestAbortRef.current === controller) {
           chatRequestAbortRef.current = null
