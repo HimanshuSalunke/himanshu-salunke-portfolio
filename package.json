@@ -40,8 +40,8 @@
     "@tailwindcss/typography": "^0.5.16",
     "@types/formidable": "^3.4.6",
     "@vercel/analytics": "^1.5.0",
-    "@vercel/blob": "^0.23.4",
-    "@vercel/node": "^5.5.15",
+    "@vercel/blob": "^2.6.1",
+    "@vercel/node": "^5.8.26",
     "@vercel/og": "^0.8.5",
     "@vercel/speed-insights": "^1.2.0",
     "autoprefixer": "^10.4.21",
@@ -52,15 +52,15 @@
     "gray-matter": "^4.0.3",
     "lucide-react": "^0.562.0",
     "markdown-to-jsx": "^7.7.13",
-    "multer": "^1.4.5-lts.1",
-    "postcss": "^8.5.6",
+    "multer": "^2.2.0",
+    "postcss": "^8.5.20",
     "react": "^18.3.1",
     "react-dom": "^18.3.1",
     "react-helmet-async": "^2.0.5",
     "react-hook-form": "^7.48.2",
     "react-hot-toast": "^2.4.1",
     "react-icons": "^5.5.0",
-    "react-router-dom": "^6.28.0",
+    "react-router-dom": "^6.30.4",
     "rehype-shiki": "^0.0.9",
     "remark-frontmatter": "^5.0.0",
     "remark-gfm": "^4.0.1",
@@ -80,7 +80,7 @@
     "@testing-library/jest-dom": "^6.8.0",
     "@testing-library/react": "^14.0.0",
     "@testing-library/user-event": "^14.6.1",
-    "@types/multer": "^1.4.11",
+    "@types/multer": "^2.2.0",
     "@types/node": "^24.3.1",
     "@types/react": "^18.3.12",
     "@types/react-dom": "^18.3.1",
@@ -88,7 +88,7 @@
     "@typescript-eslint/eslint-plugin": "^8.42.0",
     "@typescript-eslint/parser": "^8.42.0",
     "@vitejs/plugin-react": "^5.0.0",
-    "concurrently": "^9.2.1",
+    "concurrently": "^9.2.4",
     "eslint": "^9.35.0",
     "eslint-config-prettier": "^10.1.8",
     "eslint-plugin-prettier": "^5.5.4",
@@ -103,7 +103,7 @@
     "prisma": "^5.0.0",
     "typescript": "~5.8.3",
     "typescript-eslint": "^8.39.1",
-    "vite": "^7.1.2",
+    "vite": "^7.3.6",
     "vitest": "^3.2.4"
   },
   "lint-staged": {
@@ -114,5 +114,20 @@
     "*.{js,jsx,json,css,md}": [
       "prettier --write"
     ]
+  },
+  "overrides": {
+    "undici": "6.27.0",
+    "@vercel/node": {
+      "undici": "6.27.0",
+      "path-to-regexp": "6.3.0"
+    },
+    "@vercel/static-config": {
+      "ajv": "8.18.0"
+    },
+    "@vercel/python-analysis": {
+      "minimatch": "10.2.5",
+      "smol-toml": "^1.6.1",
+      "js-yaml": "^4.2.0"
+    }
   }
 }
