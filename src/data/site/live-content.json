@@ -1,8 +1,8 @@
 {
   "profile": {
     "fullName": "Himanshu Kishor Salunke",
-    "headline": "Aspiring Data Scientist & ML Engineer / Junior Software Developer (Backend)",
-    "primaryRole": "Junior Software Developer (Backend)",
+    "headline": "Aspiring Data Scientist & ML Engineer / Junior Backend Developer (Backend)",
+    "primaryRole": "Junior Backend Developer (Backend)",
     "location": "Remote / India (IST)",
     "email": "contact.himanshusalunke@gmail.com",
     "secondaryEmail": "salunkehimanshu2001@gmail.com",
@@ -24,7 +24,7 @@
   },
   "experience": [
     {
-      "title": "Junior Software Developer (Backend)",
+      "title": "Junior Backend Developer (Backend)",
       "company": "GrubPac Technologies",
       "location": "Delhi, India",
       "period": "March 2026 - Present",
@@ -116,7 +116,7 @@
     },
     {
       "id": "grubpac-backend-developer",
-      "title": "Junior Software Developer",
+      "title": "Junior Backend Developer",
       "subtitle": "GrubPac Technologies, Delhi, India",
       "period": "March 2026 - Present",
       "type": "work",

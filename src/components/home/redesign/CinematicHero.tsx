@@ -143,14 +143,14 @@ export const CinematicHero: React.FC = () => {
               compact
             >
               {prefersReducedMotion ? (
-                <span className="font-bold text-blue-600 dark:text-blue-400">Junior Software Developer</span>
+                <span className="font-bold text-blue-600 dark:text-blue-400">Junior Backend Developer</span>
               ) : (
                 <motion.span
                   className="font-bold text-blue-600 dark:text-blue-400"
                   animate={{ opacity: [0.6, 1, 0.6] }}
                   transition={{ duration: 3, repeat: Infinity, ease: 'easeInOut' }}
                 >
-                  Junior Software Developer
+                  Junior Backend Developer
                 </motion.span>
               )}
             </NeuralLayerCard>
@@ -201,14 +201,14 @@ export const CinematicHero: React.FC = () => {
               delay={0.2}
             >
               {prefersReducedMotion ? (
-                <span className="font-bold text-blue-600 dark:text-blue-400">Junior Software Developer</span>
+                <span className="font-bold text-blue-600 dark:text-blue-400">Junior Backend Developer</span>
               ) : (
                 <motion.span
                   className="font-bold text-blue-600 dark:text-blue-400"
                   animate={{ opacity: [0.6, 1, 0.6] }}
                   transition={{ duration: 3, repeat: Infinity, ease: 'easeInOut' }}
                 >
-                  Junior Software Developer
+                  Junior Backend Developer
                 </motion.span>
               )}
             </NeuralLayerCard>

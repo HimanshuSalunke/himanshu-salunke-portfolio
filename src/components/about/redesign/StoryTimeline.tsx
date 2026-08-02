@@ -100,7 +100,7 @@ const timelineData: TimelineItem[] = [
   },
   {
     id: 'grubpac-backend-developer',
-    title: 'Junior Software Developer',
+    title: 'Junior Backend Developer',
     subtitle: 'GrubPac Technologies, Delhi, India',
     period: 'March 2026 - Present',
     shortLabel: 'Work',
