@@ -363,7 +363,7 @@
     "id": "perceptron-gradient-delta",
     "title": "Power of Perceptron: Training Rule, Gradient Descent & Delta Rule",
     "excerpt": "Comprehensive guide to perceptron learning including training rules, gradient descent, and delta rule algorithms.",
-    "coverImage": "/images/articles/Perceptron, Gradient Descent, Delta Rule.jpg",
+    "coverImage": "/images/articles/Perceptron-Gradient-Descent-Delta-Rule.jpg",
     "date": "2024-04-29",
     "tags": [
       "Perceptron",

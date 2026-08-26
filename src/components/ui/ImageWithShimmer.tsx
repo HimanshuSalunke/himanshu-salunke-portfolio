@@ -90,13 +90,18 @@ export const ImageWithShimmer: React.FC<ImageWithShimmerProps> = ({
         />
       )}
 
-      {/* Actual image - prefer WebP sibling when present (generated offline) */}
+      {/* Actual image - prefer WebP sibling when present (generated offline).
+          Encode path segments so spaces/commas in filenames do not break srcset parsing. */}
       {isInView && (
         <picture>
           {/\.(jpe?g|png)$/i.test(src) && (
             <source
               type="image/webp"
-              srcSet={src.replace(/\.(jpe?g|png)$/i, '.webp')}
+              srcSet={src
+                .replace(/\.(jpe?g|png)$/i, '.webp')
+                .split('/')
+                .map((segment) => encodeURIComponent(segment))
+                .join('/')}
             />
           )}
           <motion.img
