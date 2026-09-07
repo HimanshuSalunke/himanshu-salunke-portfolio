@@ -1,8 +1,7 @@
 import React from 'react'
 import { motion, useReducedMotion } from 'framer-motion'
 import { Award, ExternalLink } from 'lucide-react'
-import { CredlyBadgeEmbed } from '../../ui/CredlyBadgeEmbed'
-import { AWS_AI_PRACTITIONER_CREDLY } from '../../../lib/credlyEmbed'
+import { SiAmazon } from 'react-icons/si'
 import {
   MobileNeuralSpine,
   NeuralLayerCard,
@@ -31,7 +30,6 @@ interface HighlightCert {
   icon: React.ReactNode
   borderAccent: string
   badgeClass: string
-  credlyBadgeId?: string
 }
 
 const issuerBadgeClass = (variant: 'aws' | 'microsoft') =>
@@ -46,8 +44,7 @@ const highlights2026: HighlightCert[] = [
     issuer: 'AWS',
     date: 'September 2026',
     url: 'https://drive.google.com/file/d/1UIknQmpWVpelMZ_IQU84MDIbGpln1WRO/view?usp=sharing',
-    icon: null,
-    credlyBadgeId: AWS_AI_PRACTITIONER_CREDLY.badgeId,
+    icon: <SiAmazon className="h-6 w-6 text-orange-500" />,
     borderAccent: 'border-orange-500/25 shadow-md shadow-orange-500/5',
     badgeClass: issuerBadgeClass('aws'),
   },
@@ -68,88 +65,42 @@ interface CertCardProps {
   index: number
 }
 
-const VerifyLink: React.FC<{ url: string }> = ({ url }) => (
-  <a
-    href={url}
-    target="_blank"
-    rel="noopener noreferrer"
-    className="group/link mt-auto inline-flex items-center gap-1.5 text-sm font-semibold text-cyan-600 transition-colors hover:text-cyan-700 dark:text-cyan-400 dark:hover:text-cyan-300"
-  >
-    Verify Credential
-    <ExternalLink className="h-3.5 w-3.5 transition-transform group-hover/link:translate-x-0.5 group-hover/link:-translate-y-0.5" />
-  </a>
-)
-
-const CertMedia: React.FC<{ cert: HighlightCert }> = ({ cert }) => {
-  if (cert.credlyBadgeId) {
-    return (
-      <CredlyBadgeEmbed
-        badgeId={cert.credlyBadgeId}
-        title={`${cert.title} - Credly badge`}
-      />
-    )
-  }
-
-  return (
-    <div className="flex h-12 w-12 items-center justify-center rounded-xl border border-neutral-200/80 bg-white shadow-sm dark:border-neutral-700/50 dark:bg-neutral-900">
-      {cert.icon}
-    </div>
-  )
-}
-
-const CertHeader: React.FC<{ cert: HighlightCert }> = ({ cert }) => (
-  <div className="mb-4 flex min-h-12 items-start justify-between gap-3">
-    <div className="flex shrink-0 items-center">
-      <CertMedia cert={cert} />
-    </div>
-    <span
-      className={`shrink-0 whitespace-nowrap rounded-md px-2.5 py-1 text-[11px] font-bold uppercase tracking-wide ${cert.badgeClass}`}
-    >
-      {cert.issuer}
-    </span>
-  </div>
-)
-
 const CertCard: React.FC<CertCardProps> = ({ cert, index }) => (
   <NeuralLayerCard
     layer=""
-    icon={cert.icon ?? <Award className="h-4 w-4" />}
+    icon={cert.icon}
     accent={cert.borderAccent}
     delay={0.12 + index * 0.08}
     showLayer={false}
     className="min-h-[168px]"
   >
-    {cert.credlyBadgeId ? (
-      <div className="flex h-full flex-col">
-        <CertHeader cert={cert} />
-        <h3 className="mb-2 break-words text-base font-bold text-neutral-900 dark:text-white sm:text-lg">
-          {cert.title}
-        </h3>
-        <p className="mb-4 font-mono text-[11px] uppercase tracking-wide text-neutral-500 dark:text-neutral-400">
-          {cert.date}
-        </p>
-        <VerifyLink url={cert.url} />
-      </div>
-    ) : (
-      <a
-        href={cert.url}
-        target="_blank"
-        rel="noopener noreferrer"
-        className="group flex h-full flex-col"
-      >
-        <CertHeader cert={cert} />
-        <h3 className="mb-2 break-words text-base font-bold text-neutral-900 transition-colors group-hover:text-cyan-700 dark:text-white dark:group-hover:text-cyan-300 sm:text-lg">
-          {cert.title}
-        </h3>
-        <p className="mb-4 font-mono text-[11px] uppercase tracking-wide text-neutral-500 dark:text-neutral-400">
-          {cert.date}
-        </p>
-        <span className="mt-auto inline-flex items-center gap-1.5 text-sm font-semibold text-cyan-600 transition-colors group-hover:text-cyan-700 dark:text-cyan-400 dark:group-hover:text-cyan-300">
-          Verify Credential
-          <ExternalLink className="h-3.5 w-3.5 transition-transform group-hover:translate-x-0.5 group-hover:-translate-y-0.5" />
+    <a
+      href={cert.url}
+      target="_blank"
+      rel="noopener noreferrer"
+      className="group flex h-full flex-col"
+    >
+      <div className="mb-4 flex min-h-12 items-start justify-between gap-3">
+        <div className="flex h-12 w-12 shrink-0 items-center justify-center rounded-xl border border-neutral-200/80 bg-white shadow-sm dark:border-neutral-700/50 dark:bg-neutral-900">
+          {cert.icon}
+        </div>
+        <span
+          className={`shrink-0 whitespace-nowrap rounded-md px-2.5 py-1 text-[11px] font-bold uppercase tracking-wide ${cert.badgeClass}`}
+        >
+          {cert.issuer}
         </span>
-      </a>
-    )}
+      </div>
+      <h3 className="mb-2 break-words text-base font-bold text-neutral-900 transition-colors group-hover:text-cyan-700 dark:text-white dark:group-hover:text-cyan-300 sm:text-lg">
+        {cert.title}
+      </h3>
+      <p className="mb-4 font-mono text-[11px] uppercase tracking-wide text-neutral-500 dark:text-neutral-400">
+        {cert.date}
+      </p>
+      <span className="mt-auto inline-flex items-center gap-1.5 text-sm font-semibold text-cyan-600 transition-colors group-hover:text-cyan-700 dark:text-cyan-400 dark:group-hover:text-cyan-300">
+        Verify Credential
+        <ExternalLink className="h-3.5 w-3.5 transition-transform group-hover:translate-x-0.5 group-hover:-translate-y-0.5" />
+      </span>
+    </a>
   </NeuralLayerCard>
 )
 

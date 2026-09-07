@@ -1,8 +1,6 @@
 import React, { useState } from 'react'
 import { motion, useReducedMotion } from 'framer-motion'
 import { Award, BookOpen, Cpu, ExternalLink } from 'lucide-react'
-import { CredlyBadgeEmbed } from '../../ui/CredlyBadgeEmbed'
-import { AWS_AI_PRACTITIONER_CREDLY } from '../../../lib/credlyEmbed'
 import { JourneySectionMarker, journeyCardClass, journeyChipClass, journeyContentClass, journeyHeadingClass, journeySectionClass } from './journey/JourneyPrimitives'
 
 const DataCampIcon: React.FC<{ size?: number; className?: string }> = ({
@@ -83,7 +81,6 @@ interface Credential {
   description: string
   url: string
   icon: React.FC<{ size?: number; className?: string }>
-  credlyBadgeId?: string
 }
 
 const credentialsData: Credential[] = [
@@ -96,7 +93,6 @@ const credentialsData: Credential[] = [
       'Foundational AWS certification validating AI and ML concepts, generative AI, and responsible AI practices on AWS.',
     url: 'https://drive.google.com/file/d/1UIknQmpWVpelMZ_IQU84MDIbGpln1WRO/view?usp=sharing',
     icon: AWSIcon,
-    credlyBadgeId: AWS_AI_PRACTITIONER_CREDLY.badgeId,
   },
   {
     id: 'microsoft-fabric-de',
@@ -333,35 +329,27 @@ export const CredentialGrid: React.FC = () => {
           >
             {visibleCredentials.map((cred, index) => {
               const styles = issuerStyles[cred.issuer]
-              const cardClassName = `group relative flex flex-col overflow-hidden ${journeyCardClass} p-4 shadow-md transition-all duration-300 sm:p-5 ${styles.border} ${styles.hover}`
-              const motionProps = {
-                layout: true as const,
-                initial: prefersReducedMotion ? false : { opacity: 0, y: 14 },
-                animate: { opacity: 1, y: 0 },
-                exit: { opacity: 0, scale: 0.98 },
-                transition: { duration: 0.35, delay: index * 0.05 },
-                whileHover: prefersReducedMotion ? undefined : { y: -4 },
-                className: cardClassName,
-              }
-
-              const cardContent = (
-                <>
+              return (
+                <motion.a
+                  key={cred.id}
+                  layout
+                  href={cred.url}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  initial={prefersReducedMotion ? false : { opacity: 0, y: 14 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  exit={{ opacity: 0, scale: 0.98 }}
+                  transition={{ duration: 0.35, delay: index * 0.05 }}
+                  whileHover={prefersReducedMotion ? undefined : { y: -4 }}
+                  className={`group relative flex flex-col overflow-hidden ${journeyCardClass} p-4 shadow-md transition-all duration-300 sm:p-5 ${styles.border} ${styles.hover}`}
+                >
                   <div
                     className={`pointer-events-none absolute inset-0 bg-gradient-to-br ${styles.glow} to-transparent opacity-0 transition-opacity group-hover:opacity-100`}
                   />
 
                   <div className="relative mb-4 flex min-h-12 items-start justify-between gap-3">
-                    <div className="flex shrink-0 items-center">
-                      {cred.credlyBadgeId ? (
-                        <CredlyBadgeEmbed
-                          badgeId={cred.credlyBadgeId}
-                          title={`${cred.title} - Credly badge`}
-                        />
-                      ) : (
-                        <div className="flex h-12 w-12 items-center justify-center rounded-xl border border-neutral-200/80 bg-neutral-50 shadow-sm dark:border-neutral-700/50 dark:bg-neutral-900/50">
-                          <cred.icon size={28} />
-                        </div>
-                      )}
+                    <div className="flex h-12 w-12 shrink-0 items-center justify-center rounded-xl border border-neutral-200/80 bg-neutral-50 shadow-sm dark:border-neutral-700/50 dark:bg-neutral-900/50">
+                      <cred.icon size={28} />
                     </div>
                     <span
                       className={`shrink-0 whitespace-nowrap rounded-full px-2.5 py-1 text-[11px] font-semibold uppercase tracking-wide ${styles.badge}`}
@@ -382,42 +370,10 @@ export const CredentialGrid: React.FC = () => {
                     {cred.description}
                   </p>
 
-                  {cred.credlyBadgeId ? (
-                    <a
-                      href={cred.url}
-                      target="_blank"
-                      rel="noopener noreferrer"
-                      className="relative inline-flex items-center gap-1.5 text-sm font-semibold text-violet-600 transition-colors hover:text-violet-700 dark:text-violet-400 dark:hover:text-violet-300"
-                    >
-                      Verify Credential
-                      <ExternalLink className="h-3.5 w-3.5 transition-transform group-hover:translate-x-0.5 group-hover:-translate-y-0.5" />
-                    </a>
-                  ) : (
-                    <span className="relative inline-flex items-center gap-1.5 text-sm font-semibold text-violet-600 transition-colors group-hover:text-violet-700 dark:text-violet-400 dark:group-hover:text-violet-300">
-                      Verify Credential
-                      <ExternalLink className="h-3.5 w-3.5 transition-transform group-hover:translate-x-0.5 group-hover:-translate-y-0.5" />
-                    </span>
-                  )}
-                </>
-              )
-
-              if (cred.credlyBadgeId) {
-                return (
-                  <motion.div key={cred.id} {...motionProps}>
-                    {cardContent}
-                  </motion.div>
-                )
-              }
-
-              return (
-                <motion.a
-                  key={cred.id}
-                  {...motionProps}
-                  href={cred.url}
-                  target="_blank"
-                  rel="noopener noreferrer"
-                >
-                  {cardContent}
+                  <span className="relative inline-flex items-center gap-1.5 text-sm font-semibold text-violet-600 transition-colors group-hover:text-violet-700 dark:text-violet-400 dark:group-hover:text-violet-300">
+                    Verify Credential
+                    <ExternalLink className="h-3.5 w-3.5 transition-transform group-hover:translate-x-0.5 group-hover:-translate-y-0.5" />
+                  </span>
                 </motion.a>
               )
             })}
