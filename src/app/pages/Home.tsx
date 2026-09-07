@@ -2,6 +2,7 @@ import React from 'react'
 import { Helmet } from 'react-helmet-async'
 import { CinematicHero } from '../../components/home/redesign/CinematicHero'
 import { ImpactMetrics } from '../../components/home/redesign/ImpactMetrics'
+import { CertificationHighlights } from '../../components/home/redesign/CertificationHighlights'
 import { CinematicFocus } from '../../components/home/redesign/CinematicFocus'
 import { ExplorationGrid } from '../../components/home/redesign/ExplorationGrid'
 
@@ -60,10 +61,13 @@ const Home: React.FC = () => {
         {/* 2. Impact Metrics (Integrated Stats) */}
         <ImpactMetrics />
 
-        {/* 3. Current Focus (Active Learning) */}
+        {/* 3. 2026 Certification Highlights */}
+        <CertificationHighlights />
+
+        {/* 4. Current Focus (Active Learning) */}
         <CinematicFocus />
 
-        {/* 4. Exploration Grid (Bento Navigation) */}
+        {/* 5. Exploration Grid (Bento Navigation) */}
         <ExplorationGrid />
       </div>
     </>

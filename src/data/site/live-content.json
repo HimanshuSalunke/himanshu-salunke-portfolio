@@ -280,6 +280,13 @@
   },
   "credentials": [
     {
+      "name": "AWS Certified AI Practitioner",
+      "issuer": "AWS",
+      "date": "September 2026",
+      "description": "Foundational AWS certification validating AI and ML concepts, generative AI, and responsible AI practices on AWS.",
+      "verificationUrl": "https://drive.google.com/file/d/1UIknQmpWVpelMZ_IQU84MDIbGpln1WRO/view?usp=sharing"
+    },
+    {
       "name": "Microsoft Certified: Fabric Data Engineer Associate (DP-700)",
       "issuer": "Microsoft",
       "date": "July 2026",
