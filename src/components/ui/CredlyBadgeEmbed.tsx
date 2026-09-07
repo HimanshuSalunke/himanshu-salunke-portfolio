@@ -1,28 +1,41 @@
 import React, { useEffect, useRef, useState } from 'react'
-import { loadCredlyEmbedScript, refreshCredlyEmbeds } from '../../lib/credlyEmbed'
+import {
+  CREDLY_EMBED_IFRAME,
+  CREDLY_EMBED_THUMBNAIL,
+  loadCredlyEmbedScript,
+  refreshCredlyEmbeds,
+} from '../../lib/credlyEmbed'
 
 export interface CredlyBadgeEmbedProps {
   badgeId: string
   host?: string
+  /** Credly iframe request size (official embed dimensions). */
   width?: number
   height?: number
+  /** Visible thumbnail size on the page. */
+  thumbnailWidth?: number
+  thumbnailHeight?: number
   className?: string
   title?: string
 }
 
 /**
  * Official Credly badge embed. Loads embed.js on the client only so SSR/hydration stay safe.
+ * Renders a compact clipped thumbnail so portrait badges do not dominate card layouts.
  */
 export const CredlyBadgeEmbed: React.FC<CredlyBadgeEmbedProps> = ({
   badgeId,
   host = 'https://www.credly.com',
-  width = 150,
-  height = 270,
+  width = CREDLY_EMBED_IFRAME.width,
+  height = CREDLY_EMBED_IFRAME.height,
+  thumbnailWidth = CREDLY_EMBED_THUMBNAIL.width,
+  thumbnailHeight = CREDLY_EMBED_THUMBNAIL.height,
   className = '',
   title = 'Credly digital badge',
 }) => {
   const containerRef = useRef<HTMLDivElement>(null)
   const [mounted, setMounted] = useState(false)
+  const scale = thumbnailWidth / width
 
   useEffect(() => {
     setMounted(true)
@@ -54,11 +67,14 @@ export const CredlyBadgeEmbed: React.FC<CredlyBadgeEmbedProps> = ({
     }
   }, [mounted, badgeId, host, width, height])
 
+  const frameClass =
+    'relative overflow-hidden rounded-xl border border-neutral-200/80 bg-white shadow-sm dark:border-neutral-700/50 dark:bg-neutral-900'
+
   if (!mounted) {
     return (
       <div
-        className={`flex items-center justify-center overflow-hidden rounded-xl border border-neutral-200/80 bg-white dark:border-neutral-700/50 dark:bg-neutral-900 ${className}`}
-        style={{ width, minHeight: Math.min(height, 120) }}
+        className={`${frameClass} ${className}`}
+        style={{ width: thumbnailWidth, height: thumbnailHeight }}
         aria-hidden
       />
     )
@@ -66,17 +82,26 @@ export const CredlyBadgeEmbed: React.FC<CredlyBadgeEmbedProps> = ({
 
   return (
     <div
-      className={`overflow-hidden ${className}`}
-      style={{ width, maxWidth: '100%' }}
+      className={`${frameClass} ${className}`}
+      style={{ width: thumbnailWidth, height: thumbnailHeight }}
       aria-label={title}
     >
       <div
-        ref={containerRef}
-        data-iframe-width={String(width)}
-        data-iframe-height={String(height)}
-        data-share-badge-id={badgeId}
-        data-share-badge-host={host}
-      />
+        className="pointer-events-none absolute left-0 top-0 origin-top-left [&_iframe]:block [&_iframe]:max-w-none"
+        style={{
+          width,
+          height,
+          transform: `scale(${scale})`,
+        }}
+      >
+        <div
+          ref={containerRef}
+          data-iframe-width={String(width)}
+          data-iframe-height={String(height)}
+          data-share-badge-id={badgeId}
+          data-share-badge-host={host}
+        />
+      </div>
     </div>
   )
 }

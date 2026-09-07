@@ -231,7 +231,8 @@ const issuerStyles: Record<
   AWS: {
     border: 'border-orange-500/25',
     hover: 'hover:border-orange-500/45 hover:shadow-orange-500/10',
-    badge: 'bg-orange-500/10 text-orange-700 dark:text-orange-300 border-orange-500/25',
+    badge:
+      'border border-orange-500/35 bg-orange-500/15 text-orange-900 dark:border-orange-400/40 dark:bg-orange-500/20 dark:text-orange-100',
     glow: 'from-orange-500/10',
   },
   DataCamp: {
@@ -249,7 +250,8 @@ const issuerStyles: Record<
   Microsoft: {
     border: 'border-sky-500/25',
     hover: 'hover:border-sky-500/45 hover:shadow-sky-500/10',
-    badge: 'bg-sky-500/10 text-sky-800 dark:text-sky-300 border-sky-500/25',
+    badge:
+      'border border-sky-500/35 bg-sky-500/15 text-sky-900 dark:border-sky-400/40 dark:bg-sky-500/20 dark:text-sky-100',
     glow: 'from-sky-500/10',
   },
 }
@@ -348,24 +350,21 @@ export const CredentialGrid: React.FC = () => {
                     className={`pointer-events-none absolute inset-0 bg-gradient-to-br ${styles.glow} to-transparent opacity-0 transition-opacity group-hover:opacity-100`}
                   />
 
-                  <div className="relative mb-4 flex items-start justify-between gap-3">
-                    <div className="shrink-0">
+                  <div className="relative mb-4 flex min-h-12 items-start justify-between gap-3">
+                    <div className="flex shrink-0 items-center">
                       {cred.credlyBadgeId ? (
                         <CredlyBadgeEmbed
                           badgeId={cred.credlyBadgeId}
-                          width={96}
-                          height={172}
                           title={`${cred.title} - Credly badge`}
-                          className="-ml-1 -mt-1 scale-[0.88] origin-top-left sm:scale-95"
                         />
                       ) : (
-                        <div className="flex h-12 w-12 items-center justify-center rounded-xl border border-neutral-200/80 bg-neutral-50 dark:border-neutral-700/50 dark:bg-neutral-900/50">
+                        <div className="flex h-12 w-12 items-center justify-center rounded-xl border border-neutral-200/80 bg-neutral-50 shadow-sm dark:border-neutral-700/50 dark:bg-neutral-900/50">
                           <cred.icon size={28} />
                         </div>
                       )}
                     </div>
                     <span
-                      className={`shrink-0 rounded-full border px-2.5 py-0.5 text-[10px] font-semibold uppercase tracking-wide ${styles.badge}`}
+                      className={`shrink-0 whitespace-nowrap rounded-full px-2.5 py-1 text-[11px] font-semibold uppercase tracking-wide ${styles.badge}`}
                     >
                       {cred.issuer}
                     </span>

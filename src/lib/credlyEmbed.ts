@@ -86,3 +86,9 @@ export const AWS_AI_PRACTITIONER_CREDLY = {
   badgeId: '45a89792-ff6c-4172-abc6-00d4e746b66d',
   host: 'https://www.credly.com',
 } as const
+
+/** Official Credly iframe request size (portrait badge). */
+export const CREDLY_EMBED_IFRAME = { width: 150, height: 270 } as const
+
+/** Compact on-page thumbnail - wide badge emblem, clipped height. */
+export const CREDLY_EMBED_THUMBNAIL = { width: 112, height: 56 } as const
