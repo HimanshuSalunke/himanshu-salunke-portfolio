@@ -272,7 +272,10 @@ export const CredentialGrid: React.FC = () => {
       : credentialsData.filter((c) => c.issuer === activeFilter)
 
   return (
-    <section className={`relative overflow-hidden border-t border-violet-500/10 bg-transparent ${journeySectionClass}`}>
+    <section
+      id="credentials"
+      className={`relative scroll-mt-[var(--header-offset)] overflow-hidden border-t border-violet-500/10 bg-transparent ${journeySectionClass}`}
+    >
       <JourneySectionMarker accent="violet" />
       <div className="pointer-events-none absolute inset-0 bg-[radial-gradient(ellipse_at_top_right,rgba(139,92,246,0.06),transparent_55%)] dark:bg-[radial-gradient(ellipse_at_top_right,rgba(139,92,246,0.1),transparent_55%)]" />
       <div className="pointer-events-none absolute inset-x-0 top-0 h-px bg-gradient-to-r from-transparent via-violet-500/30 to-transparent" />

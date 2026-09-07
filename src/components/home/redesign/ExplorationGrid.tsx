@@ -1,7 +1,7 @@
 import React from 'react'
 import { Link } from 'react-router-dom'
 import { motion, useReducedMotion } from 'framer-motion'
-import { ArrowRight, BookOpen, Briefcase, Code, Layers, User } from 'lucide-react'
+import { ArrowRight, Award, BookOpen, Briefcase, Code, Layers, User } from 'lucide-react'
 import {
   MobileNeuralSpine,
   NavigationLayerGraph,
@@ -13,7 +13,7 @@ import {
   SectionGridOverlay,
 } from './neural/NeuralPrimitives'
 
-type RouteAccent = 'green' | 'purple' | 'pink' | 'orange'
+type RouteAccent = 'green' | 'purple' | 'pink' | 'orange' | 'amber'
 
 const accentStyles: Record<
   RouteAccent,
@@ -46,6 +46,13 @@ const accentStyles: Record<
     iconBg: 'bg-orange-500/10',
     hoverGlow: 'from-orange-500/15',
     arrow: 'text-orange-500',
+  },
+  amber: {
+    border: 'border-amber-500/25 shadow-md shadow-amber-500/5 hover:border-amber-500/45',
+    iconColor: 'text-amber-600 dark:text-amber-400',
+    iconBg: 'bg-amber-500/10',
+    hoverGlow: 'from-amber-500/15',
+    arrow: 'text-amber-500',
   },
 }
 
@@ -226,6 +233,16 @@ export const ExplorationGrid: React.FC = () => {
               accent="orange"
               className="md:row-span-1"
               delay={0.28}
+            />
+
+            <GridItem
+              to="/about#credentials"
+              title="Certifications"
+              subtitle="Verified credentials & learning path"
+              icon={<Award className="h-6 w-6" />}
+              accent="amber"
+              className="md:row-span-1"
+              delay={0.34}
             />
           </div>
         </div>

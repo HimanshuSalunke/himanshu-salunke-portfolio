@@ -2,10 +2,29 @@ import { useEffect } from 'react'
 import { useLocation } from 'react-router-dom'
 
 export const ScrollToTop: React.FC = () => {
-  const { pathname } = useLocation()
+  const { pathname, hash } = useLocation()
 
   useEffect(() => {
-    // Immediately scroll to top when route changes
+    if (hash) {
+      const id = hash.replace('#', '')
+      const scrollToHash = () => {
+        const el = document.getElementById(id)
+        if (el) {
+          el.scrollIntoView({ behavior: 'smooth' })
+        }
+      }
+
+      const timeoutIds = [
+        setTimeout(scrollToHash, 100),
+        setTimeout(scrollToHash, 300),
+        setTimeout(scrollToHash, 600),
+      ]
+
+      return () => {
+        timeoutIds.forEach(clearTimeout)
+      }
+    }
+
     const scrollToTop = () => {
       window.scrollTo(0, 0)
       if (document.documentElement) {
@@ -15,21 +34,19 @@ export const ScrollToTop: React.FC = () => {
         document.body.scrollTop = 0
       }
     }
-    
-    // Immediate scroll
+
     scrollToTop()
-    
-    // Additional scroll resets with different delays to ensure it works
+
     const timeoutIds = [
       setTimeout(scrollToTop, 10),
       setTimeout(scrollToTop, 50),
-      setTimeout(scrollToTop, 100)
+      setTimeout(scrollToTop, 100),
     ]
-    
+
     return () => {
-      timeoutIds.forEach(id => clearTimeout(id))
+      timeoutIds.forEach(clearTimeout)
     }
-  }, [pathname])
+  }, [pathname, hash])
 
   return null
 }
