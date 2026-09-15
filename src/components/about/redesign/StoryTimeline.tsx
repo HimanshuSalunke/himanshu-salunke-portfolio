@@ -8,7 +8,6 @@ import {
   ChevronRight,
   GripHorizontal,
 } from 'lucide-react'
-import { ImageWithShimmer } from '../../ui/ImageWithShimmer'
 import { JourneyFlowTrack, journeyContentClass, journeyHeadingClass, journeyMarkerClass, journeySectionClass } from './journey/JourneyPrimitives'
 
 const WORLDQUANT_BRAIN_LOGO = '/images/logos/worldquant-brain.png'
@@ -127,11 +126,15 @@ const timelineData: TimelineItem[] = [
       'WorldQuant BRAIN consultant focused on systematic quantitative alpha research. Exploring data-driven signals and strategy development on the BRAIN platform.',
     type: 'consultant',
     icon: (
-      <ImageWithShimmer
-        src={WORLDQUANT_BRAIN_LOGO}
-        alt="WorldQuant BRAIN logo"
-        className="h-7 w-7 object-contain sm:h-8 sm:w-8"
-      />
+      <span className="flex h-7 w-7 items-center justify-center overflow-hidden rounded-md bg-white p-0.5 sm:h-8 sm:w-8">
+        <img
+          src={WORLDQUANT_BRAIN_LOGO}
+          alt="WorldQuant BRAIN logo"
+          className="h-full w-full object-contain"
+          loading="lazy"
+          decoding="async"
+        />
+      </span>
     ),
     stats: [
       { label: 'Role', value: 'Consultant' },

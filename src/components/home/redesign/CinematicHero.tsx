@@ -49,12 +49,7 @@ const TypewriterText: React.FC<{ text: string; speed?: number }> = ({ text, spee
   )
 }
 
-const WORLDQUANT_BORDER_GRADIENT =
-  'conic-gradient(from 0deg, transparent 0deg, #06b6d4 52deg, #9333ea 128deg, #3b82f6 204deg, #a855f7 278deg, transparent 336deg)'
-
 const WorldQuantBrainChip: React.FC = () => {
-  const prefersReducedMotion = useReducedMotion()
-
   return (
     <Link
       to="/about#worldquant-brain-consultant"
@@ -65,48 +60,22 @@ const WorldQuantBrainChip: React.FC = () => {
         className="pointer-events-none absolute -inset-1 rounded-2xl bg-gradient-to-r from-cyan-500/20 via-purple-500/25 to-blue-500/15 opacity-50 blur-lg transition-opacity duration-300 group-hover:opacity-80 dark:from-cyan-400/25 dark:via-purple-500/30 dark:to-blue-500/20"
       />
 
-      <div className="relative overflow-hidden rounded-2xl p-[1.5px] shadow-lg shadow-cyan-500/15 transition-shadow duration-300 group-hover:shadow-cyan-500/25 group-hover:shadow-purple-500/10 dark:shadow-cyan-500/20 dark:group-hover:shadow-cyan-400/30">
-        {prefersReducedMotion ? (
-          <div
-            aria-hidden="true"
-            className="absolute inset-0 rounded-2xl bg-gradient-to-br from-cyan-500/45 via-purple-500/50 to-blue-500/40"
-          />
-        ) : (
-          <div
-            aria-hidden="true"
-            className="absolute inset-[-150%] animate-[spin_12s_linear_infinite] opacity-80"
-            style={{ background: WORLDQUANT_BORDER_GRADIENT }}
-          />
-        )}
-
-        <div className="relative z-10 overflow-hidden rounded-[calc(1rem-1.5px)] border border-cyan-500/15 bg-gradient-to-br from-white/95 via-cyan-50/75 to-purple-50/65 p-3 backdrop-blur-md dark:border-purple-500/20 dark:from-[#050818]/95 dark:via-[#0a0a22]/92 dark:to-[#08061a]/95 sm:p-4">
+      <div className="relative overflow-hidden rounded-2xl border border-cyan-500/20 shadow-lg shadow-cyan-500/15 transition-shadow duration-300 group-hover:border-cyan-500/30 group-hover:shadow-cyan-500/25 group-hover:shadow-purple-500/10 dark:border-purple-500/25 dark:shadow-cyan-500/20 dark:group-hover:border-purple-400/35 dark:group-hover:shadow-cyan-400/30">
+        <div className="relative overflow-hidden rounded-2xl bg-gradient-to-br from-white/95 via-cyan-50/75 to-purple-50/65 p-3 backdrop-blur-md dark:from-[#050818]/95 dark:via-[#0a0a22]/92 dark:to-[#08061a]/95 sm:p-4">
           <div
             aria-hidden="true"
             className="pointer-events-none absolute inset-0 bg-gradient-to-br from-cyan-400/[0.08] via-transparent to-purple-500/[0.1]"
           />
 
           <div className="relative flex items-center justify-center gap-2 sm:gap-2.5">
-            <span className="relative flex h-11 w-11 shrink-0 items-center justify-center rounded-xl p-[1.5px] shadow-[0_0_14px_rgba(6,182,212,0.3)] dark:shadow-[0_0_16px_rgba(34,211,238,0.35)] sm:h-12 sm:w-12">
-              {prefersReducedMotion ? (
-                <span
-                  aria-hidden="true"
-                  className="absolute inset-0 rounded-xl bg-gradient-to-br from-cyan-400/50 via-purple-500/50 to-blue-500/45"
-                />
-              ) : (
-                <span
-                  aria-hidden="true"
-                  className="absolute inset-[-120%] animate-[spin_14s_linear_infinite] opacity-70"
-                  style={{ background: WORLDQUANT_BORDER_GRADIENT }}
-                />
-              )}
-              <span className="relative z-10 flex h-full w-full items-center justify-center overflow-hidden rounded-[calc(0.75rem-1.5px)] border border-cyan-400/35 bg-white/95 p-1.5 shadow-inner dark:border-cyan-300/40 dark:bg-white/95">
-                <ImageWithShimmer
-                  src="/images/logos/worldquant-brain.png"
-                  alt="WorldQuant BRAIN logo"
-                  className="h-full w-full object-contain"
-                  priority
-                />
-              </span>
+            <span className="flex h-11 w-11 shrink-0 items-center justify-center overflow-hidden rounded-xl border border-cyan-400/35 bg-white p-1.5 shadow-[0_0_14px_rgba(6,182,212,0.2)] dark:border-cyan-300/40 dark:bg-white sm:h-12 sm:w-12">
+              <img
+                src="/images/logos/worldquant-brain.png"
+                alt="WorldQuant BRAIN logo"
+                className="h-full w-full object-contain"
+                loading="eager"
+                decoding="async"
+              />
             </span>
 
             <span className="inline-flex items-center gap-1.5 rounded-full border border-purple-500/30 bg-gradient-to-r from-cyan-500/[0.08] via-purple-500/[0.1] to-blue-500/[0.08] px-3 py-1 font-mono text-[0.625rem] font-semibold uppercase tracking-[0.18em] shadow-[inset_0_1px_0_rgba(255,255,255,0.06)] dark:border-purple-400/35 dark:from-cyan-500/10 dark:via-purple-500/12 dark:to-blue-500/10 sm:text-xs">
