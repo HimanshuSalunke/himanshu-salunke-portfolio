@@ -122,7 +122,7 @@ const timelineData: TimelineItem[] = [
     period: 'September 2026 - Present',
     shortLabel: 'BRAIN',
     description:
-      'Approved WorldQuant BRAIN consultant conducting systematic alpha research on the BRAIN platform. Completed background check and consultant onboarding to explore data-driven signals and quantitative strategies.',
+      'WorldQuant BRAIN consultant focused on systematic quantitative alpha research. Exploring data-driven signals and strategy development on the BRAIN platform.',
     type: 'consultant',
     icon: <LineChart className="h-5 w-5" />,
     stats: [

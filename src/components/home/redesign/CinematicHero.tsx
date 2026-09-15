@@ -152,8 +152,7 @@ export const CinematicHero: React.FC = () => {
                 </span>
               </div>
               <p className="mt-2 text-center text-xs leading-relaxed text-neutral-600 dark:text-neutral-300 sm:text-sm">
-                Systematic quantitative alpha research on the WorldQuant BRAIN platform - background
-                check approved and consultant onboarding complete.
+                Systematic quantitative alpha research on the WorldQuant BRAIN platform.
               </p>
             </Link>
           </motion.div>
