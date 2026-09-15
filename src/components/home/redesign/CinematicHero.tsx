@@ -86,7 +86,7 @@ const WorldQuantBrainChip: React.FC = () => {
           />
 
           <div className="relative flex items-center justify-center gap-2 sm:gap-2.5">
-            <span className="relative flex h-9 w-9 shrink-0 items-center justify-center rounded-full p-[1.5px] shadow-[0_0_14px_rgba(6,182,212,0.3)] dark:shadow-[0_0_16px_rgba(34,211,238,0.35)]">
+            <span className="relative flex h-11 w-11 shrink-0 items-center justify-center rounded-full p-[1.5px] shadow-[0_0_14px_rgba(6,182,212,0.3)] dark:shadow-[0_0_16px_rgba(34,211,238,0.35)] sm:h-12 sm:w-12">
               {prefersReducedMotion ? (
                 <span
                   aria-hidden="true"
@@ -99,11 +99,11 @@ const WorldQuantBrainChip: React.FC = () => {
                   style={{ background: WORLDQUANT_BORDER_GRADIENT }}
                 />
               )}
-              <span className="relative z-10 flex h-full w-full items-center justify-center overflow-hidden rounded-full border border-cyan-400/30 bg-gradient-to-br from-white to-cyan-50/90 p-1 dark:border-cyan-400/25 dark:from-neutral-950/95 dark:to-cyan-950/40">
+              <span className="relative z-10 flex h-full w-full items-center justify-center overflow-hidden rounded-full border border-cyan-400/35 bg-white p-0.5 shadow-inner dark:border-cyan-300/40 dark:bg-white">
                 <ImageWithShimmer
                   src="/images/logos/worldquant-brain.png"
                   alt="WorldQuant BRAIN logo"
-                  className="h-full w-full object-contain"
+                  className="h-9 w-9 object-contain sm:h-10 sm:w-10"
                   priority
                 />
               </span>

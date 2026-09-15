@@ -127,11 +127,13 @@ const timelineData: TimelineItem[] = [
       'WorldQuant BRAIN consultant focused on systematic quantitative alpha research. Exploring data-driven signals and strategy development on the BRAIN platform.',
     type: 'consultant',
     icon: (
-      <ImageWithShimmer
-        src={WORLDQUANT_BRAIN_LOGO}
-        alt="WorldQuant BRAIN logo"
-        className="h-5 w-5 object-contain sm:h-6 sm:w-6"
-      />
+      <span className="flex h-8 w-8 items-center justify-center rounded-md bg-white p-0.5 shadow-sm dark:bg-white/95 sm:h-9 sm:w-9">
+        <ImageWithShimmer
+          src={WORLDQUANT_BRAIN_LOGO}
+          alt="WorldQuant BRAIN logo"
+          className="h-full w-full object-contain"
+        />
+      </span>
     ),
     stats: [
       { label: 'Role', value: 'Consultant' },
@@ -198,7 +200,7 @@ const typeStyles = {
     border: 'border-cyan-500/25',
     activeBorder: 'border-cyan-500/60 ring-2 ring-cyan-500/20',
     bg: 'bg-white dark:bg-neutral-950/90',
-    icon: 'border-cyan-500/30 bg-white/90 p-1 dark:bg-neutral-950/80',
+    icon: 'border-cyan-500/30 bg-cyan-500/5 p-0.5 dark:bg-cyan-500/10',
     subtitle: 'text-cyan-700 dark:text-cyan-400',
     dot: 'bg-cyan-500',
     pill: 'border-cyan-500/30 text-cyan-700 dark:text-cyan-300',
