@@ -128,6 +128,19 @@
       "tags": ["Node.js", "Express", "TypeScript", "PostgreSQL", "AWS Cloud", "REST APIs"]
     },
     {
+      "id": "worldquant-brain-consultant",
+      "title": "WorldQuant BRAIN Consultant",
+      "subtitle": "WorldQuant - Quantitative Research",
+      "period": "September 2026 - Present",
+      "type": "consultant",
+      "description": "Approved WorldQuant BRAIN consultant conducting systematic alpha research on the BRAIN platform. Completed background check and consultant onboarding to explore data-driven signals and quantitative strategies.",
+      "stats": [
+        { "label": "Role", "value": "Consultant" },
+        { "label": "Status", "value": "Active" }
+      ],
+      "tags": ["Alpha Research", "BRAIN Platform", "Quantitative Finance"]
+    },
+    {
       "id": "the-future",
       "title": "The Future & Vision",
       "subtitle": "Aspiring Data Scientist",
@@ -135,6 +148,17 @@
       "type": "story",
       "description": "Preparing for GATE 2027 while building innovative projects and contributing to the tech community. Goal is to become a leading data scientist who creates solutions that make a positive impact on society.",
       "tags": ["GATE 2027", "Innovation", "Impact"]
+    }
+  ],
+  "consultantRoles": [
+    {
+      "title": "WorldQuant BRAIN Consultant",
+      "organization": "WorldQuant",
+      "period": "September 2026 - Present",
+      "status": "Active consultant - background check approved, onboarding complete",
+      "description": "Conducts systematic quantitative alpha research on the WorldQuant BRAIN platform. Consultant research role - not full-time employment.",
+      "focus": ["Alpha research", "BRAIN platform", "Quantitative signals"],
+      "page": "/about#worldquant-brain-consultant"
     }
   ],
   "achievements": [
@@ -549,6 +573,7 @@
     "Current job / is he working / employer / GrubPac / experience → experience + storyTimeline work entry; page /about (never /work)",
     "Personal story / recovery / resilience / childhood → storyTimeline; page /about",
     "Achievements / hackathons / SIH / SUNHACKS → achievements; page /about",
+    "WorldQuant / BRAIN consultant / quantitative research → consultantRoles + storyTimeline consultant entry; page /about#worldquant-brain-consultant",
     "Mission / values / goals → mission, values, shortTermGoals; page /about",
     "Projects / case studies / portfolio work → projects array; page /work",
     "Services / freelancing / pricing / how to book → services object; page /services or /contact",

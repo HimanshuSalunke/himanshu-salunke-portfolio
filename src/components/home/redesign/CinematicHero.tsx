@@ -1,7 +1,7 @@
 import React from 'react'
 import { motion, useReducedMotion } from 'framer-motion'
 import { Link } from 'react-router-dom'
-import { Brain, Cpu, Network } from 'lucide-react'
+import { Brain, Cpu, LineChart, Network } from 'lucide-react'
 import { Button } from '../../ui/Button'
 import { ImageWithShimmer } from '../../ui/ImageWithShimmer'
 import {
@@ -131,6 +131,32 @@ export const CinematicHero: React.FC = () => {
               Salunke
             </span>
           </motion.h1>
+
+          <motion.div
+            initial={prefersReducedMotion ? false : { opacity: 0, y: 10 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ delay: 0.18 }}
+            className="mb-4 w-full max-w-xl sm:mb-5"
+          >
+            <Link
+              to="/about#worldquant-brain-consultant"
+              className="group block rounded-2xl border border-cyan-500/35 bg-gradient-to-r from-cyan-500/10 via-purple-500/10 to-blue-500/10 p-3 shadow-md shadow-cyan-500/10 transition-all hover:border-cyan-500/55 hover:shadow-lg hover:shadow-purple-500/15 dark:border-cyan-400/30 dark:from-cyan-500/15 dark:via-purple-500/15 dark:to-blue-500/10 sm:p-4"
+            >
+              <div className="flex items-center justify-center gap-2 sm:gap-2.5">
+                <span className="flex h-8 w-8 shrink-0 items-center justify-center rounded-full border border-cyan-500/40 bg-cyan-500/15 text-cyan-600 dark:text-cyan-400">
+                  <LineChart className="h-4 w-4" aria-hidden="true" />
+                </span>
+                <span className="inline-flex items-center gap-1.5 rounded-full border border-purple-500/35 bg-white/80 px-3 py-1 font-mono text-[0.625rem] font-semibold uppercase tracking-[0.18em] text-purple-800 dark:bg-neutral-950/80 dark:text-purple-200 sm:text-xs">
+                  <span className="h-1.5 w-1.5 rounded-full bg-cyan-500 shadow-[0_0_6px_rgba(6,182,212,0.7)]" />
+                  WorldQuant BRAIN Consultant
+                </span>
+              </div>
+              <p className="mt-2 text-center text-xs leading-relaxed text-neutral-600 dark:text-neutral-300 sm:text-sm">
+                Systematic quantitative alpha research on the WorldQuant BRAIN platform - background
+                check approved and consultant onboarding complete.
+              </p>
+            </Link>
+          </motion.div>
 
           {/* Mobile: single compact panel */}
           <div className="mb-4 w-full space-y-3 md:hidden">

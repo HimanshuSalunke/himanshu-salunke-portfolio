@@ -7,6 +7,7 @@ import {
   ChevronLeft,
   ChevronRight,
   GripHorizontal,
+  LineChart,
 } from 'lucide-react'
 import { JourneyFlowTrack, journeyContentClass, journeyHeadingClass, journeyMarkerClass, journeySectionClass } from './journey/JourneyPrimitives'
 
@@ -18,7 +19,7 @@ interface TimelineItem {
   shortLabel: string
   description: string
   detailedDescription?: string
-  type: 'education' | 'story' | 'recovery' | 'work'
+  type: 'education' | 'story' | 'recovery' | 'work' | 'consultant'
   icon: React.ReactNode
   stats?: { label: string; value: string }[]
   tags?: string[]
@@ -115,6 +116,22 @@ const timelineData: TimelineItem[] = [
     tags: ['Node.js', 'Express', 'TypeScript', 'PostgreSQL', 'AWS Cloud', 'REST APIs'],
   },
   {
+    id: 'worldquant-brain-consultant',
+    title: 'WorldQuant BRAIN Consultant',
+    subtitle: 'WorldQuant - Quantitative Research',
+    period: 'September 2026 - Present',
+    shortLabel: 'BRAIN',
+    description:
+      'Approved WorldQuant BRAIN consultant conducting systematic alpha research on the BRAIN platform. Completed background check and consultant onboarding to explore data-driven signals and quantitative strategies.',
+    type: 'consultant',
+    icon: <LineChart className="h-5 w-5" />,
+    stats: [
+      { label: 'Role', value: 'Consultant' },
+      { label: 'Status', value: 'Active' },
+    ],
+    tags: ['Alpha Research', 'BRAIN Platform', 'Quantitative Finance'],
+  },
+  {
     id: 'the-future',
     title: 'The Future & Vision',
     subtitle: 'Aspiring Data Scientist',
@@ -169,6 +186,16 @@ const typeStyles = {
     pill: 'border-emerald-500/30 text-emerald-700 dark:text-emerald-300',
     pillActive: 'bg-emerald-500/15 border-emerald-500/50',
   },
+  consultant: {
+    border: 'border-cyan-500/25',
+    activeBorder: 'border-cyan-500/60 ring-2 ring-cyan-500/20',
+    bg: 'bg-white dark:bg-neutral-950/90',
+    icon: 'border-cyan-500/30 bg-cyan-500/10 text-cyan-600 dark:text-cyan-400',
+    subtitle: 'text-cyan-700 dark:text-cyan-400',
+    dot: 'bg-cyan-500',
+    pill: 'border-cyan-500/30 text-cyan-700 dark:text-cyan-300',
+    pillActive: 'bg-cyan-500/15 border-cyan-500/50',
+  },
 }
 
 interface TimelineCardProps {
@@ -190,7 +217,7 @@ const TimelineCard: React.FC<TimelineCardProps> = ({
   const isExpanded = expandedId === item.id
 
   return (
-    <div ref={cardRef} className="relative flex h-full flex-col scroll-mt-28">
+    <div id={item.id} ref={cardRef} className="relative flex h-full flex-col scroll-mt-28">
       {/* Desktop connector from flow track down to card */}
       <div className="mb-0 hidden flex-col items-center md:flex">
         <div
