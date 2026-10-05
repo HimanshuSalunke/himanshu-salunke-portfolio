@@ -85,6 +85,16 @@ interface Credential {
 
 const credentialsData: Credential[] = [
   {
+    id: 'aws-cloud-practitioner',
+    title: 'AWS Certified Cloud Practitioner',
+    issuer: 'AWS',
+    date: 'October 2026',
+    description:
+      'Foundational AWS certification validating cloud concepts, AWS services, security, architecture, pricing, and support.',
+    url: 'https://aws.amazon.com/verification',
+    icon: AWSIcon,
+  },
+  {
     id: 'aws-ai-practitioner',
     title: 'AWS Certified AI Practitioner',
     issuer: 'AWS',

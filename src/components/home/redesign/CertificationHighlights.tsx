@@ -39,6 +39,16 @@ const issuerBadgeClass = (variant: 'aws' | 'microsoft') =>
 
 const highlights2026: HighlightCert[] = [
   {
+    id: 'aws-cloud-practitioner',
+    title: 'AWS Certified Cloud Practitioner',
+    issuer: 'AWS',
+    date: 'October 2026',
+    url: 'https://aws.amazon.com/verification',
+    icon: <SiAmazon className="h-6 w-6 text-orange-500" />,
+    borderAccent: 'border-orange-500/25 shadow-md shadow-orange-500/5',
+    badgeClass: issuerBadgeClass('aws'),
+  },
+  {
     id: 'aws-ai-practitioner',
     title: 'AWS Certified AI Practitioner',
     issuer: 'AWS',
@@ -145,7 +155,7 @@ export const CertificationHighlights: React.FC = () => {
         <div className="relative">
           <MobileNeuralSpine idPrefix="certs" />
 
-          <div className="relative z-10 grid grid-cols-1 gap-3 pl-1 sm:grid-cols-2 sm:gap-4 sm:pl-0 lg:gap-6">
+          <div className="relative z-10 grid grid-cols-1 gap-3 pl-1 sm:grid-cols-2 sm:gap-4 sm:pl-0 lg:grid-cols-3 lg:gap-6">
             {highlights2026.map((cert, index) => (
               <CertCard key={cert.id} cert={cert} index={index} />
             ))}

@@ -304,6 +304,13 @@
   },
   "credentials": [
     {
+      "name": "AWS Certified Cloud Practitioner",
+      "issuer": "AWS",
+      "date": "October 2026",
+      "description": "Foundational AWS certification validating cloud concepts, AWS services, security, architecture, pricing, and support.",
+      "verificationUrl": "https://aws.amazon.com/verification"
+    },
+    {
       "name": "AWS Certified AI Practitioner",
       "issuer": "AWS",
       "date": "September 2026",
