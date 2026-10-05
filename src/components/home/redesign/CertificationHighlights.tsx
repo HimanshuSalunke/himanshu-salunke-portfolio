@@ -43,7 +43,7 @@ const highlights2026: HighlightCert[] = [
     title: 'AWS Certified Cloud Practitioner',
     issuer: 'AWS',
     date: 'October 2026',
-    url: 'https://aws.amazon.com/verification',
+    url: 'https://drive.google.com/file/d/1czWcvikuqEOHmgDnf0gmbrx_E1A_GIKC/view?usp=sharing',
     icon: <SiAmazon className="h-6 w-6 text-orange-500" />,
     borderAccent: 'border-orange-500/25 shadow-md shadow-orange-500/5',
     badgeClass: issuerBadgeClass('aws'),

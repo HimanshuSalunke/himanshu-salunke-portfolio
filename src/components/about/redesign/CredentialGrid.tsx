@@ -91,7 +91,7 @@ const credentialsData: Credential[] = [
     date: 'October 2026',
     description:
       'Foundational AWS certification validating cloud concepts, AWS services, security, architecture, pricing, and support.',
-    url: 'https://aws.amazon.com/verification',
+    url: 'https://drive.google.com/file/d/1czWcvikuqEOHmgDnf0gmbrx_E1A_GIKC/view?usp=sharing',
     icon: AWSIcon,
   },
   {
